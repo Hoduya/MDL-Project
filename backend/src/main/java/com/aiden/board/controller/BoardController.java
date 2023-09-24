@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.aiden.board.domain.BoardVO;
+import com.aiden.board.dto.BoardDto;
 import com.aiden.board.service.BoardService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -24,38 +24,37 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @CrossOrigin
 @RestController
-public class BoardApiController {
+public class BoardController {
 	
 	@Autowired
 	private BoardService boardService;
 	
 	@GetMapping("/boards")
-	public List<BoardVO> getBoardList() {
-		List<BoardVO> boards = boardService.selectAll();
+	public List<BoardDto> getBoardList(@RequestParam int offset,
+										@RequestParam(defaultValue = "10") int limit) {
+		List<BoardDto> boards = boardService.selectBoards(offset, limit);
 		
-		for(BoardVO board: boards) {
-			System.out.println(board.getBoardId());
-		}
+		log.info(boards.toString());
 		
 		return boards;
 	}
 	
 	@GetMapping("/boards-writer/{id}")
-	public List<BoardVO> getBoardListByWriterId(@PathVariable("id") String id) {
-		List<BoardVO> boards = boardService.selectByWriterId(id);
+	public List<BoardDto> getBoardListByWriterId(@PathVariable("id") String id) {
+		List<BoardDto> boards = boardService.selectByWriterId(id);
 		return boards;
 	}
 	
-	@GetMapping("/boards/{id}")
-	public BoardVO getBoardById(@PathVariable("id") String id) {
-		BoardVO board = boardService.selectById(id);
+	@GetMapping("/boards/{bno}")
+	public BoardDto getBoardById(@PathVariable("id") String id) {
+		BoardDto board = boardService.selectById(id);
 		return board;
 	}
 	
 	@PostMapping("/boards")
-	public BoardVO insertBoard(@RequestBody BoardVO board) {
+	public BoardDto insertBoard(@RequestBody BoardDto board) {
 		log.info(board.toString());
-		return new BoardVO();//boardService.insertBoard(board);
+		return new BoardDto();//boardService.insertBoard(board);
 	}
 	
 	@DeleteMapping("/boards")

@@ -1,15 +1,11 @@
 declare interface Profile {
-  username: string
-  bio: string
-  image: string
-  following: boolean
+  name: string
+  regDate: string
 }
 
 declare interface User {
   id: number
-  email: string
-  username: string
-  bio: string | undefined
-  image: string | undefined
+  name: string
+  regDate: string
   token: string
 }

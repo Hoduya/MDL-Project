@@ -15,5 +15,17 @@
   */
 
 declare interface UserResponse {
-  user: User
+  data: {
+    token: string
+    user: User
+  }
+}
+
+declare interface BoardsResponse {
+  boards: Board[]
+  boardsCount: number
+}
+
+declare interface ArticleResponse {
+  board: Board
 }

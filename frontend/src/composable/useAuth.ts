@@ -18,7 +18,8 @@ export function useAuth() {
   async function login(form: PostLoginForm): Promise<void> {
     loadding.value = true
     await postLogin(form)
-      .then((data) => (user.value = data))
+      .then((data) => { user.value = data
+      })
       .catch((err) => {
         errors.value = err
       })

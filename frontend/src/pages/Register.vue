@@ -17,7 +17,7 @@
           <form @submit.prevent="register">
             <fieldset class="form-group">
               <input
-                v-model="form.username"
+                v-model="form.name"
                 class="form-control form-control-lg"
                 type="text"
                 required
@@ -26,7 +26,7 @@
             </fieldset>
             <fieldset class="form-group">
               <input
-                v-model="form.email"
+                v-model="form.id"
                 class="form-control form-control-lg"
                 type="email"
                 required
@@ -65,9 +65,9 @@ import { routerPush } from '../router'
 import { useAuth } from '../composable/useAuth'
 
 const form = reactive<PostRegisterForm>({
-  username: '',
-  email: '',
-  password: '',
+  'id': '',
+  'password': '',
+  'name': '',
 })
 
 const { user, register: postRegister, errors, loadding } = useAuth()

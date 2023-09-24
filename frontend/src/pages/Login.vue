@@ -1,6 +1,4 @@
 <template>
-
-
   <div class="auth-page">
     <div class="container page">
       <div class="row">
@@ -19,7 +17,7 @@
           <form @submit.prevent="login">
             <fieldset class="form-group">
               <input
-                v-model="form.email"
+                v-model="form.id"
                 class="form-control form-control-lg"
                 type="email"
                 placeholder="Email"
@@ -48,14 +46,14 @@
 <script lang="ts" setup>
 import { reactive } from 'vue'
 import { PostLoginForm } from '../services/auth/postLogin'
-import { routerPush } from '@/router'
+import { router, routerPush } from '@/router'
 import AppLink from '../components/AppLink.vue'
 import { userStore } from '../store/user'
 import { useAuth } from '../composable/useAuth'
 
 const form = reactive<PostLoginForm>({
-  email: '',
-  password: '',
+  'id': '',
+  'password': '',
 })
 
 const { user, login: postLogin, errors, loadding } = useAuth()
@@ -69,3 +67,4 @@ const login = async () => {
   }
 }
 </script>
+

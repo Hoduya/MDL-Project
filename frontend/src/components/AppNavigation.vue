@@ -1,10 +1,9 @@
 <template>
   <nav class="navbar bg-body-tertiary border">
     <div class="container">
-      <app-link class="navbar-brand" name="login"> conduit </app-link>
+      <app-link class="navbar-brand" name="home"> Board </app-link>
       <ul class="nav navbar-nav pull-xs-right">
         <li class="nav-item" v-for="link in navLinks" :key="link.name">
-          <!-- Add "active" class when you're on that page" -->
           <app-link
             class="nav-link"
             active-class="active"
@@ -35,14 +34,24 @@ interface NavLink {
 
 const store = userStore()
 
-const username = computed(() => store.user?.username)
+const username = computed(() => store.user?.name)
 const displayStatus = computed(() => (username.value ? 'authorized' : 'guest'))
 
 const allLinks = computed<NavLink[]>(() => [
   {
     name: 'login',
-    title: 'Sign in',
+    title: '로그인',
     display: 'guest',
+  },
+  {
+    name: 'register',
+    title: '회원가입',
+    display: 'guest'
+  },
+  {
+    name: 'create-article',
+    title: 'New Article',
+    display: 'authorized',
   },
 ])
 
