@@ -10,6 +10,12 @@
         WHERE id = #{id}
     </select>
     
+    <select id="findByUserName" resultType="UserDto">
+        SELECT id, password, name, role, regDate
+        FROM user
+        WHERE name = #{name}
+    </select>
+    
     <insert id="save" parameterType="UserDto">
         INSERT INTO user (id, password, name, regDate)
         VALUES ( #{id}, #{password}, #{name}, #{regDate} )

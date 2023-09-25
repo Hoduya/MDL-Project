@@ -13,7 +13,7 @@
     </ul>
   </template>
   <script lang="ts" setup>
-  import { computed } from 'vue'
+  import { computed, withDefaults, defineProps } from 'vue'
   import { AppRouteNames } from '../router'
   import { RouteParams } from 'vue-router'
   import { userStore } from '../store/user'
@@ -37,7 +37,7 @@
     useUserFeed: false,
   })
   
-  const { tag, username } = useBoards()
+  const { username } = useBoards()
   
   const store = userStore()
   
@@ -51,34 +51,21 @@
   
   const allLinks = computed<NavLink[]>(() => [
     {
-      routeName: 'feed',
-      title: 'Your Feed',
-      show: props.useMyFeed && store.user ? true : false,
-    },
-    {
       routeName: 'global-feed',
-      title: 'Global Feed',
+      title: '전체글',
       show: props.useGlobalFeed,
     },
-    {
-      routeName: 'tag',
-      routeParams: <RouteParams>{ tag: tag.value },
-      title: tag.value,
-      icon: 'ion-pound',
-      show: props.useTagFeed && tag.value ? true : false,
-    },
+    // {
+    //   routeName: 'feed',
+    //   title: '나의 게시글',
+    //   show: props.useMyFeed && store.user ? true : false,
+    // },
     {
       routeName: 'profile',
-      title: 'My Articles',
-      routeParams: <RouteParams>{ username: username.value },
+      title: '게시글',
+      routeParams: { username: username.value },
       show: props.useUserFeed,
-    },
-    {
-      routeName: 'profile-favorites',
-      title: 'Favorited Articles',
-      routeParams: <RouteParams>{ username: username.value },
-      show: props.useUserFavorited,
-    },
+    }
   ])
   const links = computed(() => allLinks.value.filter((link) => link.show))
   </script>

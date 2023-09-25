@@ -14,6 +14,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 
 /**
@@ -35,22 +37,18 @@ public class JwtFilter extends GenericFilterBean {
  public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
          throws IOException, ServletException {
 	      
-     // HttpServletRequest로 캐스팅하여 JWT 토큰을 해석
      String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
-
-     // 현재 요청의 URI를 가져옵니다.	
+     
      String requestURI = ((HttpServletRequest) request).getRequestURI();
 
      // 만약 JWT 토큰이 존재하고 유효하다면, 해당 토큰을 사용하여 사용자 인증 정보를 가져와
-     // Spring Security의 SecurityContextHolder에 저장합니다.
+     // Spring Security의 SecurityContextHolder에 저장
      if (StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)) {
          Authentication authentication = jwtTokenProvider.getAuthentication(token);
          SecurityContextHolder.getContext().setAuthentication(authentication);
 
-         // 로그에 메시지를 출력하여 Security context에 인증 정보를 저장했음을 나타냅니다.
          logger.info("Security context에 인증 정보를 저장했습니다, uri: {}", requestURI);
      } else {
-         // 유효한 JWT 토큰이 없을 경우, 디버그 로그에 메시지를 출력합니다.
          logger.debug("유효한 Jwt 토큰이 없습니다, uri: {}", requestURI);
      }
 

@@ -25,7 +25,3 @@ declare interface BoardsResponse {
   boards: Board[]
   boardsCount: number
 }
-
-declare interface ArticleResponse {
-  board: Board
-}

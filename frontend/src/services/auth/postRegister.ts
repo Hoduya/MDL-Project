@@ -21,4 +21,4 @@ export async function postRegister(form: PostRegisterForm): Promise<User | any> 
         throw await error.getErrors()
       }
     })
-}
+} 

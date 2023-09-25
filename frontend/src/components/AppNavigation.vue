@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar bg-body-tertiary border">
     <div class="container">
-      <app-link class="navbar-brand" name="home"> Board </app-link>
+      <app-link class="navbar-brand" name="global-feed"> Board </app-link>
       <ul class="nav navbar-nav pull-xs-right">
         <li class="nav-item" v-for="link in navLinks" :key="link.name">
           <app-link
@@ -49,9 +49,10 @@ const allLinks = computed<NavLink[]>(() => [
     display: 'guest'
   },
   {
-    name: 'create-article',
-    title: 'New Article',
+    name: 'create-board',
+    title: '글쓰기',
     display: 'authorized',
+    icon: '',
   },
 ])
 

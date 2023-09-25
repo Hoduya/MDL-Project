@@ -23,6 +23,7 @@ import com.aiden.board.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 
+@CrossOrigin(origins="http://localhost:8080")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
@@ -39,20 +40,19 @@ public class UserController {
         try {
             UserDto savedUser = userService.join(userDto);
             SingleDataResponse<UserDto> response = responseService.getSingleDataResponse(true, "회원가입 성공", savedUser);
-
+            
             responseEntity = ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (DuplicatedUsernameException exception) {
             logger.debug(exception.getMessage());
             BaseResponse response = responseService.getBaseResponse(false, exception.getMessage());
 
-            responseEntity = ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            responseEntity = ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
         }
         return responseEntity;
     }
 
     @PostMapping("/login")
     public ResponseEntity<BaseResponse> login(@RequestBody LoginDto loginDto) {
-    	logger.info(loginDto.getId());
     	ResponseEntity<BaseResponse> responseEntity = null;
         try {
             String token = userService.login(loginDto);
@@ -70,6 +70,7 @@ public class UserController {
         } catch (LoginFailedException exception) {
             BaseResponse response = responseService.getBaseResponse(false, exception.getMessage());
             responseEntity = ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        	logger.info(responseEntity.getBody().getMessage());
         }
 
         return responseEntity;

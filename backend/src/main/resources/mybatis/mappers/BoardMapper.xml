@@ -2,31 +2,52 @@
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<!-- 
+`board`
+  `bno` int(11) NOT NULL AUTO_INCREMENT COMMENT '게시글ID',
+  `id` varchar(45) NOT NULL COMMENT '작성자이메일',
+  `name` varchar(45) NOT NULL COMMENT '작성자이름',
+  `title` varchar(45) NOT NULL COMMENT '제목',
+  `content` varchar(200) NOT NULL COMMENT '내용',
+  `regDate` datetime NOT NULL COMMENT '등록일자',
+  `updateDate` datetime DEFAULT NULL COMMENT '수정일자'
+-->
 
 <mapper namespace="com.aiden.board.mapper.BoardMapper">
 	
-	<select resultType="com.aiden.board.domain.BoardVO" id="selectBoards">
-		SELECT bno, title, content, id, regDate, updateDate
-		FROM board
-		ORDER BY regDate DESC
+	<select resultType="com.aiden.board.dto.BoardDto" id="selectBoards">
+		select bno, id, name, title, content, regDate, updateDate
+		from board
+		order BY regDate DESC
 		LIMIT #{limit} OFFSET #{offset};
 	</select>
-	
-	<select resultType="com.aiden.board.domain.BoardVO" id="selectByWriterId">
-		select * from board where id=#{writerId}
+
+	<select resultType="Integer" id="selectCount"> 
+		select count(*) from board
 	</select>
 	
-	<select resultType="com.aiden.board.domain.BoardVO" id="selectById">
-		select * from board where board_id=#{id}
+	<select resultType="com.aiden.board.dto.BoardDto" id="selectByUserName">
+		select  bno, id, name, title, content, regDate, updateDate
+		from board 
+		where name=#{username}
+		order BY regDate DESC
 	</select>
 	
-	<insert id="insertBoard" useGeneratedKeys="true" keyProperty="boardId">
-		insert into board(board_id, id, title, content, regDate)
-		values(#{boardId}, #{id}, #{title}, #{content}, #{regDate})
+	<select resultType="com.aiden.board.dto.BoardDto" id="selectByBno">
+		select  bno, id, name, title, content, regDate, updateDate
+		from board 
+		where bno=#{bno}
+		order BY regDate DESC	
+	</select>
+	
+	<insert id="insertBoard" useGeneratedKeys="true" keyProperty="bno">
+		insert into board(name, id, title, content, regDate)
+		values(#{name}, #{id}, #{title}, #{content}, #{regDate})
 	</insert>
 	
 	<delete id="deleteBoard">
-		delete from board where board_id=#{id}
+		delete from board where bno=#{bno}
 	</delete>
 	
 </mapper>

@@ -46,7 +46,7 @@
 <script lang="ts" setup>
 import { reactive } from 'vue'
 import { PostLoginForm } from '../services/auth/postLogin'
-import { router, routerPush } from '@/router'
+import { routerPush } from '@/router'
 import AppLink from '../components/AppLink.vue'
 import { userStore } from '../store/user'
 import { useAuth } from '../composable/useAuth'
@@ -64,6 +64,7 @@ const login = async () => {
   await postLogin(form)
   if (user.value) {
     store.updateUser(user.value)
+    routerPush("global-feed");
   }
 }
 </script>

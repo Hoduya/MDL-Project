@@ -78,7 +78,7 @@ const register = async () => {
   await postRegister(form)
   if (user.value) {
     store.updateUser(user.value)
-
+    routerPush("login");
   }
 }
 </script>

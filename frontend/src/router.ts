@@ -1,24 +1,28 @@
-import { createRouter, createWebHashHistory, RouteParams } from 'vue-router'
+import { createRouter, createWebHashHistory, createWebHistory, RouteParams } from 'vue-router'
 
 import Home from './pages/Home.vue'
 
 export type AppRouteNames =
-  | 'home'
+  | 'global-feed'
+  | 'feed'
   | 'login'
   | 'register'
   | 'create-board'
+  | 'profile'
+  | 'board'
 
 export const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(),
   routes: [
     {
+      name: 'global-feed',
       path: '/',
-      redirect: '/home'
+      component: Home,
     },
     {
-      name: 'home',
-      path: '/home',
-      component: Home 
+      name: 'feed',
+      path: '/',
+      component: Home,
     },
     {
       name: 'login',
@@ -35,6 +39,16 @@ export const router = createRouter({
       path: '/board',
       component: () => import('./pages/EditBoard.vue')
     },
+    {
+      name: 'profile',
+      path: '/:username',
+      component: () => import('./pages/Profile.vue'),
+    },
+    {
+      name: 'board',
+      path: '/board/:slug',
+      component: () => import('./pages/Board.vue')
+    }
   ],
 })
 

@@ -1,5 +1,6 @@
 package com.aiden.board.config.security;
 
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,6 +11,9 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,7 +24,8 @@ public class SecurityConfig {
 			"/v3/api-docs/**", 
 			"/swagger-ui/**", 
 			"/api/join",
-			"/api/login"
+			"/api/login",
+			"/api/*"
 	};
 
 	@Bean
@@ -36,6 +41,7 @@ public class SecurityConfig {
         		sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 		return http.build();
 	}
+	
 
 	// passwordEncoder
 	@Bean

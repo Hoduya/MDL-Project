@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.aiden.board.dto.BoardDto;
 import com.aiden.board.mapper.BoardMapper;
+import com.aiden.board.mapper.BoardSelectType;
 import com.aiden.board.mapper.UserMapper;
 import com.aiden.board.utils.JwtTokenProvider;
 import com.fasterxml.jackson.databind.deser.impl.BeanAsArrayBuilderDeserializer;
@@ -32,8 +33,13 @@ public class BoardService {
 		return boards;
 	}
 	
-	public List<BoardDto> selectByWriterId(String writerId) {
-		List<BoardDto> boards = boardMapper.selectByWriterId(writerId);
+	public Integer selectCount() {
+		Integer count = boardMapper.selectCount();
+		return count;
+	}
+	
+	public List<BoardDto> selectByUserName(String username) {
+		List<BoardDto> boards = boardMapper.selectByWriterId(username);
 		return boards;
 	}
 	

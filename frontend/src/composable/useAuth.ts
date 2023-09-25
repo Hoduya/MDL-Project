@@ -19,7 +19,8 @@ export function useAuth() {
     loadding.value = true
     await postLogin(form)
       .then((data) => { user.value = data
-      })
+        console.log(user)
+      } )
       .catch((err) => {
         errors.value = err
       })

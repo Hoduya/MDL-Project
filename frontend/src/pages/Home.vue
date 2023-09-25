@@ -4,15 +4,15 @@
         <div class="row">
           <div class="col-md-9">
             <div class="feed-toggle">
-              <ArticleNavigation useGlobalFeed useMyFeed useTagFeed />
+              <BoardNavigation useGlobalFeed useMyFeed />
             </div>
   
             <suspense>
               <template #default>
-                <ArticleList />
+                <BoardList />
               </template>
               <template #fallback>
-                <div class="article-preview">Loading articles...</div>
+                <div class="article-preview">Loading boards...</div>
               </template>
             </suspense>
           </div>

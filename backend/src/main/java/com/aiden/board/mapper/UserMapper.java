@@ -9,5 +9,6 @@ import com.aiden.board.dto.UserDto;
 @Mapper
 public interface UserMapper {
     Optional<UserDto> findByUserId(String userId);
+    Optional<UserDto> findByUserName(String username);
     void save(UserDto userDto);
 }
