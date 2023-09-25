@@ -1,7 +1,7 @@
 declare interface Board {
   bno: string
   id: string
-  name: string
+  writerName: string
   title: string
   content: string
   regDate: string

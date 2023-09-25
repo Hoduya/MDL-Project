@@ -1,14 +1,15 @@
 package com.aiden.board.controller;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.annotations.Mapper;
-import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.support.lob.LobCreator;
+import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,54 +21,55 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aiden.board.dto.BoardDto;
-import com.aiden.board.mapper.BoardSelectType;
+import com.aiden.board.dto.UserDto;
 import com.aiden.board.service.BoardService;
-import com.aiden.board.service.ResponseService;
-import com.aiden.board.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@CrossOrigin(origins="http://localhost:8080")
+@CrossOrigin(origins = "http://localhost:8080")
 @Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class BoardController {
-	
+
 	private final BoardService boardService;
-	
+
 	@GetMapping("/boards")
-	public Map<String, Object> getBoardList(@RequestParam int offset,
-										@RequestParam(defaultValue = "10") int limit) {
+	public Map<String, Object> getBoardList(@RequestParam int offset, @RequestParam(defaultValue = "10") int limit) {
 		List<BoardDto> boards = boardService.selectBoards(offset, limit);
 		Integer count = boardService.selectCount();
+
+		Map<String, Object> response = new HashMap<>();
+		response.put("boards", boards);
+		response.put("boardsCount", count);
 		
-	    Map<String, Object> response = new HashMap<>();
-	    response.put("boards", boards);
-	    response.put("boardsCount", count);
-	    
 		return response;
 	}
-	
+
 	@GetMapping("/boards/{unsername}")
 	public List<BoardDto> getBoardListByUserName(@PathVariable("unsername") String username) {
-		List<BoardDto> boards = boardService.selectByWriterId(unsername);
+		List<BoardDto> boards = boardService.selectByUserName(username);
 		return boards;
 	}
-	
+
 	@GetMapping("/boards/{bno}")
-	public BoardDto getBoardByBno(@PathVariable("id") String id) {
-		BoardDto board = boardService.selectById(id);
+	public BoardDto getBoardByBno(@PathVariable("bno") Long bno) {
+		BoardDto board = boardService.selectByBno(bno);
 		return board;
 	}
-	
+
 	@PostMapping("/boards")
 	public BoardDto createBoard(@RequestBody BoardDto board) {
-		log.info(board.toString());
-		return new BoardDto();//boardService.insertBoard(board);
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		board.setRegDate(new Date());
+		board.setWriterName(username);
+		Long bno = boardService.insertBoard(board);
+		BoardDto result = boardService.selectByBno(bno);
+		return result;
 	}
-	
+
 	@DeleteMapping("/boards")
 	public void deleteBoard(@RequestParam("id") String id) {
 		log.info("Delte: Delete a Board {id}", id);

@@ -67,7 +67,7 @@ export default class FetchRequest {
     this.options = Object.assign({}, this.defaultOptions, options)
   }
 
-  private runFetch(
+  private runFetch( 
     method: 'GET' | 'DELETE' | 'POST' | 'PUT' | 'PATCH',
     url: string,
     data?: unknown,
@@ -82,7 +82,7 @@ export default class FetchRequest {
     return fetch(finalUrl, fetchOptions)
   }
 
-  get<T = unknown>(
+  async get<T = unknown>(
     url: string,
     options?: Partial<FetchRequestOptions>
   ): Promise<T> {
@@ -91,7 +91,7 @@ export default class FetchRequest {
     )
   }
 
-  post<T = unknown>(
+  async post<T = unknown>(
     url: string,
     data?: unknown,
     options?: Partial<FetchRequestOptions>
@@ -101,7 +101,7 @@ export default class FetchRequest {
     )
   }
 
-  put<T = unknown>(
+  async put<T = unknown>(
     url: string,
     data?: unknown,
     options?: Partial<FetchRequestOptions>
@@ -111,7 +111,7 @@ export default class FetchRequest {
     )
   }
 
-  delete<T = unknown>(
+  async delete<T = unknown>(
     url: string,
     data?: unknown,
     options?: Partial<FetchRequestOptions>
@@ -122,7 +122,8 @@ export default class FetchRequest {
   }
 
   setAuthorizationHeader(token: string) {
-    this.options.headers.authorization = `Token ${token}`
+    console.log(token);
+    this.options.headers.authorization = `Bearer ${token}`
   }
 
   deleteAuthorizationHeader() {

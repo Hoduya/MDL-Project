@@ -3,7 +3,7 @@
     <div class="container page">
       <div class="row">
         <div class="col-md-6 offset-md-3 col-xs-12">
-          <h1 class="text-xs-center">Sign up</h1>
+          <h1 class="text-xs-center">회원가입</h1>
           <p class="text-xs-center">
             <app-link name="login">Have an account?</app-link>
           </p>
@@ -21,7 +21,7 @@
                 class="form-control form-control-lg"
                 type="text"
                 required
-                placeholder="Your Name"
+                placeholder="이름"
               />
             </fieldset>
             <fieldset class="form-group">
@@ -30,7 +30,7 @@
                 class="form-control form-control-lg"
                 type="email"
                 required
-                placeholder="Email"
+                placeholder="이메일"
               />
             </fieldset>
             <fieldset class="form-group">
@@ -39,7 +39,7 @@
                 class="form-control form-control-lg"
                 type="password"
                 required
-                placeholder="Password"
+                placeholder="비밀번호"
               />
             </fieldset>
             <button
@@ -78,7 +78,8 @@ const register = async () => {
   await postRegister(form)
   if (user.value) {
     store.updateUser(user.value)
-    routerPush("login");
+    console.log(user.value);
+    routerPush("global-feed");
   }
 }
 </script>

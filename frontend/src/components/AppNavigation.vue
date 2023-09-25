@@ -1,7 +1,7 @@
 <template>
-  <nav class="navbar bg-body-tertiary border">
+  <nav class="navbar bg-body-tertiary">
     <div class="container">
-      <app-link class="navbar-brand" name="global-feed"> Board </app-link>
+      <app-link class="navbar-brand" name="global-feed"> 기업IT개발1팀 </app-link>
       <ul class="nav navbar-nav pull-xs-right">
         <li class="nav-item" v-for="link in navLinks" :key="link.name">
           <app-link

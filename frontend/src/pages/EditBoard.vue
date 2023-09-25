@@ -1,25 +1,23 @@
 <template>
-    <div>
-
+    <div class="editor-page">
+      <div class="container page">
+        <div class="row">
+          <div class="col-md-10 offset-md-1 col-xs-12">
+            <suspense>
+              <template #default>
+                <EditBoardForm />
+              </template>
+              <template #fallback>
+                <div class="row article-content">Loading article...</div>
+              </template>
+            </suspense>
+          </div>
+        </div>
+      </div>
     </div>
-</template>
-
-<script>
-import { reactive, toRefs } from 'vue'
-
-export default {
-    setup () {
-        const state = reactive({
-            count: 0,
-        })
-    
-        return {
-            ...toRefs(state),
-        }
-    }
-}
-</script>
-
-<style lang="scss" scoped>
-
-</style>
+  </template>
+  
+  <script lang="ts" setup>
+  import EditBoardForm from '../components/EditBoardForm.vue'
+  </script>
+  

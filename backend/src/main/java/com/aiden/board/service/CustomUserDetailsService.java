@@ -27,7 +27,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     private UserDto addAuthorities(UserDto userDto) {
-        userDto.setAuthorities(Arrays.asList(new SimpleGrantedAuthority(userDto.getRole())));
+        userDto.setAuthorities(Arrays.asList(new SimpleGrantedAuthority("USER")));
 
         return userDto;
     }

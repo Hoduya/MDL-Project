@@ -3,7 +3,7 @@
     <div class="container page">
       <div class="row">
         <div class="col-md-6 offset-md-3 col-xs-12">
-          <h1 class="text-xs-center">Sign in</h1>
+          <h1 class="text-xs-center">로그인</h1>
           <p class="text-xs-center">
             <app-link name="register">Need an account?</app-link>
           </p>
@@ -20,7 +20,7 @@
                 v-model="form.id"
                 class="form-control form-control-lg"
                 type="email"
-                placeholder="Email"
+                placeholder="이메일"
                 required />
             </fieldset>
             <fieldset class="form-group">
@@ -28,14 +28,14 @@
                 v-model="form.password"
                 class="form-control form-control-lg"
                 type="password"
-                placeholder="Password"
+                placeholder="비밀번호"
                 required />
             </fieldset>
             <button
               class="btn btn-lg btn-primary pull-xs-right"
               type="submit"
               :disabled="loadding">
-              Sign in
+              로그인
             </button>
           </form>
         </div>

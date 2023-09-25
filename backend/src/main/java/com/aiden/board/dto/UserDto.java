@@ -15,6 +15,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/*
+CREATE TABLE `user` (
+  `name` varchar(45) NOT NULL COMMENT '이름',
+  `id` varchar(45) NOT NULL COMMENT '이메일',
+  `password` varchar(100) NOT NULL COMMENT '비밀번호',
+  `role` varchar(45) DEFAULT NULL COMMENT '권한',
+  `regDate` datetime NOT NULL COMMENT '가입일자',
+  PRIMARY KEY (`name`),
+  UNIQUE KEY `unique_name` (`name`),
+  UNIQUE KEY `id` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci COMMENT='회원'; 
+*/
+
 @Getter
 @Setter
 @Builder
@@ -29,8 +42,6 @@ public class UserDto implements UserDetails {
     private String role;
     private Date regDate;
 
-
-    // 이하 코드는 security 를 위한 용도
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Collection<? extends GrantedAuthority> authorities;
 
@@ -46,7 +57,7 @@ public class UserDto implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.id;
+        return this.name;
     }
     
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

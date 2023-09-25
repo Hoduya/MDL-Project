@@ -22,7 +22,9 @@ import com.aiden.board.service.ResponseService;
 import com.aiden.board.service.UserService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @CrossOrigin(origins="http://localhost:8080")
 @RestController
 @RequiredArgsConstructor
@@ -31,11 +33,9 @@ public class UserController {
 
     private final UserService userService;
     private final ResponseService responseService;
-    private final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @PostMapping("/join")
     public ResponseEntity<BaseResponse> join(@RequestBody UserDto userDto) {
-    	logger.info(userDto.getId());
     	ResponseEntity<BaseResponse> responseEntity = null;
         try {
             UserDto savedUser = userService.join(userDto);
@@ -43,7 +43,7 @@ public class UserController {
             
             responseEntity = ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (DuplicatedUsernameException exception) {
-            logger.debug(exception.getMessage());
+            log.debug(exception.getMessage());
             BaseResponse response = responseService.getBaseResponse(false, exception.getMessage());
 
             responseEntity = ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
@@ -70,7 +70,6 @@ public class UserController {
         } catch (LoginFailedException exception) {
             BaseResponse response = responseService.getBaseResponse(false, exception.getMessage());
             responseEntity = ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        	logger.info(responseEntity.getBody().getMessage());
         }
 
         return responseEntity;
@@ -81,13 +80,12 @@ public class UserController {
         ResponseEntity<BaseResponse> responseEntity = null;
         try {
             String userId = ((UserDto) authentication.getPrincipal()).getId();
-            UserDto findUser = userService.findByUserId(userId);
+            UserDto findUser = userService.findByUserName(userId);
 
             SingleDataResponse<UserDto> response = responseService.getSingleDataResponse(true, "조회 성공", findUser);
             
             responseEntity = ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (UserNotFoundException exception) {
-            logger.debug(exception.getMessage());
             BaseResponse response = responseService.getBaseResponse(false, exception.getMessage());
 
             responseEntity = ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);

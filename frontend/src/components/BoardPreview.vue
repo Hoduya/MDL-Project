@@ -4,7 +4,7 @@
       <AppLink
         class="preview-link"
         name="profile"
-        :params="{ username: board.name }"
+        :params="{ username: board.writerName }"
       >
         <img src="../assets/defaultProfile.png" style="max-width: 25px;"/>
       </AppLink>
@@ -12,9 +12,9 @@
         <AppLink
           class="author"
           name="profile"
-          :params="{ username: board.name }"
+          :params="{ username: board.writerName }"
         >
-          {{ board.name }}
+          {{ board.writerName }}
         </AppLink>
         <span class="date">
           {{ new Date(board.regDate).toDateString() }}
@@ -36,10 +36,10 @@
 import { defineProps } from 'vue'
 import AppLink from './AppLink.vue'
 
-declare interface Board {
+interface Board {
   bno: string
   id: string
-  name: string
+  writerName: string
   title: string
   content: string
   regDate: string

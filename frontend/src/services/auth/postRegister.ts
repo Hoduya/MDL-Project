@@ -15,7 +15,7 @@ export type PostRegisterErrors = Partial<Record<keyof PostRegisterForm, string[]
 export async function postRegister(form: PostRegisterForm): Promise<User | any> {
   return request
     .post<UserResponse>('/join', form)
-    .then((res) => res.data.user)
+    .then((res) => res.data)
     .catch(async (error) => {
       if (error instanceof ValidationError) {
         throw await error.getErrors()

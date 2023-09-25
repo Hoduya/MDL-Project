@@ -16,7 +16,9 @@ import com.aiden.board.mapper.UserMapper;
 import com.aiden.board.utils.JwtTokenProvider;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -34,13 +36,14 @@ public class UserService {
 		if (userMapper.findByUserName(userDto.getName()).isPresent()) {
 			throw new DuplicatedUsernameException("이미 존재하는 이름입니다.");
 		}
-
+		
 		userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
 		userDto.setRegDate(new Date());
 		userDto.setRole("USER");
+		
 		userMapper.save(userDto);
 		
-		return userMapper.findByUserId(userDto.getUsername()).get();
+		return userMapper.findByUserName(userDto.getUsername()).get();
 	}
 
 	public String login(LoginDto loginDto) {
@@ -54,7 +57,12 @@ public class UserService {
 		return jwtTokenProvider.createToken(userDto.getId(), Collections.singletonList(userDto.getRole()));
 	}
 
+	public UserDto findByUserName(String username) {
+		return userMapper.findByUserName(username).orElseThrow(() -> new UserNotFoundException("존재하지 않는 계정입니다."));
+	}
+	
 	public UserDto findByUserId(String userId) {
 		return userMapper.findByUserId(userId).orElseThrow(() -> new UserNotFoundException("존재하지 않는 계정입니다."));
 	}
+	
 }

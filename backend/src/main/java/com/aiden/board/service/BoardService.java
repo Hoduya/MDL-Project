@@ -1,22 +1,18 @@
 package com.aiden.board.service;
 
-import java.util.Date;
+
 import java.util.List;
 
-import javax.naming.spi.DirStateFactory.Result;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
+
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.aiden.board.dto.BoardDto;
 import com.aiden.board.mapper.BoardMapper;
-import com.aiden.board.mapper.BoardSelectType;
-import com.aiden.board.mapper.UserMapper;
-import com.aiden.board.utils.JwtTokenProvider;
-import com.fasterxml.jackson.databind.deser.impl.BeanAsArrayBuilderDeserializer;
+
 
 import lombok.RequiredArgsConstructor;
 
@@ -33,27 +29,31 @@ public class BoardService {
 		return boards;
 	}
 	
+	public List<BoardDto> selectByUserName(String username) {
+		List<BoardDto> boards = boardMapper.selectByUserName(username);
+		return boards;
+	}
+	
 	public Integer selectCount() {
 		Integer count = boardMapper.selectCount();
 		return count;
 	}
 	
-	public List<BoardDto> selectByUserName(String username) {
-		List<BoardDto> boards = boardMapper.selectByWriterId(username);
-		return boards;
+	public Integer selectCountByUserName(String username) {
+		Integer count = boardMapper.selectCount(username);
+		return count;
 	}
 	
-	public BoardDto selectById(String id) {
-		BoardDto board = boardMapper.selectById(id);
+	public BoardDto selectByBno(Long bno) {
+		BoardDto board = boardMapper.selectByBno(bno);
 		return board;
 	}
 	
-	public BoardDto insertBoard(BoardDto board) {
-		board.setRegDate(new Date());
+	public Long insertBoard(BoardDto board) {
 		boardMapper.insertBoard(board);
-		return board;
+		return board.getBno();
 	}
-	
+
 	public Integer deleteBoard(String id) {
 		return boardMapper.deleteBoard(id);
 	}

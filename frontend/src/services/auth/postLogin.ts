@@ -11,10 +11,10 @@ export type PostLoginErrors = Partial<Record<keyof PostLoginForm, string[]>>
 export async function postLogin(form: PostLoginForm): Promise<User | any> {
   return request
     .post<UserResponse>('/login', form)
-    .then((res) => {
-      const user = res.data.user
-      user.token = res.data.token
-      return user
+    .then(({ data }) => {
+      const { user, token } = data;
+      user.token = token;
+      return user;
     })
     .catch(async (error) => {
       if (error instanceof ValidationError) {
