@@ -6,6 +6,7 @@
         </div>
         <div class="col-10 mb-1 small">Some placeholder content in a paragraph below the heading and date.</div>
   </a>
+  
   <div class="article-preview">
     <div class="article-meta">
       <AppLink

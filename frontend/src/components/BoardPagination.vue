@@ -25,7 +25,6 @@ interface Props {
   count: number
 }
 
-
 const props = defineProps<Props>()
 
 const emit = defineEmits<{

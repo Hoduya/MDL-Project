@@ -30,7 +30,7 @@ export function useBoards() {
 
     if (responsePromise !== null) {
       const response = await responsePromise
-      console.log(response.boards);
+      console.log(response)
       boards.value = response.boards
       boardsCount.value = response.boardsCount
     }

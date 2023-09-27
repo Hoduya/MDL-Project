@@ -4,7 +4,7 @@ declare interface Profile {
 }
 
 declare interface User {
-  id: number
+  id: string
   name: string
   regDate: string
   token: string
