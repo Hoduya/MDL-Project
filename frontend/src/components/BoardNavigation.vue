@@ -1,5 +1,6 @@
 <template>
-    <ul class="nav nav-pills outline-active">
+  <nav class="navbar navbar-expand-lg navbar-light bg-transparent border-bottom border-primary">
+    <ul class="nav">
       <li class="nav-item" v-for="link in links" :key="link.routeName">
         <AppLink
           class="nav-link"
@@ -11,7 +12,26 @@
         </AppLink>
       </li>
     </ul>
+  </nav>
+
+  <nav class="navbar navbar-expand-lg navbar-light bg-transparent border-bottom border-primary">
+    <div class="container">
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#">전체 글</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">나의 글</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
   </template>
+
+
+
   <script lang="ts" setup>
   import { computed, withDefaults, defineProps } from 'vue'
   import { AppRouteNames } from '../router'

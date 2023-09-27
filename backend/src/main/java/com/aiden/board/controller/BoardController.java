@@ -48,15 +48,16 @@ public class BoardController {
 		return response;
 	}
 
-	@GetMapping("/boards/{unsername}")
-	public List<BoardDto> getBoardListByUserName(@PathVariable("unsername") String username) {
-		List<BoardDto> boards = boardService.selectByUserName(username);
-		return boards;
-	}
+//	@GetMapping("/boards/{username}")
+//	public List<BoardDto> getBoardListByUserName(@PathVariable("unsername") String username) {
+//		List<BoardDto> boards = boardService.selectByUserName(username);
+//		return boards;
+//	}
 
 	@GetMapping("/boards/{bno}")
-	public BoardDto getBoardByBno(@PathVariable("bno") Long bno) {
-		BoardDto board = boardService.selectByBno(bno);
+	public BoardDto getBoardByBno(@PathVariable("bno") String bno) {
+		log.info("@@@@@GetboardbyBno");
+		BoardDto board = boardService.selectByBno(Long.parseLong(bno));
 		return board;
 	}
 

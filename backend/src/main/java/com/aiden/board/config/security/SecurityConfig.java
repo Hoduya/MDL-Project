@@ -46,7 +46,7 @@ public class SecurityConfig {
 			// 세션을 사용하지 않으므로 STATELESS 설정
         	.sessionManagement(sessionManagement ->
         		sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-        
+		
         http
         	.addFilterBefore(new JwtFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class); 
 

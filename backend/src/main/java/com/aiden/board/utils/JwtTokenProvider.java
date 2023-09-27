@@ -69,7 +69,9 @@ public class JwtTokenProvider {
     // Request header에서 token 꺼내옴
     public String resolveToken(HttpServletRequest request) {
         String token = request.getHeader("Authorization");
-
+        
+        System.out.println(token);
+        
         // 가져온 Authorization Header 가 문자열이고, Bearer 로 시작해야 가져옴
         if (StringUtils.hasText(token) && token.startsWith("Bearer ")) {
             return token.substring(7);

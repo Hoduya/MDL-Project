@@ -79,6 +79,8 @@ export default class FetchRequest {
     const fetchOptions: any = { method, headers }
     if (data !== undefined) fetchOptions.body = JSON.stringify(data)
 
+    console.log(fetchOptions)
+    
     return fetch(finalUrl, fetchOptions)
   }
 
@@ -122,8 +124,7 @@ export default class FetchRequest {
   }
 
   setAuthorizationHeader(token: string) {
-    console.log(token);
-    this.options.headers.authorization = `Bearer ${token}`
+    this.options.headers.Authorization = `Bearer ${token}`;
   }
 
   deleteAuthorizationHeader() {

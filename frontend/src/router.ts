@@ -1,15 +1,6 @@
-import { createRouter, createWebHashHistory, createWebHistory, RouteParams } from 'vue-router'
+import { createRouter, createWebHistory, RouteParams } from 'vue-router'
 
 import Home from './pages/Home.vue'
-
-export type AppRouteNames =
-  | 'global-feed'
-  | 'feed'
-  | 'login'
-  | 'register'
-  | 'create-board'
-  | 'profile'
-  | 'board'
 
 export const router = createRouter({
   history: createWebHistory(),
@@ -51,6 +42,15 @@ export const router = createRouter({
     }
   ],
 })
+
+export type AppRouteNames =
+  | 'global-feed'
+  | 'feed'
+  | 'login'
+  | 'register'
+  | 'create-board'
+  | 'profile'
+  | 'board'
 
 export async function routerPush(
   name: AppRouteNames,
