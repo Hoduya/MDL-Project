@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,10 +38,21 @@ public class BoardController {
 	private final BoardService boardService;
 
 	@GetMapping("/boards")
-	public Map<String, Object> getBoardList(@RequestParam int offset, @RequestParam(defaultValue = "10") int limit) {
-		List<BoardDto> boards = boardService.selectBoards(offset, limit);
-		Integer count = boardService.selectCount();
-
+	public Map<String, Object> getBoardList(@RequestParam(value="author", required=false) String username, 
+											@RequestParam int offset, 
+											@RequestParam(defaultValue = "10") int limit) {
+		List<BoardDto> boards;
+		Integer count;
+		
+		if (username == null) {
+			boards = boardService.selectBoards(offset, limit);
+			count = boardService.selectCount();
+		} else {
+			boards = boardService.selectByUserName(username, offset, limit);
+			count = boardService.selectCountByUserName(username);
+			log.info(Integer.toString(count));
+		}
+		
 		Map<String, Object> response = new HashMap<>();
 		response.put("boards", boards);
 		response.put("boardsCount", count);
@@ -48,15 +60,9 @@ public class BoardController {
 		return response;
 	}
 
-//	@GetMapping("/boards/{username}")
-//	public List<BoardDto> getBoardListByUserName(@PathVariable("unsername") String username) {
-//		List<BoardDto> boards = boardService.selectByUserName(username);
-//		return boards;
-//	}
 
 	@GetMapping("/boards/{bno}")
 	public BoardDto getBoardByBno(@PathVariable("bno") String bno) {
-		log.info("@@@@@GetboardbyBno");
 		BoardDto board = boardService.selectByBno(Long.parseLong(bno));
 		return board;
 	}
@@ -70,10 +76,20 @@ public class BoardController {
 		BoardDto result = boardService.selectByBno(bno);
 		return result;
 	}
+	
+	@PutMapping("/boards/{bno}")
+	public BoardDto updateBoard(@PathVariable("bno") String bno, @RequestBody BoardDto board) {
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		board.setRegDate(new Date());
+		board.setWriterName(username);
+		boardService.updateByBoard(bno, board);
+		BoardDto result = boardService.selectByBno(Long.valueOf(bno));
+		return result;
+	}
 
-	@DeleteMapping("/boards")
-	public void deleteBoard(@RequestParam("id") String id) {
-		log.info("Delte: Delete a Board {id}", id);
-		int result = boardService.deleteBoard(id);
+	@DeleteMapping("/boards/{bno}")
+	public void deleteBoard(@PathVariable("bno") String bno) {
+		log.info("Delte: Delete a Board {bno}", bno);
+		int result = boardService.deleteBoard(bno);
 	}
 }

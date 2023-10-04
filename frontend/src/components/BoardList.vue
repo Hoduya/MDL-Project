@@ -1,10 +1,12 @@
 <template>
+  
   <BoardPreview
+    class="mt-5"
     :board="board"
     v-for="(board, index) in boards"
     :key="index"
     @update="(newBoard) => updateBoard(index, newBoard)" />
-  <div class="article-preview" v-if="boards.length === 0">
+  <div v-if="boards.length === 0">
     게시글이 없습니다.
   </div>
   <BoardPagination

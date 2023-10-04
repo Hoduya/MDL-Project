@@ -31,14 +31,24 @@ export const router = createRouter({
       component: () => import('./pages/EditBoard.vue')
     },
     {
+      name: 'edit-board',
+      path: '/edit-board/:slug',
+      component: () => import('./pages/EditBoard.vue')
+    },
+    {
       name: 'profile',
-      path: '/:username',
+      path: '/profile/:username',
       component: () => import('./pages/Profile.vue'),
     },
     {
       name: 'board',
       path: '/board/:slug',
       component: () => import('./pages/Board.vue')
+    },
+    {
+      name: 'settings',
+      path: '/settings',
+      component: () => import('./pages/Settings.vue')
     }
   ],
 })
@@ -49,8 +59,10 @@ export type AppRouteNames =
   | 'login'
   | 'register'
   | 'create-board'
+  | 'edit-board'
   | 'profile'
   | 'board'
+  | 'settings'
 
 export async function routerPush(
   name: AppRouteNames,

@@ -3,6 +3,7 @@ package com.aiden.board.config.security;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -28,20 +29,22 @@ public class SecurityConfig {
 	
     private final JwtTokenProvider jwtTokenProvider;
 	
-	private static final String[] PERMIT_URL_ARRAY = { 
-			"/v3/api-docs/**", 
-			"/swagger-ui/**", 
+	private static final String[] PERMIT_ALL_URLS = { 
 			"/api/join",
 			"/api/login",
-			"/api/boards"
 	};
-
+	
+	private static final String[] PERMIT_GET_URLS = {  
+			"/swagger-ui/**", 
+			"/api/boards/**"
+	};
 	@Bean
 	protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.csrf(AbstractHttpConfigurer::disable);
 		http.authorizeHttpRequests(authorize -> 
 			authorize
-			.requestMatchers(PERMIT_URL_ARRAY).permitAll()
+			.requestMatchers(HttpMethod.GET, PERMIT_GET_URLS).permitAll()
+			.requestMatchers(PERMIT_ALL_URLS).permitAll()
 			.anyRequest().authenticated())
 			// 세션을 사용하지 않으므로 STATELESS 설정
         	.sessionManagement(sessionManagement ->

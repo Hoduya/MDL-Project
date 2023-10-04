@@ -1,11 +1,5 @@
 <template>
-  <div class="banner">
-    <div class="container">
-      <h1>{{ board?.title }}</h1>
-    </div>
-  </div>
-
-  <div class="container page">
+  <!-- <div class="container page">
     <div class="row article-content">
       <BoardContent :board="board" />
     </div>
@@ -26,28 +20,63 @@
         </suspense>
       </div>
     </div>
+  </div> -->
+
+  <div class="container mt-5">
+    <div class="row">
+      <div class="col-lg-">
+        <!-- Post content-->
+        <article>
+          <!-- Post header-->
+          <header class="mb-3">
+            <!-- Post title-->
+            <h1 class="fw-bolder mb-1">{{ board.title }}</h1>
+            <!-- Post meta content-->
+            <div class="d-flex align-items-center mt-4">
+              <BoardMeta :board="board" class="me-3 fst-italic" />
+              <AppLink name='edit-board' class="btn btn-success me-2" v-if="showEdit">
+                글 수정
+              </AppLink>
+              <button class="btn btn-danger" v-if="showEdit" v-on:click="onDelete">
+                글 삭제
+              </button>
+            </div>
+          </header>
+          <hr>
+          <section class="mb-5">
+            <p class="fs-5 mb-4">{{ board.content }}</p>
+          </section>
+        </article>
+    </div>
+  </div>
   </div>
 </template>
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { getBoardBySlug } from '@/services/board/getBoard'
-import BoardContent from './BoardContent.vue'
+import AppLink from './AppLink.vue';
+import BoardMeta from './BoardMeta.vue';
+import { userStore } from '@/store/user';
+import { deleteBoard } from '@/services/board/deleteBoard'
+import { routerPush } from '@/router';
 
-interface Board {
-  bno: string
-  id: string
-  writerName: string
-  title: string
-  content: string
-  regDate: string
-  updateDate: string
-}
+const userStroe = userStore()
 
 const route = useRoute()
+
 const slug = route.params.slug as string
 
 const board = ref<Board>(await getBoardBySlug(slug))
+
+const showEdit = computed(
+  () => userStroe.user?.name === board.value.writerName
+)
+
+const onDelete = async () => {
+  await deleteBoard(slug)
+  routerPush('global-feed')
+}
 
 const updateBoard = (newBoard: Board) => {
   board.value = newBoard

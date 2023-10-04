@@ -10,11 +10,12 @@ import com.aiden.board.dto.BoardDto;
 public interface BoardMapper {
 
 	public List<BoardDto> selectBoards(int offset, int limit);
-	public List<BoardDto> selectByUserName(String username);
+	public List<BoardDto> selectByUserName(String username, int offset, int limit);
 	public Integer selectCount();
-	public Integer selectCount(String username);
+	public Integer selectCountByUserName(String username);
 	public BoardDto selectByBno(Long bno);
 	public Long insertBoard(BoardDto board);
-	public Integer deleteBoard(String id);
+	public Integer updateBoard(String bno, BoardDto board);
+	public Integer deleteBoard(String bno);
 }
 

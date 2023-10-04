@@ -8,7 +8,7 @@
                 <EditBoardForm />
               </template>
               <template #fallback>
-                <div class="row article-content">Loading article...</div>
+                <div class="row article-content">로딩중...</div>
               </template>
             </suspense>
           </div>

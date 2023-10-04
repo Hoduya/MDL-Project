@@ -1,21 +1,27 @@
 <template>
   <header class="p-3 text-bg-dark">
     <div class="container">
-      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-        <AppLink class="navbar-brand me-lg-auto" name="global-feed"> 기업IT개발1팀 </AppLink>
-        <!-- <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-          <li class="nav-item" v-for="link in enabledNavLinks" :key="link.name">
-            <AppLink
-              class="nav-link px-2 text-white"
-              active-class="active"
-              :name="link.name"
-              :params="link.params">
-              <i v-if="link.icon" :class="link.icon" /> {{ link.title }}
-            </AppLink>
-          </li>
-        </ul> -->
+      <div class="row align-items-center">
+        <div class="col-auto">
+          <AppLink class="navbar-brand fw-bold" style="font-size: 1.5rem" name="global-feed"> 기업IT개발1팀 </AppLink>
+        </div>
+        <div class="col-auto">
+          <ul class="nav mb-2 justify-content-center mb-md-0">
+            <li class="nav-item" v-for="link in enabledNavLinks" :key="link.name">
+              <AppLink
+                class="nav-link px-2 text-white"
+                active-class="active"
+                :name="link.name"
+                :params="link.params"
+                style="font-weight: 300;"> 
+                <i v-if="link.icon" :class="link.icon" /> {{ link.title }}
+              </AppLink>
+            </li>
+          </ul>
+        </div>
+        <div class="col"></div>
+        <div class="col-auto text-end">
 
-        <div class="text-end">
           <template v-if="displayStatus === 'guest'">
             <AppLink :name="loginLink.name" class="btn btn-outline-light me-2">
               {{ loginLink.title }}
@@ -73,14 +79,14 @@ const username = computed(() => store.user?.name)
 const userProfileUrl = computed(() => require("/src/assets/defaultProfile.png"))
 const displayStatus = computed(() => (username.value ? 'authorized' : 'guest'))
 
-// const navLinks = computed<NavLink[]>(() => [
-//   {
-//     name: 'create-board',
-//     title: '글쓰기',
-//     display: 'authorized',
-//     icon: '',
-//   },
-// ])
+const navLinks = computed<NavLink[]>(() => [
+  {
+    name: 'create-board',
+    title: '글쓰기',
+    display: 'authorized',
+    icon: '',
+  },
+])
 
 const loginLink: NavLink = {
   name: 'login',
@@ -102,9 +108,9 @@ const profileLink = computed<NavLink>(() => {
   }
 })
 
-// const enabledNavLinks = computed(() =>
-//   navLinks.value.filter(
-//     (l) => l.display === 'all' || l.display === displayStatus.value
-//   )
-// )
+const enabledNavLinks = computed(() =>
+  navLinks.value.filter(
+    (l) => l.display === 'all' || l.display === displayStatus.value
+  )
+)
 </script>

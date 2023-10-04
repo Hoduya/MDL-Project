@@ -29,8 +29,8 @@ public class BoardService {
 		return boards;
 	}
 	
-	public List<BoardDto> selectByUserName(String username) {
-		List<BoardDto> boards = boardMapper.selectByUserName(username);
+	public List<BoardDto> selectByUserName(String username, int offset, int limit) {
+		List<BoardDto> boards = boardMapper.selectByUserName(username, offset, limit);
 		return boards;
 	}
 	
@@ -40,7 +40,8 @@ public class BoardService {
 	}
 	
 	public Integer selectCountByUserName(String username) {
-		Integer count = boardMapper.selectCount(username);
+		Integer count = boardMapper.selectCountByUserName(username);
+		log.info(Integer.toString(count));
 		return count;
 	}
 	
@@ -53,8 +54,13 @@ public class BoardService {
 		boardMapper.insertBoard(board);
 		return board.getBno();
 	}
+	
+	public Integer updateByBoard(String bno, BoardDto board) {
+		return boardMapper.updateBoard(bno, board);
+		
+	}
 
-	public Integer deleteBoard(String id) {
-		return boardMapper.deleteBoard(id);
+	public Integer deleteBoard(String bno) {
+		return boardMapper.deleteBoard(bno);
 	}
 }
