@@ -41,7 +41,7 @@
 	</select>
 	
 	<select resultType="com.aiden.board.dto.BoardDto" id="selectByBno">
-		select  bno, writer_name, title, content, regDate, updateDate
+		select bno, writer_name, title, content, regDate, updateDate
 		from board 
 		where bno=#{bno}
 		order BY regDate DESC	

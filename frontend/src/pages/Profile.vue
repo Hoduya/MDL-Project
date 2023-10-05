@@ -28,8 +28,6 @@
 import BoardNavigation from '@/components/BoardNavigation.vue';
 import ProfileHeader from '../components/ProfileHeader.vue'
 import BoardList from '@/components/BoardList.vue';
-// import ArticleNavigation from '../components/ArticleNavigation.vue'
-// import ArticleList from '../components/ArticleList.vue'
 
 </script>
 

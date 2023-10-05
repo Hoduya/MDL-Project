@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="board-container">
     <div class="feed-toggle">
       <BoardNavigation useGlobalFeed useMyFeed />
     </div>
@@ -20,3 +20,10 @@
 import BoardNavigation from '../components/BoardNavigation.vue'
 import BoardList from '../components/BoardList.vue'
 </script>
+
+<style scoped>
+  .board-container {
+    max-width: 954px;
+    margin: 0 auto; 
+  }
+</style>

@@ -20,3 +20,9 @@ const props = withDefaults(defineProps<Props>(), {
 
 const attrs = useAttrs()
 </script>
+
+<style scoped>
+a {
+  text-decoration: none;
+}
+</style>

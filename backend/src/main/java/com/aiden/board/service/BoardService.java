@@ -57,7 +57,6 @@ public class BoardService {
 	
 	public Integer updateByBoard(String bno, BoardDto board) {
 		return boardMapper.updateBoard(bno, board);
-		
 	}
 
 	public Integer deleteBoard(String bno) {

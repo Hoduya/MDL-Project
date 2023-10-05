@@ -2,14 +2,14 @@
   <div class="d-flex align-items-center mb-3">
     <AppLink
       name="profile"
-      class="text-body "
+      class="text-body"
       :params="{ username: board.writerName }">
       <img src="../assets/defaultProfile.png" alt="" class="rounded-circle me-2" style="width: 45px; height: 45px;">
     </AppLink>
     <div>
       <AppLink
         name="profile"
-        class="text-body "
+        class="text-body"
         :params="{ username: board.writerName }">
         <h5 class="mb-1">
           {{ board.writerName }}

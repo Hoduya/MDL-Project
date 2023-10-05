@@ -47,7 +47,7 @@
                 <li>
                   <hr class="dropdown-divider">
                 </li>
-                <li><a class="dropdown-item text-danger fw-bold" href="#">로그아웃</a></li>
+                <li><button class="dropdown-item text-danger fw-bold" @click="onLogout">로그아웃</button></li>
               </ul>
             </div>
           </template>
@@ -59,9 +59,9 @@
 
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import AppLink from './AppLink.vue'
-import { AppRouteNames } from '../router'
+import { AppRouteNames, router, routerPush } from '../router'
 import { RouteParams } from 'vue-router'
 import { userStore } from '../store/user'
 
@@ -113,4 +113,9 @@ const enabledNavLinks = computed(() =>
     (l) => l.display === 'all' || l.display === displayStatus.value
   )
 )
+
+const onLogout = async () => {
+  store.updateUser(null)
+  await routerPush("global-feed")
+}
 </script>

@@ -25,6 +25,7 @@ CREATE TABLE `comment` (
 @NoArgsConstructor
 @AllArgsConstructor
 public class CommentDto {
+	private Long commentId;
 	private Long bno;
 	private String content;
 	private String username;
