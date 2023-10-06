@@ -29,4 +29,11 @@ public class CommentService {
 		log.info(comment.getCommentId().toString());
 		return comment;
 	}
+	
+	public void deleteComment(Long bno, Long commentId) throws Exception {
+		Integer result = commentMapper.deleteComment(bno, commentId);
+		if (result == 0) {
+			throw new Exception("댓글 삭제 오류");
+		}
+	}
 }

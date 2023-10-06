@@ -11,9 +11,9 @@
         </AppLink>
       </li>
     </ul>
+    <BoardSearchBar />
   </nav>
 </template>
-
 
 
 <script lang="ts" setup>
@@ -24,6 +24,7 @@ import { userStore } from '../store/user'
 import { useBoards } from '../composable/useBoards'
 
 import AppLink from './AppLink.vue'
+import BoardSearchBar from './BoardSearchBar.vue'
 
 interface Props {
   useGlobalFeed?: boolean
@@ -73,4 +74,3 @@ const allLinks = computed<NavLink[]>(() => [
 ])
 const links = computed(() => allLinks.value.filter((link) => link.show))
 </script>
-  

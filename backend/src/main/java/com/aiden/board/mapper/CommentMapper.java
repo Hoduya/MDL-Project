@@ -10,4 +10,5 @@ import com.aiden.board.dto.CommentDto;
 public interface CommentMapper {
 	public List<CommentDto> selectCommentsByBno(Long Bno);
 	public Integer insertComment(CommentDto comment);
+	public Integer deleteComment(Long bno, Long commentId);
 }

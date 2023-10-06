@@ -9,4 +9,3 @@ export const request = new FetchRequest({
     'Content-Type': 'application/json',
   },
 })
-

@@ -1,31 +1,33 @@
 <template>
-  <div class="card">
-    <div class="card-block">
-      <p class="card-text">
-        {{ comment.content }}
-      </p>
+  <div class="mt-2 border">
+  <div class="d-flex flex-row p-1 align-items-center">
+    <div class="w-10">
+      <div class="d-flex align-items-center">
+        <div class="d-flex flex-row align-items-center">
+          <span class="fs-5 fw-bolder">
+            <AppLink
+              name="profile"
+              :params="{ username: comment.username }"
+              class="me-2 text-body">
+              {{ comment.username }}
+            </AppLink>
+          </span>
+        </div>
+      </div>
     </div>
-    <div class="card-footer">
-      <AppLink
-        name="profile"
-        :params="{ username: comment.username }"
-        class="comment-author">
-        <img src="../assets/defaultProfile.png" alt="" class="rounded-circle me-2" style="width: 45px; height: 45px" />
-      </AppLink>
-      <AppLink
-        name="profile"
-        :params="{ username: comment.username }"
-        class="me-2">
-        {{ comment.username }}
-      </AppLink>
-      <span class="date-posted">
-        {{ new Date(comment.regDate).toLocaleString() }}
-      </span>
-      <span class="mod-options" v-if="canModify">
-        <i class="ion-trash-a" @click="emit('delete')">삭제</i>
-      </span>
-    </div>
+    <button class="btn me-2 ml-auto btn-sm btn-outline-danger" @click="emit('delete')" v-if="canModify">
+      삭제
+    </button>
+    <samll> {{ new Date(comment.regDate).toLocaleString() }}</samll>
   </div>
+  <p class="text-justify comment-text mt-2">
+    {{ comment.content }}
+  </p>
+</div>
+
+
+
+
 </template>
 <script lang="ts" setup>
 import { computed } from 'vue'

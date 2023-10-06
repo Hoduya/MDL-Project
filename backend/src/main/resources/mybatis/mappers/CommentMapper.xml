@@ -16,4 +16,8 @@
 		values(#{bno}, #{content}, #{username}, NOW())
 	</insert>
 	
+	<delete id="deleteComment">
+		delete from comment where comment_id=#{commentId}
+	</delete>
+	
 </mapper>

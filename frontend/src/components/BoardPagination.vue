@@ -3,14 +3,12 @@
     <li
       v-for="pageNumber in pagesCount"
       :key="pageNumber"
-      :class="['page-item', { active: isActive(pageNumber) }]"
-    >
+      :class="['page-item', { active: isActive(pageNumber) }]">
       <a
         :aria-label="`Go to page ${pageNumber}`"
         class="page-link"
         href="javascript:"
-        @click="onPageChange(pageNumber)"
-      >
+        @click="onPageChange(pageNumber)">
         {{ pageNumber }}
       </a>
     </li>

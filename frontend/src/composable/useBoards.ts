@@ -1,11 +1,12 @@
 import { ref, watch, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import {
-  getBoards,
+  getBoardss,
   getBoardsByFeed,
   getBoardsByAuthor,
 } from '../services/board/getBoards'
 import { userStore } from '../store/user'
+import SearchOption from '@/utils/searchOption'
 
 export function useBoards() {
   const store = userStore()
@@ -17,7 +18,7 @@ export function useBoards() {
     let responsePromise: null | Promise<BoardsResponse> = null
 
     if (routeName.value === 'global-feed') {
-      responsePromise = getBoards(page.value)
+      responsePromise = getBoardss(page.value)
     }
 
     if (routeName.value === 'feed' && store.user) {
@@ -42,10 +43,6 @@ export function useBoards() {
   }
   watch(page, fetchBoards)
 
-  const updateBoard = (index: number, board: Board): void => {
-    boards.value[index] = board
-  }
-
   const { username, routeName } = useMetaChange(fetchBoards)
 
   return {
@@ -55,7 +52,6 @@ export function useBoards() {
     fetchBoards,
     boards,
     boardsCount,
-    updateBoard,
   }
 }
 

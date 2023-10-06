@@ -1,11 +1,9 @@
 <template>
-  
   <BoardPreview
     class="mt-5"
     :board="board"
     v-for="(board, index) in boards"
-    :key="index"
-    @update="(newBoard) => updateBoard(index, newBoard)" />
+    :key="index" />
   <div v-if="boards.length === 0">
     게시글이 없습니다.
   </div>
@@ -33,7 +31,6 @@ const {
   changePage,
   fetchBoards,
   boards,
-  updateBoard,
 } = useBoards()
 
 await fetchBoards()

@@ -1,27 +1,4 @@
 <template>
-  <!-- <div class="container page">
-    <div class="row article-content">
-      <BoardContent :board="board" />
-    </div>
-
-    <hr />
-
-    <div class="row">
-      <div class="col-xs-12 col-md-8 offset-md-2">
-        <suspense>
-          <template #default>
-            <ArticleComments />
-          </template>
-          <template #fallback>
-            <div class="card">
-              <div class="card-block">Loading comments...</div>
-            </div>
-          </template>
-        </suspense>
-      </div>
-    </div>
-  </div> -->
-
   <div class="container mt-5">
     <div class="row">
       <div class="col-lg-">
@@ -43,12 +20,13 @@
             </div>
           </header>
           <hr>
-          <section class="mb-5">
+          <section class="p-2">
             <p class="fs-5 mb-4">{{ board.content }}</p>
           </section>
         </article>
       </div>
     </div>
+
     <div class="row">
       <div class="col-xs-12 col-md-10 offset-md-1">
         <suspense>
@@ -91,9 +69,5 @@ const showEdit = computed(
 const onDelete = async () => {
   await deleteBoard(slug)
   routerPush('global-feed')
-}
-
-const updateBoard = (newBoard: Board) => {
-  board.value = newBoard
 }
 </script>

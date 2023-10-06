@@ -64,5 +64,4 @@ public class UserService {
 	public UserDto findByUserId(String userId) {
 		return userMapper.findByUserId(userId).orElseThrow(() -> new UserNotFoundException("존재하지 않는 계정입니다."));
 	}
-	
 }

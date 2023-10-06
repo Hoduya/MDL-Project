@@ -69,7 +69,7 @@ public class UserController {
             responseEntity = ResponseEntity.status(HttpStatus.OK).headers(httpHeaders).body(response);
         } catch (LoginFailedException exception) {
             BaseResponse response = responseService.getBaseResponse(false, exception.getMessage());
-            responseEntity = ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            responseEntity = ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
         }
 
         return responseEntity;
@@ -88,7 +88,7 @@ public class UserController {
         } catch (UserNotFoundException exception) {
             BaseResponse response = responseService.getBaseResponse(false, exception.getMessage());
 
-            responseEntity = ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            responseEntity = ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
         }
 
         return responseEntity;
