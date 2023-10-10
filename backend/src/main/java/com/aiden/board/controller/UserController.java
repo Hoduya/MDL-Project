@@ -41,7 +41,7 @@ public class UserController {
             UserDto savedUser = userService.join(userDto);
             SingleDataResponse<UserDto> response = responseService.getSingleDataResponse(true, "회원가입 성공", savedUser);
             
-            responseEntity = ResponseEntity.status(HttpStatus.CREATED).body(response);
+            responseEntity = ResponseEntity.status(HttpStatus.CREATED).body(response);                                  
         } catch (DuplicatedUsernameException exception) {
             log.debug(exception.getMessage());
             BaseResponse response = responseService.getBaseResponse(false, exception.getMessage());
@@ -56,8 +56,8 @@ public class UserController {
     	ResponseEntity<BaseResponse> responseEntity = null;
         try {
             String token = userService.login(loginDto);
-            UserDto userDto = userService.findByUserId(loginDto.getId());
-            		
+            UserDto userDto = userService.findByUserEmail(loginDto.getEmail());
+            
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.add("Authorization", "Bearer " + token);
             
@@ -79,8 +79,8 @@ public class UserController {
     public ResponseEntity<BaseResponse> getCurrentUser(final Authentication authentication) {
         ResponseEntity<BaseResponse> responseEntity = null;
         try {
-            String userId = ((UserDto) authentication.getPrincipal()).getId();
-            UserDto findUser = userService.findByUserName(userId);
+            Long userId = ((UserDto) authentication.getPrincipal()).getUserId();
+            UserDto findUser = userService.findByUserId(userId);
 
             SingleDataResponse<UserDto> response = responseService.getSingleDataResponse(true, "조회 성공", findUser);
             
@@ -93,4 +93,21 @@ public class UserController {
 
         return responseEntity;
     }
+    
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<BaseResponse> getUser(@PathVariable(value="userId") Long userId, final Authentication authentication) {
+        ResponseEntity<BaseResponse> responseEntity = null;
+        try {
+        	UserDto findUser = userService.findByUserId(userId);
+            SingleDataResponse<UserDto> response = responseService.getSingleDataResponse(true, "조회 성공", findUser);
+            
+            responseEntity = ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (UserNotFoundException exception) {
+            BaseResponse response = responseService.getBaseResponse(false, exception.getMessage());
+
+            responseEntity = ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+        }
+
+        return responseEntity;
+    } 
 }

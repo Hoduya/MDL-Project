@@ -7,9 +7,9 @@
           <span class="fs-5 fw-bolder">
             <AppLink
               name="profile"
-              :params="{ username: comment.username }"
+              :params="{ username: comment.userId }"
               class="me-2 text-body">
-              {{ comment.username }}
+              {{ comment.userId }}
             </AppLink>
           </span>
         </div>
@@ -43,7 +43,7 @@ const props = defineProps<Props>()
 const store = userStore()
 
 const canModify = computed(
-  () => store.user?.name === props.comment.username
+  () => store.user?.userId === props.comment.userId
 )
 
 const emit = defineEmits<{

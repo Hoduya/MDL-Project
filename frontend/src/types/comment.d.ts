@@ -1,7 +1,7 @@
 declare interface Comment {
   commentId: string
-  bno: string
+  boardId: string
+  userId: string
   regDate: string
   content: string
-  username: string
 }

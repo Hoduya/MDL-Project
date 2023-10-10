@@ -8,7 +8,8 @@ import com.aiden.board.dto.UserDto;
 
 @Mapper
 public interface UserMapper {
-    Optional<UserDto> findByUserId(String userId);
+    Optional<UserDto> findByUserEmail(String email);
     Optional<UserDto> findByUserName(String username);
+    Optional<UserDto> findByUserId(Long userId);
     void save(UserDto userDto);
 }

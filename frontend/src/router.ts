@@ -37,7 +37,7 @@ export const router = createRouter({
     },
     {
       name: 'profile',
-      path: '/profile/:username',
+      path: '/profile/:userId',
       component: () => import('./pages/Profile.vue'),
     },
     {

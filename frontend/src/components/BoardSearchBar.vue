@@ -23,11 +23,10 @@ const route = useRoute()
 const router = useRouter()
 
 const selectedFilter = ref("title")
-const searchText = ref("searchText")
-
+const searchText = ref("")
 
 const onSearch = () => {
-  routerPush("profile", {"searchText":searchText.value}).then(()=>{
+  routerPush("profile", {userId: searchText.value}).then(()=>{
     console.log(route.params)
   })
 }

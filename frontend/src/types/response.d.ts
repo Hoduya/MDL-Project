@@ -14,7 +14,7 @@
   * => 해당 인터페이스는 JS 
   */
 
-declare interface UserResponse {
+declare interface CurrentUserResponse {
   data: {
     token: string
     user: User
@@ -27,6 +27,8 @@ declare interface BoardsResponse {
 }
 
 declare interface UserResponse {
-  user: User
+  success: string,
+  message: string,
+  data: User
 }
 

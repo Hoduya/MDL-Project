@@ -1,6 +1,6 @@
 <template>
   <img src="../assets/defaultProfile.png" alt="" class="rounded-circle me-2" style="width: 60px; height: 60px;">
-  <h4>{{ username }}</h4>
+  <h4>{{ userName }}</h4>
 
   <AppLink
     v-if="showEdit"
@@ -22,8 +22,11 @@ const route = useRoute()
 
 const store = userStore()
 
-const username = computed(() => route.params?.username as string)
+const userId = store.user?.userId || ''
 
-const showEdit = computed(() => store.user?.name === username.value)
+const showEdit = computed(() => store.user?.userId === userId)
+
+const userName = computed(() => store.user?.name)
+
 
 </script>

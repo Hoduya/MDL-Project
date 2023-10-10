@@ -63,7 +63,7 @@ const slug = route.params.slug as string
 const board = ref<Board>(await getBoardBySlug(slug))
 
 const showEdit = computed(
-  () => userStroe.user?.name === board.value.writerName
+  () => userStroe.user?.userId === board.value.userId
 )
 
 const onDelete = async () => {

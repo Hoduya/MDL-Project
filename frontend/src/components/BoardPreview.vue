@@ -4,7 +4,7 @@
     <div class="col-md-8">
       <AppLink
         name="board"
-        :params="{ slug: board.bno }"
+        :params="{ slug: board.boardId }"
         class="list-group-item list-group-item-action py-3 lh-sm">
         <h3>{{ board.title }}</h3>
         <p>{{ board.content }}</p>

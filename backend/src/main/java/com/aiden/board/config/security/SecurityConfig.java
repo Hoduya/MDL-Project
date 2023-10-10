@@ -36,7 +36,8 @@ public class SecurityConfig {
 	
 	private static final String[] PERMIT_GET_URLS = {  
 			"/swagger-ui/**", 
-			"/api/boards/**"
+			"/api/boards/**",
+			"/api/users/**"
 	};
 	@Bean
 	protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {

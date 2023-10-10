@@ -25,7 +25,7 @@ import { userStore } from '../store/user'
 import AppLink from './AppLink.vue'
 
 interface Props {
-  bno: string
+  boardId: string
 }
 
 interface Emits {
@@ -40,7 +40,7 @@ const store = userStore()
 const comment = ref('')
 
 const addComment = async () => {
-  const newComment = await postComment(props.bno, comment.value)
+  const newComment = await postComment(props.boardId, comment.value)
   emit('add-Comment', newComment)
   comment.value = ''
 }

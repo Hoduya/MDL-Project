@@ -28,10 +28,10 @@ export function useAuth() {
     loadding.value = false
   }
 
-  async function register(form: PostRegisterForm): Promise<void> {
+  async function register(form: PostRegisterForm): Promise<User | void> {
     loadding.value = true
     await postRegister(form)
-      .then((data) => (user.value = data))
+      .then(res => res)
       .catch((err) => {
         errors.value = err
       })

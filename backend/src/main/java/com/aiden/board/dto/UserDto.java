@@ -35,11 +35,12 @@ CREATE TABLE `user` (
 @AllArgsConstructor
 @Data
 public class UserDto implements UserDetails {
-    private String id;
+	private Long userId;
+    private String email;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     private String name;
-    private String role;
+    private Integer role;
     private Date regDate;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -57,7 +58,7 @@ public class UserDto implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.name;
+        return this.userId.toString();
     }
     
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

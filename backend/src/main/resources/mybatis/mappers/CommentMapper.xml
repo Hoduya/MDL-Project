@@ -4,20 +4,20 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.aiden.board.mapper.CommentMapper">
-    <select id="selectCommentsByBno" resultType="CommentDto">
-        SELECT comment_id, bno, content, username, regDate
-        FROM comment
-        WHERE bno = #{bno}
-        order BY regDate DESC	
+    <select id="selectCommentsByBoardId" resultType="CommentDto">
+        SELECT COMMENT_ID, BOARD_ID, CONTENT, USER_ID, REG_DATE
+        FROM TB_COMMENT
+        WHERE BOARD_ID = #{boardId}
+        ORDER BY BOARD_ID DESC	
     </select>
     
     <insert id="insertComment" parameterType="CommentDto" useGeneratedKeys="true" keyProperty="commentId">
-		insert into comment(bno, content, username, regDate)
-		values(#{bno}, #{content}, #{username}, NOW())
+		insert into TB_COMMENT(BOARD_ID, USER_ID, CONTENT, REG_DATE)
+		values(#{boardId}, #{userId}, #{content}, NOW())
 	</insert>
 	
 	<delete id="deleteComment">
-		delete from comment where comment_id=#{commentId}
+		delete from TB_COMMENT where COMMNET_ID=#{commentId}
 	</delete>
 	
 </mapper>

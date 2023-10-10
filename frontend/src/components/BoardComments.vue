@@ -15,14 +15,14 @@
   </div>
 
   <div class="mb-5">
-    <BoardCommentForm :bno="slug" @add-comment="addComment" />
+    <BoardCommentForm :boardId="slug" @add-comment="addComment" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { getCommentsByBno } from '@/services/comment/getComments'
+import { getCommentsByBoardId } from '@/services/comment/getComments'
 import { deleteComment } from '@/services/comment/postComment'
 import BoardCommentForm from './BoardCommentForm.vue'
 import BoardComment from './BoardComment.vue'
@@ -37,7 +37,7 @@ const delComment = async (commentId: string) => {
   comments.value = comments.value?.filter((c) => c.commentId !== commentId)
 }
 
-comments.value = await getCommentsByBno(slug)
+comments.value = await getCommentsByBoardId(slug)
 
 const addComment = (newComment: Comment) => {
   comments.value?.unshift(newComment)

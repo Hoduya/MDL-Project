@@ -19,8 +19,8 @@ public class CommentService {
 	
 	private final CommentMapper commentMapper;
 	
-	public List<CommentDto> selectCommentsByBno(Long bno) {
-		List<CommentDto> comments = commentMapper.selectCommentsByBno(bno);
+	public List<CommentDto> selectCommentsByBoardId(Long boardId) {
+		List<CommentDto> comments = commentMapper.selectCommentsByBoardId(boardId);
 		return comments;
 	}
 	
@@ -30,8 +30,8 @@ public class CommentService {
 		return comment;
 	}
 	
-	public void deleteComment(Long bno, Long commentId) throws Exception {
-		Integer result = commentMapper.deleteComment(bno, commentId);
+	public void deleteComment(Long boardId, Long commentId) throws Exception {
+		Integer result = commentMapper.deleteComment(boardId, commentId);
 		if (result == 0) {
 			throw new Exception("댓글 삭제 오류");
 		}

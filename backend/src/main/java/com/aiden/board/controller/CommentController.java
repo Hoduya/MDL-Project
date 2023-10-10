@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.aiden.board.dto.BoardDto;
 import com.aiden.board.dto.CommentDto;
+import com.aiden.board.dto.UserDto;
 import com.aiden.board.dto.response.BaseResponse;
 import com.aiden.board.service.CommentService;
 import com.aiden.board.service.ResponseService;
@@ -34,32 +36,32 @@ public class CommentController {
 	private final CommentService commentService;
     private final ResponseService responseService;
 
-	@GetMapping("/boards/{bno}/comments")
-	public List<CommentDto> getCommentsByBno(@PathVariable("bno") Long bno) {
-		List<CommentDto> comments = commentService.selectCommentsByBno(bno);
+	@GetMapping("/boards/{boardId}/comments")
+	public List<CommentDto> getCommentsByBno(@PathVariable("boardId") Long boardId) {
+		List<CommentDto> comments = commentService.selectCommentsByBoardId(boardId);
 		return comments;
 	}
 
-	@PostMapping("/boards/{bno}/comments")
-	public CommentDto addComment(@PathVariable("bno") Long bno, @RequestBody Map<String, String> body) {
+	@PostMapping("/boards/{boardId}/comments")
+	public CommentDto addComment(@PathVariable("boardId") Long boardId, @RequestBody Map<String, String> body, final Authentication authentication) {
 		String content = body.get("content");
 		CommentDto comment = new CommentDto();
-		String username = SecurityContextHolder.getContext().getAuthentication().getName();
-		comment.setBno(bno);
+        Long currentUserId = ((UserDto) authentication.getPrincipal()).getUserId();
+		comment.setBoardId(boardId);
 		comment.setContent(content);
-		comment.setUsername(username);
+		comment.setUserId(currentUserId);
 		
 		CommentDto result = commentService.insertComment(comment);
 		return result;
 	}
 	
-	@DeleteMapping("/boards/{bno}/comments/{commentId}")
+	@DeleteMapping("/boards/{boardId}/comments/{commentId}")
 	
-	public ResponseEntity<BaseResponse> deleteComment(@PathVariable("bno") Long bno, @PathVariable("commentId") Long commentId) {
+	public ResponseEntity<BaseResponse> deleteComment(@PathVariable("boardId") Long boardId, @PathVariable("commentId") Long commentId) {
     	ResponseEntity<BaseResponse> responseEntity = null;
         
 		try {
-			commentService.deleteComment(bno, commentId);
+			commentService.deleteComment(boardId, commentId);
 			
 			BaseResponse response = responseService.getBaseResponse(true, "Success");
             responseEntity = ResponseEntity.status(HttpStatus.OK).body(response);

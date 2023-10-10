@@ -42,7 +42,7 @@ const props = withDefaults(defineProps<Props>(), {
   useUserFeed: false,
 })
 
-const { username } = useBoards()
+const { userId } = useBoards()
 
 const store = userStore()
 
@@ -63,14 +63,11 @@ const allLinks = computed<NavLink[]>(() => [
   {
     routeName: 'feed',
     title: '나의 게시글',
+    routeParams: {
+      userId: 'userId'
+    },
     show: props.useMyFeed && store.user ? true : false,
   },
-  {
-    routeName: 'profile',
-    title: '게시글',
-    routeParams: { username: username.value },
-    show: props.useUserFeed,
-  }
 ])
 const links = computed(() => allLinks.value.filter((link) => link.show))
 </script>

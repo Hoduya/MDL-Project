@@ -5,19 +5,25 @@
 
 <mapper namespace="com.aiden.board.mapper.UserMapper">
     <select id="findByUserId" resultType="UserDto">
-        SELECT id, password, name, role, regDate
-        FROM user
-        WHERE id = #{id}
+        SELECT USER_ID, EMAIL, PASSWORD, NAME, ROLE, REG_DATE
+        FROM TB_USER
+        WHERE USER_ID = #{userId}
+    </select>
+    
+    <select id="findByUserEmail" resultType="UserDto">
+        SELECT USER_ID, EMAIL, PASSWORD, NAME, ROLE, REG_DATE
+        FROM TB_USER
+        WHERE EMAIL = #{email}
     </select>
     
     <select id="findByUserName" resultType="UserDto">
-        SELECT id, password, name, role, regDate
-        FROM user
-        WHERE name = #{name}
+        SELECT USER_ID, EMAIL, PASSWORD, NAME, ROLE, REG_DATE
+        FROM TB_USER
+        WHERE NAME = #{name}
     </select>
     
     <insert id="save" parameterType="UserDto">
-        INSERT INTO user (id, password, name, regDate)
-        VALUES ( #{id}, #{password}, #{name}, #{regDate} )
+        INSERT INTO TB_USER (EMAIL, PASSWORD, NAME, REG_DATE)
+        VALUES ( #{email}, #{password}, #{name}, #{regDate} )
     </insert>
 </mapper>

@@ -3,67 +3,56 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
         
-<!-- 
-`board`
-  `bno` bigint NOT NULL AUTO_INCREMENT COMMENT '게시글ID',
-  `id` varchar(45) NOT NULL COMMENT '작성자이메일',
-  `writer_name` varchar(45) NOT NULL COMMENT '작성자이름',
-  `title` varchar(45) NOT NULL COMMENT '제목',
-  `content` varchar(200) NOT NULL COMMENT '내용',
-  `regDate` datetime NOT NULL COMMENT '등록일자',
-  `updateDate` datetime DEFAULT NULL COMMENT '수정일자'
--->
 
 <mapper namespace="com.aiden.board.mapper.BoardMapper">
 	
 	<select resultType="com.aiden.board.dto.BoardDto" id="selectBoards">
-		select bno, writer_name, title, content, regDate, updateDate
-		from board
-		order BY regDate DESC
+		select BOARD_ID, USER_ID, TITLE, CONTENT, REG_DATE, UPDATE_DATE
+		from TB_BOARD
+		order BY BOARD_ID DESC
 		LIMIT #{limit} OFFSET #{offset};
 	</select>
 	
-	<select resultType="com.aiden.board.dto.BoardDto" id="selectByUserName">
-		select bno, writer_name, title, content, regDate, updateDate
-		from board 
-		where writer_name=#{username}
-		order BY regDate DESC
+	<select resultType="com.aiden.board.dto.BoardDto" id="selectByUserId">
+		select BOARD_ID, USER_ID, TITLE, CONTENT, REG_DATE, UPDATE_DATE
+		from TB_BOARD 
+		where USER_ID=#{userId}
+		order BY BOARD_ID DESC
 		LIMIT #{limit} OFFSET #{offset};
 	</select>
 
 	<select resultType="Integer" id="selectCount"> 
-		select count(*) from board
+		select count(*) from TB_BOARD
 	</select>
 	
-	<select resultType="Integer" id="selectCountByUserName"> 
-		select count(*) from board
-		where writer_name=#{username}
+	<select resultType="Integer" id="selectCountByUserId"> 
+		select count(*) from TB_BOARD
+		where USER_ID=#{userId}
 	</select>
 	
-	<select resultType="com.aiden.board.dto.BoardDto" id="selectByBno">
-		select bno, writer_name, title, content, regDate, updateDate
-		from board 
-		where bno=#{bno}
-		order BY regDate DESC	
+	<select resultType="com.aiden.board.dto.BoardDto" id="selectByBoardId">
+		select BOARD_ID, USER_ID, TITLE, CONTENT, REG_DATE, UPDATE_DATE
+		from TB_BOARD 
+		where BOARD_ID=#{boardId}
 	</select>
 	
-	<insert id="insertBoard" parameterType="BoardDto" useGeneratedKeys="true" keyProperty="bno">
-		insert into board(writer_name, title, content, regDate)
-		values(#{writerName}, #{title}, #{content}, NOW())
+	<insert id="insertBoard" parameterType="BoardDto" useGeneratedKeys="true" keyProperty="boardId">
+		insert into TB_BOARD(USER_ID, TITLE, CONTENT, REG_DATE)
+		values(#{userId}, #{title}, #{content}, NOW())
 	</insert>
 	
-	<update id="updateBoard" parameterType="map">
-  		UPDATE board
+	<update id="updateBoard" parameterType="boardDto">
+  		UPDATE TB_BOARD
   		SET
-    		title = #{board.title},
-    		content = #{board.content},
-    		updateDate = NOW()
+    		TITLE = #{board.title},
+    		CONTENT = #{board.content},
+    		UPDATE_DATE = NOW()
   		WHERE
-    		bno = #{bno}
+    		BOARD_ID = #{boardId}
 	</update>
 
 	<delete id="deleteBoard">
-		delete from board where bno=#{bno}
+		delete from TB_BOARD where BOARD_ID=#{boardId}
 	</delete>
 	
 </mapper>

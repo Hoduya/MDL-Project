@@ -17,7 +17,7 @@
           <form @submit.prevent="login">
             <fieldset class="form-group">
               <input
-                v-model="form.id"
+                v-model="form.email"
                 class="form-control form-control-lg"
                 type="email"
                 placeholder="이메일"
@@ -52,7 +52,7 @@ import { userStore } from '../store/user'
 import { useAuth } from '../composable/useAuth'
 
 const form = reactive<PostLoginForm>({
-  'id': '',
+  'email': '',
   'password': '',
 })
 
@@ -63,9 +63,17 @@ const store = userStore()
 const login = async () => {
   await postLogin(form)
   if (user.value) {
+    console.log(user);
     store.updateUser(user.value)
     routerPush("global-feed");
   }
 }
+
+/*
+
+  우측 상단 프로필 부분 오류
+
+*/
+
 </script>
 

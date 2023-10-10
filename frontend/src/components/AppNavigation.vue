@@ -76,6 +76,7 @@ interface NavLink {
 const store = userStore()
 
 const username = computed(() => store.user?.name)
+const userId = computed(() => store.user?.userId)
 const userProfileUrl = computed(() => require("/src/assets/defaultProfile.png"))
 const displayStatus = computed(() => (username.value ? 'authorized' : 'guest'))
 
@@ -104,7 +105,7 @@ const profileLink = computed<NavLink>(() => {
   return {
     name: 'profile',
     display: 'authorized',
-    params: { username: username.value || 'as' },
+    params: { userId: userId.value || 'as' },
   }
 })
 

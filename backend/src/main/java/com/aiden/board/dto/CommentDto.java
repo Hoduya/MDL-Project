@@ -26,8 +26,8 @@ CREATE TABLE `comment` (
 @AllArgsConstructor
 public class CommentDto {
 	private Long commentId;
-	private Long bno;
+	private Long userId;
+	private Long boardId;
 	private String content;
-	private String username;
 	private Date regDate;
 }

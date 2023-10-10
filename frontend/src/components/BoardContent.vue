@@ -8,9 +8,5 @@ interface Props {
   board: Board
 }
 
-onMounted(() => {
-  console.log(prop.board.content)
-})
-
 const prop = defineProps<Props>()
 </script>

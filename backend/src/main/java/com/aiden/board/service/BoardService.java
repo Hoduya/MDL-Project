@@ -29,8 +29,8 @@ public class BoardService {
 		return boards;
 	}
 	
-	public List<BoardDto> selectByUserName(String username, int offset, int limit) {
-		List<BoardDto> boards = boardMapper.selectByUserName(username, offset, limit);
+	public List<BoardDto> selectByUserId(Long userId, int offset, int limit) {
+		List<BoardDto> boards = boardMapper.selectByUserId(userId, offset, limit);
 		return boards;
 	}
 	
@@ -39,27 +39,27 @@ public class BoardService {
 		return count;
 	}
 	
-	public Integer selectCountByUserName(String username) {
-		Integer count = boardMapper.selectCountByUserName(username);
+	public Integer selectCountByUserId(Long userId) {
+		Integer count = boardMapper.selectCountByUserId(userId);
 		log.info(Integer.toString(count));
 		return count;
 	}
 	
-	public BoardDto selectByBno(Long bno) {
-		BoardDto board = boardMapper.selectByBno(bno);
+	public BoardDto selectByBoardId(Long boardId) {
+		BoardDto board = boardMapper.selectByBoardId(boardId);
 		return board;
 	}
 	
 	public Long insertBoard(BoardDto board) {
 		boardMapper.insertBoard(board);
-		return board.getBno();
+		return board.getBoardId();
 	}
 	
-	public Integer updateByBoard(String bno, BoardDto board) {
-		return boardMapper.updateBoard(bno, board);
+	public Integer updateByBoardId(Long boardId, BoardDto board) {
+		return boardMapper.updateBoard(boardId, board);
 	}
 
-	public Integer deleteBoard(String bno) {
-		return boardMapper.deleteBoard(bno);
+	public Integer deleteBoard(Long boardId) {
+		return boardMapper.deleteBoard(boardId);
 	}
 }

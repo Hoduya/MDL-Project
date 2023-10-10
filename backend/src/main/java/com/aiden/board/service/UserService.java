@@ -29,7 +29,7 @@ public class UserService {
 
 	@Transactional
 	public UserDto join(UserDto userDto) {
-		if (userMapper.findByUserId(userDto.getId()).isPresent()) {
+		if (userMapper.findByUserEmail(userDto.getEmail()).isPresent()) {
 			throw new DuplicatedUsernameException("이미 가입된 이메일입니다");
 		}
 		
@@ -39,29 +39,32 @@ public class UserService {
 		
 		userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
 		userDto.setRegDate(new Date());
-		userDto.setRole("USER");
 		
 		userMapper.save(userDto);
-		
-		return userMapper.findByUserName(userDto.getUsername()).get();
+			
+		return userMapper.findByUserEmail(userDto.getEmail()).get();
 	}
 
 	public String login(LoginDto loginDto) {
-		UserDto userDto = userMapper.findByUserId(loginDto.getId())
-				.orElseThrow(() -> new LoginFailedException("존재하지 않는 계정입니다"));
+		UserDto userDto = userMapper.findByUserEmail(loginDto.getEmail())
+				.orElseThrow(() -> new LoginFailedException("올바르지 않은 계정정보(email)입니다."));
 
 		if (!passwordEncoder.matches(loginDto.getPassword(), userDto.getPassword())) {
-			throw new LoginFailedException("존재하지 않는 계정입니다");
+			throw new LoginFailedException("올바르지 않은 계정정보입니다.");
 		}
-
-		return jwtTokenProvider.createToken(userDto.getId(), Collections.singletonList(userDto.getRole()));
-	}
-
-	public UserDto findByUserName(String username) {
-		return userMapper.findByUserName(username).orElseThrow(() -> new UserNotFoundException("존재하지 않는 계정입니다."));
+				
+		return jwtTokenProvider.createToken(userDto.getUserId(), Collections.singletonList(userDto.getRole()));
 	}
 	
-	public UserDto findByUserId(String userId) {
+	public UserDto findByUserId(Long userId) {
 		return userMapper.findByUserId(userId).orElseThrow(() -> new UserNotFoundException("존재하지 않는 계정입니다."));
+	}
+
+	public UserDto findByUserEmail(String email) {
+		return userMapper.findByUserEmail(email).orElseThrow(() -> new UserNotFoundException("존재하지 않는 계정입니다."));
+	}
+	
+	public UserDto findByUserName(String username) {
+		return userMapper.findByUserName(username).orElseThrow(() -> new UserNotFoundException("존재하지 않는 이름입니다."));
 	}
 }

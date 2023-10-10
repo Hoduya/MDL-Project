@@ -22,11 +22,11 @@ export function useBoards() {
     }
 
     if (routeName.value === 'feed' && store.user) {
-      responsePromise = getBoardsByFeed(page.value)
+      responsePromise = getBoardsByAuthor(userId.value)
     }
 
-    if (routeName.value === 'profile' && username.value) {
-      responsePromise = getBoardsByAuthor(username.value, page.value)
+    if (routeName.value === 'profile' && userId.value) {
+      responsePromise = getBoardsByAuthor(userId.value, page.value)
     }
 
     if (responsePromise !== null) {
@@ -43,11 +43,11 @@ export function useBoards() {
   }
   watch(page, fetchBoards)
 
-  const { username, routeName } = useMetaChange(fetchBoards)
+  const { userId, routeName } = useMetaChange(fetchBoards)
 
   return {
     page,
-    username,
+    userId,
     changePage,
     fetchBoards,
     boards,
@@ -59,13 +59,13 @@ function useMetaChange(callbackFunc: () => void) {
   const route = useRoute()
 
   const routeName = computed(() => route.name)
-  const username = computed(() =>
-    typeof route.params.username === 'string' ? route.params.username : ''
+  const userId = computed(() =>
+    typeof route.params.userId === 'string' ? route.params.userId : ''
   )
 
-  watch([routeName, username], () => {
+  watch([routeName, userId], () => {
     callbackFunc()
   })
 
-  return { routeName, username }
+  return { routeName, userId }
 }

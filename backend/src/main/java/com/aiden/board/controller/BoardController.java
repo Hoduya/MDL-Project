@@ -38,18 +38,18 @@ public class BoardController {
 	private final BoardService boardService;
 
 	@GetMapping("/boards")
-	public Map<String, Object> getBoardList(@RequestParam(value="author", required=false) String username, 
+	public Map<String, Object> getBoardList(@RequestParam(value="authorId", required=false) Long userId, 
 											@RequestParam int offset, 
 											@RequestParam(defaultValue = "10") int limit) {
 		List<BoardDto> boards;
 		Integer count;
 		
-		if (username == null) {
+		if (userId == null) {
 			boards = boardService.selectBoards(offset, limit);
 			count = boardService.selectCount();
 		} else {
-			boards = boardService.selectByUserName(username, offset, limit);
-			count = boardService.selectCountByUserName(username);
+			boards = boardService.selectByUserId(userId, offset, limit);
+			count = boardService.selectCountByUserId(userId);
 			log.info(Integer.toString(count));
 		}
 		
@@ -61,35 +61,34 @@ public class BoardController {
 	}
 
 
-	@GetMapping("/boards/{bno}")
-	public BoardDto getBoardByBno(@PathVariable("bno") String bno) {
-		BoardDto board = boardService.selectByBno(Long.parseLong(bno));
+	@GetMapping("/boards/{boardId}")
+	public BoardDto getBoardByboardId(@PathVariable("boardId") Long boardId) {
+		BoardDto board = boardService.selectByBoardId(boardId);
 		return board;
 	}
 
 	@PostMapping("/boards")
-	public BoardDto createBoard(@RequestBody BoardDto board) {
-		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+	public BoardDto createBoard(@RequestBody BoardDto board, final Authentication authentication) {
+        Long currentUserId = ((UserDto) authentication.getPrincipal()).getUserId();
 		board.setRegDate(new Date());
-		board.setWriterName(username);
-		Long bno = boardService.insertBoard(board);
-		BoardDto result = boardService.selectByBno(bno);
+		board.setUserId(currentUserId);
+		Long boardId = boardService.insertBoard(board);
+		BoardDto result = boardService.selectByBoardId(boardId);
 		return result;
 	}
 	
-	@PutMapping("/boards/{bno}")
-	public BoardDto updateBoard(@PathVariable("bno") String bno, @RequestBody BoardDto board) {
-		String username = SecurityContextHolder.getContext().getAuthentication().getName();
-		board.setRegDate(new Date());
-		board.setWriterName(username);
-		boardService.updateByBoard(bno, board);
-		BoardDto result = boardService.selectByBno(Long.valueOf(bno));
+	@PutMapping("/boards/{boardId}")
+	public BoardDto updateBoard(@PathVariable("boardId") Long boardId, @RequestBody BoardDto board, final Authentication authentication) {
+        Long currentUserId = ((UserDto) authentication.getPrincipal()).getUserId();
+		board.setUserId(currentUserId);
+		boardService.updateByBoardId(boardId, board);
+		BoardDto result = boardService.selectByBoardId(boardId);
 		return result;
 	}
 
-	@DeleteMapping("/boards/{bno}")
-	public void deleteBoard(@PathVariable("bno") String bno) {
-		log.info("Delte: Delete a Board {bno}", bno);
-		int result = boardService.deleteBoard(bno);
+	@DeleteMapping("/boards/{boardId}")
+	public void deleteBoard(@PathVariable("boardId") Long boardId) {
+		log.info("Delte: Delete a Board {boardId}", boardId);
+		int result = boardService.deleteBoard(boardId);
 	}
 }

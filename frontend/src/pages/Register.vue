@@ -26,7 +26,7 @@
             </fieldset>
             <fieldset class="form-group">
               <input
-                v-model="form.id"
+                v-model="form.email"
                 class="form-control form-control-lg"
                 type="email"
                 required
@@ -65,7 +65,7 @@ import { routerPush } from '../router'
 import { useAuth } from '../composable/useAuth'
 
 const form = reactive<PostRegisterForm>({
-  'id': '',
+  'email': '',
   'password': '',
   'name': '',
 })
@@ -75,11 +75,10 @@ const { user, register: postRegister, errors, loadding } = useAuth()
 const store = userStore()
 
 const register = async () => {
-  await postRegister(form)
-  if (user.value) {
-    store.updateUser(user.value)
-    console.log(user.value);
-    routerPush("global-feed");
+  const result = await postRegister(form)
+  console.log(result)
+  if (result) {
+    console.log("성공")
   }
 }
 </script>

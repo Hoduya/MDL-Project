@@ -95,7 +95,7 @@
       board = await postBoard(formData)
     }
     console.log(board)
-    if (board) await routerPush('board', { slug: board.bno })
+    if (board) await routerPush('board', { slug: board.boardId })
   }
 
   const onCancel = async () => {
