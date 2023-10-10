@@ -15,18 +15,18 @@
 <script lang="ts" setup>
 import AppLink from '../components/AppLink.vue'
 import { computed } from 'vue'
-import { userStore } from '../store/user'
+import { useUserStore } from '../store/user'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
 
-const store = userStore()
+const userStore = useUserStore()
 
-const userId = store.user?.userId || ''
+const userId = userStore.currentUser?.userId || ''
 
-const showEdit = computed(() => store.user?.userId === userId)
+const showEdit = computed(() => userStore.currentUser?.userId === userId)
 
-const userName = computed(() => store.user?.name)
+const userName = computed(() => userStore.currentUser?.name)
 
 
 </script>

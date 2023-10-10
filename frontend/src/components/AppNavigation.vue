@@ -63,7 +63,7 @@ import { computed } from 'vue'
 import AppLink from './AppLink.vue'
 import { AppRouteNames, router, routerPush } from '../router'
 import { RouteParams } from 'vue-router'
-import { userStore } from '../store/user'
+import { useUserStore } from '../store/user'
 
 interface NavLink {
   name: AppRouteNames
@@ -73,10 +73,10 @@ interface NavLink {
   display: 'all' | 'guest' | 'authorized'
 }
 
-const store = userStore()
+const userStore = useUserStore()
 
-const username = computed(() => store.user?.name)
-const userId = computed(() => store.user?.userId)
+const username = computed(() => userStore.currentUser?.name)
+const userId = computed(() => userStore.currentUser?.userId)
 const userProfileUrl = computed(() => require("/src/assets/defaultProfile.png"))
 const displayStatus = computed(() => (username.value ? 'authorized' : 'guest'))
 
@@ -116,7 +116,8 @@ const enabledNavLinks = computed(() =>
 )
 
 const onLogout = async () => {
-  store.updateUser(null)
+  await userStore.logout()
   await routerPush("global-feed")
 }
+
 </script>

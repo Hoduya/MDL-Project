@@ -40,8 +40,8 @@ public class UserController {
         try {
             UserDto savedUser = userService.join(userDto);
             SingleDataResponse<UserDto> response = responseService.getSingleDataResponse(true, "회원가입 성공", savedUser);
-            
-            responseEntity = ResponseEntity.status(HttpStatus.CREATED).body(response);                                  
+            responseEntity = ResponseEntity.status(HttpStatus.CREATED).body(response);
+                                   
         } catch (DuplicatedUsernameException exception) {
             log.debug(exception.getMessage());
             BaseResponse response = responseService.getBaseResponse(false, exception.getMessage());

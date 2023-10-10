@@ -32,10 +32,11 @@ public class SecurityConfig {
 	private static final String[] PERMIT_ALL_URLS = { 
 			"/api/join",
 			"/api/login",
+			"/swagger-ui/**",
+			"/v3/api-docs/**"
 	};
 	
 	private static final String[] PERMIT_GET_URLS = {  
-			"/swagger-ui/**", 
 			"/api/boards/**",
 			"/api/users/**"
 	};

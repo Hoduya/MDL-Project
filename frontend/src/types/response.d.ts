@@ -14,21 +14,21 @@
   * => 해당 인터페이스는 JS 
   */
 
-declare interface CurrentUserResponse {
-  data: {
-    token: string
-    user: User
-  }
-}
+// declare interface CurrentUserResponse {
+//   data: {
+//     token: string
+//     user: User
+//   }
+// }
 
-declare interface BoardsResponse {
-  boards: Board[]
-  boardsCount: number
-}
+// declare interface BoardsResponse {
+//   boards: Board[]
+//   boardsCount: number
+// }
 
-declare interface UserResponse {
-  success: string,
-  message: string,
-  data: User
-}
+// declare interface UserResponse {
+//   success: string,
+//   message: string,
+//   data: User
+// }
 

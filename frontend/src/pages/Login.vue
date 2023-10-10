@@ -14,7 +14,7 @@
             </li>
           </ul>
 
-          <form @submit.prevent="login">
+          <form @submit.prevent="onLogin">
             <fieldset class="form-group">
               <input
                 v-model="form.email"
@@ -44,36 +44,31 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { reactive } from 'vue'
-import { PostLoginForm } from '../services/auth/postLogin'
-import { routerPush } from '@/router'
+import { ref, reactive } from 'vue'
+import { router, routerPush } from '@/router'
 import AppLink from '../components/AppLink.vue'
-import { userStore } from '../store/user'
-import { useAuth } from '../composable/useAuth'
+import { useUserStore } from '../store/user'
+
+const errors = ref('')
+const loadding = ref(false)
 
 const form = reactive<PostLoginForm>({
   'email': '',
   'password': '',
 })
 
-const { user, login: postLogin, errors, loadding } = useAuth()
+const userStore = useUserStore()
 
-const store = userStore()
-
-const login = async () => {
-  await postLogin(form)
-  if (user.value) {
-    console.log(user);
-    store.updateUser(user.value)
-    routerPush("global-feed");
-  }
+const onLogin = async () => {
+  loadding.value = true
+  await userStore.login(form)
+  .catch((error) => {
+    errors.value = error
+    loadding.value = false
+  })
+  loadding.value = false
+  routerPush("global-feed")
 }
-
-/*
-
-  우측 상단 프로필 부분 오류
-
-*/
 
 </script>
 

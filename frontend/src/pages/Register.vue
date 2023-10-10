@@ -14,7 +14,7 @@
             </li>
           </ul>
 
-          <form @submit.prevent="register">
+          <form @submit.prevent="onRegister">
             <fieldset class="form-group">
               <input
                 v-model="form.name"
@@ -57,12 +57,13 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import AppLink from '../components/AppLink.vue'
-import { PostRegisterForm } from '../services/auth/postRegister'
-import { userStore } from '../store/user'
+import { useUserStore } from '../store/user'
 import { routerPush } from '../router'
-import { useAuth } from '../composable/useAuth'
+
+const errors = ref('')
+const loadding = ref(false)
 
 const form = reactive<PostRegisterForm>({
   'email': '',
@@ -70,15 +71,18 @@ const form = reactive<PostRegisterForm>({
   'name': '',
 })
 
-const { user, register: postRegister, errors, loadding } = useAuth()
+const userStore = useUserStore()
 
-const store = userStore()
-
-const register = async () => {
-  const result = await postRegister(form)
-  console.log(result)
-  if (result) {
-    console.log("성공")
-  }
+const onRegister = async () => {
+  await userStore.register(form) 
+  await userStore.login(form)
+  .catch((error) => {
+    errors.value = error
+  })
+  .finally(()=> {
+    loadding.value = false
+  })
+  routerPush("login")
 }
+
 </script>

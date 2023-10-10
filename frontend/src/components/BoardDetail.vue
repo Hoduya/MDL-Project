@@ -49,12 +49,12 @@ import { useRoute } from 'vue-router'
 import { getBoardBySlug } from '@/services/board/getBoard'
 import AppLink from './AppLink.vue';
 import BoardMeta from './BoardMeta.vue';
-import { userStore } from '@/store/user';
+import { useUserStore } from '@/store/user';
 import { deleteBoard } from '@/services/board/deleteBoard'
 import { routerPush } from '@/router';
 import BoardComments from './BoardComments.vue';
 
-const userStroe = userStore()
+const userStroe = useUserStore()
 
 const route = useRoute()
 
@@ -63,7 +63,7 @@ const slug = route.params.slug as string
 const board = ref<Board>(await getBoardBySlug(slug))
 
 const showEdit = computed(
-  () => userStroe.user?.userId === board.value.userId
+  () => userStroe.currentUser?.userId === board.value.userId
 )
 
 const onDelete = async () => {

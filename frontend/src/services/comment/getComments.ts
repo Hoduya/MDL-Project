@@ -1,6 +1,6 @@
-import { request } from '../index'
+// import { request } from '../index'
 
-export function getCommentsByBoardId(boardId: string): Promise<Comment[]> {
-  return request
-    .get<Comment[]>(`/boards/${boardId}/comments`);
-}
+// export function getCommentsByBoardId(boardId: string): Promise<Comment[]> {
+//   return request
+//     .get<Comment[]>(`/boards/${boardId}/comments`);
+// }

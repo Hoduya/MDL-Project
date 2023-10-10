@@ -2,6 +2,7 @@ package com.aiden.board.dto;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.Optional;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -42,6 +43,7 @@ public class UserDto implements UserDetails {
     private String name;
     private Integer role;
     private Date regDate;
+    private String token;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Collection<? extends GrantedAuthority> authorities;

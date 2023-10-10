@@ -1,19 +1,28 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
-import { request } from '../services'
+import { ref, computed } from 'vue'
+import api from '@/api'
 
-export const userStore = defineStore('user', () => {
-  const user = ref<User | null>(null)
-
-  function updateUser(u: User | null) {
-    if (u) {
-      user.value = u
-      request.setAuthorizationHeader(u.token)
-    } else {
-      user.value = null
-      request.deleteAuthorizationHeader()
-    }
+export const useUserStore = defineStore('user', () => {
+  const currentUser = ref<User | null>(null)
+  const isLoggedIn = computed(() => currentUser.value !== null)
+  const updateUserInfo = (user: User) => {
+    currentUser.value = user
+    localStorage.setItem('jwt-token', user.token!)
   }
 
-  return { user, updateUser }
+  const login = async (postLoginForm: PostLoginForm) => {
+    const user = await api.login(postLoginForm)
+    updateUserInfo(user)
+  }
+
+  const register = async (postRegisterForm: PostRegisterForm) => {
+    await api.register(postRegisterForm)
+  }
+
+  const logout = async () => {
+    currentUser.value = null
+    localStorage.removeItem('jwt-token')
+  }
+
+  return { currentUser, isLoggedIn, login, register, logout }
 })

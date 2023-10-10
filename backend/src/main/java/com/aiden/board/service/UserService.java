@@ -47,7 +47,7 @@ public class UserService {
 
 	public String login(LoginDto loginDto) {
 		UserDto userDto = userMapper.findByUserEmail(loginDto.getEmail())
-				.orElseThrow(() -> new LoginFailedException("올바르지 않은 계정정보(email)입니다."));
+				.orElseThrow(() -> new LoginFailedException("올바르지 않은 계정정보입니다."));
 
 		if (!passwordEncoder.matches(loginDto.getPassword(), userDto.getPassword())) {
 			throw new LoginFailedException("올바르지 않은 계정정보입니다.");

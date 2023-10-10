@@ -1,12 +1,12 @@
-import { request } from '../index'
+// import { request } from '../index'
 
-export function postComment(bno: string, content: string): Promise<Comment> {
-  return request
-    .post<Comment>(`/boards/${bno}/comments`, {
-      content: content
-    })
-}
+// export function postComment(boardId: string, content: string): Promise<Comment> {
+//   return request
+//     .post<Comment>(`/boards/${boardId}/comments`, {
+//       content: content
+//     })
+// }
 
-export function deleteComment(bno: string, commentId: string): Promise<void> {
-  return request.delete(`/boards/${bno}/comments/${commentId}`)
-}
+// export function deleteComment(boardId: string, commentId: string): Promise<void> {
+//   return request.delete(`/boards/${boardId}/comments/${commentId}`)
+// }
