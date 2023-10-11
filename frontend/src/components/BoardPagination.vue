@@ -15,7 +15,7 @@
   </ul>
 </template>
 <script lang="ts" setup>
-import { limit } from '../services'
+import api from '@/api';
 import { computed, defineProps, defineEmits } from 'vue'
 
 interface Props {
@@ -29,7 +29,7 @@ const emit = defineEmits<{
   (e: 'page-change', index: number): void
 }>()
 
-const pagesCount = computed(() => Math.ceil(props.count / limit))
+const pagesCount = computed(() => Math.ceil(props.count / api.fetchBoardsLimit))
 
 const isActive = (index: number) => props.page === index
 

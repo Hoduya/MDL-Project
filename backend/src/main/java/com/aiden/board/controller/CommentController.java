@@ -52,11 +52,11 @@ public class CommentController {
 		comment.setUserId(currentUserId);
 		
 		CommentDto result = commentService.insertComment(comment);
+		log.info(result.getAuthor().getEmail());
 		return result;
 	}
 	
 	@DeleteMapping("/boards/{boardId}/comments/{commentId}")
-	
 	public ResponseEntity<BaseResponse> deleteComment(@PathVariable("boardId") Long boardId, @PathVariable("commentId") Long commentId) {
     	ResponseEntity<BaseResponse> responseEntity = null;
         

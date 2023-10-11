@@ -12,7 +12,6 @@
     :count="boardsCount"
     @page-change="changePage" />
 </template>
-
 <script lang="ts">
 export default {
   name: 'PopularTags',
@@ -22,16 +21,45 @@ export default {
 <script lang="ts" setup>
 import BoardPreview from './BoardPreview.vue'
 import BoardPagination from './BoardPagination.vue'
+import { ref } from 'vue'
+import api from '@/api'
 
-import { useBoards } from '../composable/useBoards'
+const boards = ref<Board[]>([])
+const boardsCount = ref(0)
+const page = ref(1)
 
-const {
-  page,
-  boardsCount,
-  changePage,
-  fetchBoards,
-  boards,
-} = useBoards()
+interface Props{ 
+  searchOption: SearchOption | null
+}
+
+const props = defineProps<Props>()
+
+const baseOption: BoardsOption = {
+  limit: 10,
+  offset: (page.value - 1) * 10
+}
+
+const fetchBoards = async () => {
+  const params: BoardsOption = {
+    ...baseOption,
+  }
+
+  const response = await api.fetchBoards(params)
+  boards.value = response.boards
+  boardsCount.value = response.boardsCount
+}
+
+const changePage = (index: number) => { page.value = index }
 
 await fetchBoards()
+
+// const {
+//   page,
+//   boardsCount,
+//   changePage,
+//   fetchBoards,
+//   boards,
+// } = useBoards()
+
+
 </script>

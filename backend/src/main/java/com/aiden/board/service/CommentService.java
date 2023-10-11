@@ -23,11 +23,11 @@ public class CommentService {
 		List<CommentDto> comments = commentMapper.selectCommentsByBoardId(boardId);
 		return comments;
 	}
-	
+		
 	public CommentDto insertComment(CommentDto comment) {
-		Integer result = commentMapper.insertComment(comment);
-		log.info(comment.getCommentId().toString());
-		return comment;
+		commentMapper.insertComment(comment);
+		CommentDto result = commentMapper.selectCommentByCommentId(comment.getCommentId());
+		return result;
 	}
 	
 	public void deleteComment(Long boardId, Long commentId) throws Exception {

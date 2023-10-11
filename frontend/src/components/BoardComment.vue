@@ -7,9 +7,9 @@
           <span class="fs-5 fw-bolder">
             <AppLink
               name="profile"
-              :params="{ username: comment.userId }"
+              :params="{ userId: comment.author.userId.toString() }"
               class="me-2 text-body">
-              {{ comment.userId }}
+              {{ comment.author.name }}
             </AppLink>
           </span>
         </div>
@@ -25,25 +25,22 @@
   </p>
 </div>
 
-
-
-
 </template>
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { userStore } from '../store/user'
+import { useUserStore } from '../store/user'
 import AppLink from './AppLink.vue'
 
 interface Props {
-  comment: Comment
+  comment: BoardComment
 }
 
 const props = defineProps<Props>()
 
-const store = userStore()
+const userStore = useUserStore()
 
 const canModify = computed(
-  () => store.user?.userId === props.comment.userId
+  () => userStore.currentUser?.userId === props.comment.author.userId
 )
 
 const emit = defineEmits<{

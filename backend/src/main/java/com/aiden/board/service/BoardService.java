@@ -11,8 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.aiden.board.dto.BoardDto;
+import com.aiden.board.dto.UserDto;
 import com.aiden.board.mapper.BoardMapper;
-
+import com.aiden.board.mapper.UserMapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,6 +24,7 @@ public class BoardService {
 	private static final Logger log = LoggerFactory.getLogger(BoardService.class);
 	
 	private final BoardMapper boardMapper;
+	private final UserMapper userMapper;
 	
 	public List<BoardDto> selectBoards(int offset, int limit) {
 		List<BoardDto> boards = boardMapper.selectBoards(offset, limit);

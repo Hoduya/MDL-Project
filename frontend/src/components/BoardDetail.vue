@@ -46,28 +46,30 @@
 <script lang="ts" setup>
 import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { getBoardBySlug } from '@/services/board/getBoard'
 import AppLink from './AppLink.vue';
 import BoardMeta from './BoardMeta.vue';
 import { useUserStore } from '@/store/user';
-import { deleteBoard } from '@/services/board/deleteBoard'
 import { routerPush } from '@/router';
 import BoardComments from './BoardComments.vue';
+import api from '@/api';
 
-const userStroe = useUserStore()
+const userStore = useUserStore()
 
 const route = useRoute()
 
 const slug = route.params.slug as string
 
-const board = ref<Board>(await getBoardBySlug(slug))
+const board = ref<Board>(await api.fetchBoard(slug))
 
 const showEdit = computed(
-  () => userStroe.currentUser?.userId === board.value.userId
+  () => 
+  { console.log(userStore.currentUser)
+    console.log(board.value)
+    return userStore.currentUser?.userId === board.value.author.userId }
 )
 
 const onDelete = async () => {
-  await deleteBoard(slug)
+  await api.deleteBoard(slug)
   routerPush('global-feed')
 }
 </script>

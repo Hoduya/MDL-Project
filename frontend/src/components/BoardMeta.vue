@@ -3,16 +3,16 @@
     <AppLink
       name="profile"
       class="text-body"
-      :params="{ userId: board.userId }">
+      :params="{ userId: board.author.userId.toString() }">
       <img src="../assets/defaultProfile.png" alt="" class="rounded-circle me-2" style="width: 45px; height: 45px;">
     </AppLink>
     <div>
       <AppLink
         name="profile"
         class="text-body"
-        :params="{ userId: board.userId }">
+        :params="{ userId: board.author.userId.toString() }">
         <h5 class="mb-1">
-          {{ writer.name }}
+          {{ board.author.name }}
         </h5>
       </AppLink>
       <small class="text-muted mb-0">{{ formattedDate }}</small>
@@ -23,8 +23,7 @@
 <script lang="ts" setup>
 import AppLink from './AppLink.vue';
 import formatDateTime from '@/utils/formatDateTime';
-import { defineProps, ref } from 'vue';
-import { getUserById } from '@/services/user/getUser'
+import { defineProps, ref, onMounted } from 'vue';
 
 interface Props {
   board: Board,
@@ -32,6 +31,9 @@ interface Props {
 
 const props = defineProps<Props>()
 const formattedDate = formatDateTime(props.board.regDate);
-const writer = ref<User>(await getUserById(props.board.userId));
+
+onMounted(() => {
+  console.log(props.board)
+})
 
 </script>

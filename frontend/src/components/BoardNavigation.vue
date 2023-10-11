@@ -11,7 +11,6 @@
         </AppLink>
       </li>
     </ul>
-    <BoardSearchBar />
   </nav>
 </template>
 
@@ -20,7 +19,7 @@
 import { computed, withDefaults, defineProps } from 'vue'
 import { AppRouteNames } from '../router'
 import { RouteParams } from 'vue-router'
-import { userStore } from '../store/user'
+import { useUserStore } from '../store/user'
 import { useBoards } from '../composable/useBoards'
 
 import AppLink from './AppLink.vue'
@@ -44,7 +43,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const { userId } = useBoards()
 
-const store = userStore()
+const userStore = useUserStore()
 
 interface NavLink {
   routeName: AppRouteNames
@@ -66,7 +65,7 @@ const allLinks = computed<NavLink[]>(() => [
     routeParams: {
       userId: 'userId'
     },
-    show: props.useMyFeed && store.user ? true : false,
+    show: props.useMyFeed && userStore.currentUser ? true : false,
   },
 ])
 const links = computed(() => allLinks.value.filter((link) => link.show))

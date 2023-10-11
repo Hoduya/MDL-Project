@@ -50,7 +50,6 @@ public class BoardController {
 		} else {
 			boards = boardService.selectByUserId(userId, offset, limit);
 			count = boardService.selectCountByUserId(userId);
-			log.info(Integer.toString(count));
 		}
 		
 		Map<String, Object> response = new HashMap<>();

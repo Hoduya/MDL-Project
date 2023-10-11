@@ -3,7 +3,7 @@
  * Data Model
  */
 declare interface User {
-  userId: string
+  userId: number
   email: string
   name: string
   regDate: string
@@ -12,22 +12,40 @@ declare interface User {
 }
 
 declare interface Board {
-  boardId: string
-  userId: string
+  boardId: number
   title: string
   content: string
   regDate: string
   updateDate: string
+  author: User
 }
 
-declare interface Comment {
-  commentId: string
-  boardId: string
-  userId: string
+declare interface BoardsOption {
+  tag?: string
+  authorId?: number
+  limit: number
+  offset: number
+  searchOption?: SearchOption
+}
+
+declare interface SearchOption {
+  searchFilter: number
+  searchText: string
+}
+
+declare interface UpdateBoard {
+  title: string
+  content: string
+  updateDate: string
+}
+
+declare interface BoardComment {
+  commentId: number
+  boardId: number
   regDate: string
   content: string
+  author: User
 }
-
 
 /**
  * Form Model
@@ -42,4 +60,9 @@ declare interface PostRegisterForm {
   email: string
   password: string
   name: string
+}
+
+declare interface BoardForm {
+  title: string,
+  content: string
 }

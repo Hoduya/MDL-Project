@@ -25,3 +25,8 @@ instance.interceptors.response.use(
 ) 
 
 export default instance
+
+/**
+ * 200외 에러 message 모두 묶어서. return
+ * api 사용부분에서 catch 되면 alert 표시.
+ */

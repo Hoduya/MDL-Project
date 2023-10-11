@@ -1,5 +1,5 @@
 <template>
-  <form v-if="store.user" class="card comment-form">
+  <form v-if="userStore.currentUser" class="card comment-form">
     <div class="card-block">
       <textarea
         v-model="comment"
@@ -19,28 +19,31 @@
   </p>
 </template>
 <script lang="ts" setup>
-import { ref, defineProps, defineEmits } from 'vue'
-import { postComment } from '@/services/comment/postComment';
-import { userStore } from '../store/user'
 import AppLink from './AppLink.vue'
+import { ref, defineProps, defineEmits } from 'vue'
+import { useUserStore } from '../store/user'
+import api from '@/api';
 
 interface Props {
   boardId: string
 }
 
 interface Emits {
-  (e: 'add-Comment', comment: Comment): void
+  (e: 'add-Comment', comment: BoardComment): void
 }
 
 const props = defineProps<Props>()
 const emit = defineEmits<Emits>()
 
-const store = userStore()
+const userStore = useUserStore()
 
 const comment = ref('')
 
 const addComment = async () => {
-  const newComment = await postComment(props.boardId, comment.value)
+  const newComment = await api.createComment({ 
+    slug: props.boardId, 
+    content: comment.value })
+
   emit('add-Comment', newComment)
   comment.value = ''
 }

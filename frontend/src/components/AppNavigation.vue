@@ -105,7 +105,7 @@ const profileLink = computed<NavLink>(() => {
   return {
     name: 'profile',
     display: 'authorized',
-    params: { userId: userId.value || 'as' },
+    params: { userId: userId.value?.toString() || 'as' },
   }
 })
 

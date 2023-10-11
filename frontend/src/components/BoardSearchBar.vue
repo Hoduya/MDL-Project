@@ -1,10 +1,10 @@
 <template>
-  <div class="input-group mb-3" style="max-width: 500px; margin-left: auto;">
+  <div class="input-group mb-3" style="max-width: 500px;">
     <div class="input-group-text p-0">
-      <select v-model="selectedFilter" class="form-select form-select-lg shadow-none bg-light border-0">
-        <option con>제목</option>
-        <option>내용</option>
-        <option>작성자</option>
+      <select v-model="searchFilter" class="form-select form-select shadow-none bg-light border-0">
+        <option value=0>제목</option>
+        <option value=1>내용</option>
+        <option value=2>작성자</option>
       </select>
     </div>
     <input type="text" v-model="searchText" class="form-control" placeholder="Search Here">
@@ -15,20 +15,23 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute, useRouter } from 'vue-router';
-import { routerPush } from '@/router';
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
-const route = useRoute()
-const router = useRouter()
+const searchFilter = ref(0)
+const searchText = ref('')
 
-const selectedFilter = ref("title")
-const searchText = ref("")
+const searchOption = computed(() => {
+  if (searchText.value !== null && searchText.value !== '') {
+    return { searchFilter: searchFilter.value, searchText: searchText.value}
+  } else {
+    return null
+  }
+})
 
-const onSearch = () => {
-  routerPush("profile", {userId: searchText.value}).then(()=>{
-    console.log(route.params)
-  })
-}
+const emit = defineEmits<{
+  (e: 'text-search', searchOption: SearchOption | null): void
+}>()
+
+const onSearch = () => emit('text-search', searchOption.value)
 
 </script>

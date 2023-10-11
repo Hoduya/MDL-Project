@@ -2,6 +2,8 @@ package com.aiden.board.dto;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,4 +32,6 @@ public class CommentDto {
 	private Long boardId;
 	private String content;
 	private Date regDate;
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	private UserDto author;
 }

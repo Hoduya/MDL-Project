@@ -1,33 +1,30 @@
 import { ref, watch, computed } from 'vue'
 import { useRoute } from 'vue-router'
-import {
-  getBoardss,
-  getBoardsByFeed,
-  getBoardsByAuthor,
-} from '../services/board/getBoards'
-import { userStore } from '../store/user'
-import SearchOption from '@/utils/searchOption'
+import api from '@/api'
+import { useUserStore } from '../store/user'
 
 export function useBoards() {
-  const store = userStore()
+  const userStore = useUserStore()
 
   const boards = ref<Board[]>([])
   const boardsCount = ref(0)
 
   async function fetchBoards(): Promise<void> {
-    let responsePromise: null | Promise<BoardsResponse> = null
+    let responsePromise: null | Promise<{ boards: Board[], boardsCount: number}> = null
+    const baseOption: BoardsOption = {
+        limit: api.fetchBoardsLimit,
+        offset: (page.value - 1) * api.fetchBoardsLimit
+    }
 
     if (routeName.value === 'global-feed') {
-      responsePromise = getBoardss(page.value)
+      responsePromise = api.fetchBoards(baseOption)
     }
 
-    if (routeName.value === 'feed' && store.user) {
-      responsePromise = getBoardsByAuthor(userId.value)
-    }
+    if (routeName.value === 'feed' && userStore.currentUser) {
+      responsePromise = api.fetchBoards(baseOption)    }
 
     if (routeName.value === 'profile' && userId.value) {
-      responsePromise = getBoardsByAuthor(userId.value, page.value)
-    }
+      responsePromise = api.fetchBoards(baseOption)    }
 
     if (responsePromise !== null) {
       const response = await responsePromise

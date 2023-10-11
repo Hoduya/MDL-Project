@@ -22,24 +22,20 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { getCommentsByBoardId } from '@/services/comment/getComments'
-import { deleteComment } from '@/services/comment/postComment'
 import BoardCommentForm from './BoardCommentForm.vue'
 import BoardComment from './BoardComment.vue'
+import api from '@/api';
 
 const route = useRoute()
 const slug = route.params.slug as string
 
-const comments = ref<Comment[]>()
+const comments = ref<BoardComment[]>(await api.fetchComments(slug))
 
-const delComment = async (commentId: string) => {
-  await deleteComment(slug, commentId)
+const delComment = async (commentId: number) => {
+  await api.deleteComment(slug, commentId)
   comments.value = comments.value?.filter((c) => c.commentId !== commentId)
 }
-
-comments.value = await getCommentsByBoardId(slug)
-
-const addComment = (newComment: Comment) => {
+const addComment = (newComment: BoardComment) => {
   comments.value?.unshift(newComment)
 }
 </script>

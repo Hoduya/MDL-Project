@@ -1,49 +1,49 @@
-import { ref } from 'vue'
-import {
-  PostLoginForm,
-  PostLoginErrors,
-  postLogin,
-} from '../services/auth/postLogin'
-import {
-  postRegister,
-  PostRegisterErrors,
-  PostRegisterForm,
-} from '../services/auth/postRegister'
+// import { ref } from 'vue'
+// import {
+//   PostLoginForm,
+//   PostLoginErrors,
+//   postLogin,
+// } from '../services/auth/postLogin'
+// import {
+//   postRegister,
+//   PostRegisterErrors,
+//   PostRegisterForm,
+// } from '../services/auth/postRegister'
 
-export function useAuth() {
-  const user = ref<User | null>(null)
-  const loadding = ref(false)
-  const errors = ref<PostLoginErrors | PostRegisterErrors>({})
+// export function useAuth() {
+//   const user = ref<User | null>(null)
+//   const loadding = ref(false)
+//   const errors = ref<PostLoginErrors | PostRegisterErrors>({})
 
-  async function login(form: PostLoginForm): Promise<void> {
-    loadding.value = true
-    await postLogin(form)
-      .then((data) => { user.value = data
-        console.log(user)
-      })
-      .catch((err) => {
-        errors.value = err
-      })
+//   async function login(form: PostLoginForm): Promise<void> {
+//     loadding.value = true
+//     await postLogin(form)
+//       .then((data) => { user.value = data
+//         console.log(user)
+//       })
+//       .catch((err) => {
+//         errors.value = err
+//       })
 
-    loadding.value = false
-  }
+//     loadding.value = false
+//   }
 
-  async function register(form: PostRegisterForm): Promise<User | void> {
-    loadding.value = true
-    await postRegister(form)
-      .then(res => res)
-      .catch((err) => {
-        errors.value = err
-      })
+//   async function register(form: PostRegisterForm): Promise<User | void> {
+//     loadding.value = true
+//     await postRegister(form)
+//       .then(res => res)
+//       .catch((err) => {
+//         errors.value = err
+//       })
 
-    loadding.value = false
-  }
+//     loadding.value = false
+//   }
 
-  return {
-    login,
-    register,
-    user,
-    errors,
-    loadding,
-  }
-}
+//   return {
+//     login,
+//     register,
+//     user,
+//     errors,
+//     loadding,
+//   }
+// }

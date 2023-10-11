@@ -1,23 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.aiden.board.mapper.CommentMapper">
-    <select id="selectCommentsByBoardId" resultType="CommentDto">
-        SELECT COMMENT_ID, BOARD_ID, CONTENT, USER_ID, REG_DATE
-        FROM TB_COMMENT
-        WHERE BOARD_ID = #{boardId}
-        ORDER BY BOARD_ID DESC	
-    </select>
-    
-    <insert id="insertComment" parameterType="CommentDto" useGeneratedKeys="true" keyProperty="commentId">
+
+	<resultMap type="UserDto" id="UserDto">
+		<id property="userId" column="USER_ID" />
+		<result property="name" column="NAME" />
+		<result property="email" column="EMAIL" />
+		<result property="regDate" column="USER_REG_DATE" />
+	</resultMap>
+
+	<resultMap type="CommentDto" id="CommentResultMap">
+		<id property="commentId" column="COMMENT_ID" />
+		<result property="boardId" column="BOARD_ID"/>
+		<result property="userId" column="USER_ID" />
+		<result property="content" column="CONTENT" />
+		<result property="regDate" column="REG_DATE" />
+		<collection property="author" resultMap="UserDto" />
+	</resultMap>
+
+	<select id="selectCommentsByBoardId" resultMap="CommentResultMap">
+		SELECT c.COMMENT_ID, c.BOARD_ID, c.CONTENT, c.REG_DATE,
+		u.USER_ID, u.NAME, u.EMAIL, u.REG_DATE AS USER_REG_DATE
+		FROM TB_COMMENT c
+		JOIN TB_USER u ON c.USER_ID = u.USER_ID
+		WHERE BOARD_ID = #{boardId}
+	</select>
+	
+	<select id="selectCommentByCommentId" resultMap="CommentResultMap">
+		SELECT c.COMMENT_ID, c.BOARD_ID, c.CONTENT, c.REG_DATE,
+		u.USER_ID, u.NAME, u.EMAIL, u.REG_DATE AS USER_REG_DATE
+		FROM TB_COMMENT c
+		JOIN TB_USER u ON c.USER_ID = u.USER_ID
+		WHERE COMMENT_ID = #{commentId}
+	</select>
+	
+	<insert id="insertComment" parameterType="CommentDto"
+		useGeneratedKeys="true" keyProperty="commentId">
 		insert into TB_COMMENT(BOARD_ID, USER_ID, CONTENT, REG_DATE)
 		values(#{boardId}, #{userId}, #{content}, NOW())
 	</insert>
-	
+
 	<delete id="deleteComment">
 		delete from TB_COMMENT where COMMNET_ID=#{commentId}
 	</delete>
-	
+
 </mapper>

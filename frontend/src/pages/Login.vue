@@ -45,7 +45,7 @@
 </template>
 <script lang="ts" setup>
 import { ref, reactive } from 'vue'
-import { router, routerPush } from '@/router'
+import { routerPush } from '@/router'
 import AppLink from '../components/AppLink.vue'
 import { useUserStore } from '../store/user'
 
@@ -64,9 +64,11 @@ const onLogin = async () => {
   await userStore.login(form)
   .catch((error) => {
     errors.value = error
+    console.log(error)
+  })
+  .finally(()=> {
     loadding.value = false
   })
-  loadding.value = false
   routerPush("global-feed")
 }
 
