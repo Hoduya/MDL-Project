@@ -40,7 +40,7 @@
           </fieldset>
           <fieldset class="form-group">
             <select required class="custom-select form-select shadow-none bg-light border-0">
-              <option value=""> 소속 부서 </option>
+              <option value="">소속 부서</option>
               <option value=1>제목</option>
               <option value=2>내용</option>
               <option value=3>작성자</option>
