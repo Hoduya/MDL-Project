@@ -11,8 +11,8 @@ export const router = createRouter({
       component: Home,
     },
     {
-      name: 'feed',
-      path: '/',
+      name: 'user-feed',
+      path: '/:slug',
       component: Home,
     },
     {
@@ -37,7 +37,7 @@ export const router = createRouter({
     },
     {
       name: 'profile',
-      path: '/profile/:userId',
+      path: '/profile/:slug',
       component: () => import('./pages/Profile.vue'),
     },
     {
@@ -49,13 +49,18 @@ export const router = createRouter({
       name: 'settings',
       path: '/settings',
       component: () => import('./pages/Settings.vue')
+    },
+    {
+      name: 'Lunch',
+      path: '/Lunch',
+      component: () => import('./pages/Lunch.vue')
     }
   ],
 })
 
 export type AppRouteNames =
   | 'global-feed'
-  | 'feed'
+  | 'user-feed'
   | 'login'
   | 'register'
   | 'create-board'
@@ -63,6 +68,7 @@ export type AppRouteNames =
   | 'profile'
   | 'board'
   | 'settings'
+  | 'Lunch'
 
 export async function routerPush(
   name: AppRouteNames,

@@ -22,7 +22,7 @@ declare interface Board {
 
 declare interface BoardsOption {
   tag?: string
-  authorId?: number
+  authorId?: string
   limit: number
   offset: number
   searchOption?: SearchOption
@@ -45,6 +45,11 @@ declare interface BoardComment {
   regDate: string
   content: string
   author: User
+}
+
+declare interface Department {
+  departmentId: number
+  name: string
 }
 
 /**

@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.security.core.Authentication;
@@ -38,27 +39,28 @@ public class BoardController {
 	private final BoardService boardService;
 
 	@GetMapping("/boards")
-	public Map<String, Object> getBoardList(@RequestParam(value="authorId", required=false) Long userId, 
-											@RequestParam int offset, 
-											@RequestParam(defaultValue = "10") int limit) {
+	public Map<String, Object> getBoardList(@RequestParam int offset, 
+											@RequestParam(defaultValue = "10") int limit,
+											@RequestParam(value="authorId", required=false) Long userId,
+											@RequestParam(value="searchFilter", defaultValue = "0") int searchFilter,
+											@RequestParam(value="searchText", defaultValue = "") String searchText) {
 		List<BoardDto> boards;
 		Integer count;
 		
 		if (userId == null) {
-			boards = boardService.selectBoards(offset, limit);
-			count = boardService.selectCount();
+			boards = boardService.selectBoards(offset, limit, searchFilter, searchText);
+			count = boardService.selectCount(searchFilter, searchText);
 		} else {
 			boards = boardService.selectByUserId(userId, offset, limit);
 			count = boardService.selectCountByUserId(userId);
 		}
-		
+
 		Map<String, Object> response = new HashMap<>();
 		response.put("boards", boards);
 		response.put("boardsCount", count);
-		
+
 		return response;
 	}
-
 
 	@GetMapping("/boards/{boardId}")
 	public BoardDto getBoardByboardId(@PathVariable("boardId") Long boardId) {
@@ -68,17 +70,18 @@ public class BoardController {
 
 	@PostMapping("/boards")
 	public BoardDto createBoard(@RequestBody BoardDto board, final Authentication authentication) {
-        Long currentUserId = ((UserDto) authentication.getPrincipal()).getUserId();
+		Long currentUserId = ((UserDto) authentication.getPrincipal()).getUserId();
 		board.setRegDate(new Date());
 		board.setUserId(currentUserId);
 		Long boardId = boardService.insertBoard(board);
 		BoardDto result = boardService.selectByBoardId(boardId);
 		return result;
 	}
-	
+
 	@PutMapping("/boards/{boardId}")
-	public BoardDto updateBoard(@PathVariable("boardId") Long boardId, @RequestBody BoardDto board, final Authentication authentication) {
-        Long currentUserId = ((UserDto) authentication.getPrincipal()).getUserId();
+	public BoardDto updateBoard(@PathVariable("boardId") Long boardId, @RequestBody BoardDto board,
+			final Authentication authentication) {
+		Long currentUserId = ((UserDto) authentication.getPrincipal()).getUserId();
 		board.setUserId(currentUserId);
 		boardService.updateByBoardId(boardId, board);
 		BoardDto result = boardService.selectByBoardId(boardId);

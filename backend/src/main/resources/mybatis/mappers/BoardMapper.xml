@@ -19,27 +19,45 @@
         <result property="updateDate" column="UPDATE_DATE"/>
         <collection property="author" resultMap="UserDto" />
 	</resultMap>
+	
+	<sql id="condition">
+		WHERE true
+		<if test='searchFilter=="1"'>
+			AND b.title LIKE concat('%', #{searchText}, '%')
+		</if>
+		<if test='searchFilter==2'>
+			AND b.content LIKE concat('%', #{searchText}, '%')
+		</if>
+		<if test='searchFilter==3'>
+			AND u.name LIKE concat('%', #{searchText}, '%')
+		</if>
+	</sql>
 
 	<select resultMap="BoardResultMap" id="selectBoards">
 		SELECT b.BOARD_ID, b.TITLE, b.CONTENT, b.REG_DATE, b.UPDATE_DATE,
 		u.USER_ID, u.NAME, u.EMAIL, u.REG_DATE AS USER_REG_DATE
-		FROM tb_board b
+		FROM TB_BOARD b
 		JOIN TB_USER u ON b.USER_ID = u.USER_ID
+		<include refid="condition"></include>
+		ORDER BY BOARD_ID DESC
 		LIMIT #{offset}, #{limit}
+	</select>
+	
+	<select resultType="Integer" id="selectCount">
+		select count(*)
+		FROM TB_BOARD b
+		JOIN TB_USER u ON b.USER_ID = u.USER_ID
+		<include refid="condition"></include>
 	</select>
 
 	<select resultMap="BoardResultMap" id="selectByUserId">
 		SELECT b.BOARD_ID, b.TITLE, b.CONTENT, b.REG_DATE, b.UPDATE_DATE,
 		u.USER_ID, u.NAME, u.EMAIL, u.REG_DATE AS USER_REG_DATE
-		FROM tb_board b
+		FROM TB_BOARD b
 		JOIN TB_USER u ON b.USER_ID = u.USER_ID
-		WHERE USER_ID=#{userId}
+		WHERE u.USER_ID=#{userId}
 		ORDER BY BOARD_ID DESC
 		LIMIT #{offset}, #{limit}
-	</select>
-
-	<select resultType="Integer" id="selectCount">
-		select count(*) from TB_BOARD
 	</select>
 
 	<select resultType="Integer" id="selectCountByUserId">

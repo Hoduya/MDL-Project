@@ -20,10 +20,8 @@ import { computed, withDefaults, defineProps } from 'vue'
 import { AppRouteNames } from '../router'
 import { RouteParams } from 'vue-router'
 import { useUserStore } from '../store/user'
-import { useBoards } from '../composable/useBoards'
 
 import AppLink from './AppLink.vue'
-import BoardSearchBar from './BoardSearchBar.vue'
 
 interface Props {
   useGlobalFeed?: boolean
@@ -40,8 +38,6 @@ const props = withDefaults(defineProps<Props>(), {
   useUserFavorited: false,
   useUserFeed: false,
 })
-
-const { userId } = useBoards()
 
 const userStore = useUserStore()
 
@@ -60,10 +56,10 @@ const allLinks = computed<NavLink[]>(() => [
     show: props.useGlobalFeed,
   },
   {
-    routeName: 'feed',
+    routeName: 'user-feed',
     title: '나의 게시글',
     routeParams: {
-      userId: 'userId'
+      slug: userStore.currentUser?.userId.toString() || ''
     },
     show: props.useMyFeed && userStore.currentUser ? true : false,
   },

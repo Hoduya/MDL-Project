@@ -16,7 +16,7 @@ async function login(params: PostLoginForm): Promise<User> {
 
 async function register(params: PostRegisterForm): Promise<void> {
   return request({
-    url: '/api/users/join',
+    url: '/api/join',
     method: 'POST',
     data: params
   })
@@ -33,15 +33,17 @@ async function fetchUserInfo(slug: string): Promise<User> {
   return request({ 
     url: `/api/users/${slug}`,
     method: 'GET',
+  }).then((res)=>{
+    return res.data
   })
 }
 
-async function fetchBoards(params: BoardsOption): Promise<{ boards: Board[], boardsCount: number }> {
-  console.log(params)
+async function fetchBoards(params: BoardsOption, data?: SearchOption): Promise<{ boards: Board[], boardsCount: number }> {
   return request({
     url: '/api/boards',
     method:'GET',
-    params: params
+    params: params,
+    data: data
   })
 }
 
@@ -100,6 +102,13 @@ async function deleteComment(slug: string, id: number): Promise<void> {
   return request({ 
     url: `/api/boards/${slug}/comments/${id}`,
     method: 'DELETE'
+  })
+}
+
+async function getALlDepartments(): Promise<Department> {
+  return request({
+    url: '/api/departments',
+    method: 'GET'
   })
 }
 

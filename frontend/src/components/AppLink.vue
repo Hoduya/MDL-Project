@@ -1,7 +1,7 @@
 <template>
-  <router-link :aria-label="props.name" :to="props" v-bind="attrs">
-    <slot></slot>
-  </router-link>
+    <router-link :aria-label="props.name" :to="props" v-bind="attrs">
+      <slot></slot>
+    </router-link>
 </template>
 
 <script lang="ts" setup>
@@ -19,6 +19,7 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const attrs = useAttrs()
+
 </script>
 
 <style scoped>

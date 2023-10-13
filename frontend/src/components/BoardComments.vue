@@ -37,5 +37,5 @@ const delComment = async (commentId: number) => {
 }
 const addComment = (newComment: BoardComment) => {
   comments.value?.unshift(newComment)
-}
+} 
 </script>

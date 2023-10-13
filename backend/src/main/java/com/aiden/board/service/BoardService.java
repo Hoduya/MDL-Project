@@ -2,7 +2,7 @@ package com.aiden.board.service;
 
 
 import java.util.List;
-
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,19 +26,19 @@ public class BoardService {
 	private final BoardMapper boardMapper;
 	private final UserMapper userMapper;
 	
-	public List<BoardDto> selectBoards(int offset, int limit) {
-		List<BoardDto> boards = boardMapper.selectBoards(offset, limit);
+	public List<BoardDto> selectBoards(int offset, int limit, int searchFilter, String searchText) {
+		List<BoardDto> boards = boardMapper.selectBoards(offset, limit, searchFilter, searchText);
 		return boards;
+	}
+	
+	public Integer selectCount(int searchFilter, String searchText) {
+		Integer count = boardMapper.selectCount(searchFilter, searchText);
+		return count;
 	}
 	
 	public List<BoardDto> selectByUserId(Long userId, int offset, int limit) {
 		List<BoardDto> boards = boardMapper.selectByUserId(userId, offset, limit);
 		return boards;
-	}
-	
-	public Integer selectCount() {
-		Integer count = boardMapper.selectCount();
-		return count;
 	}
 	
 	public Integer selectCountByUserId(Long userId) {

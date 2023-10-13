@@ -3,14 +3,14 @@
     <AppLink
       name="profile"
       class="text-body"
-      :params="{ userId: board.author.userId.toString() }">
+      :params="{ slug: board.author.userId.toString() }">
       <img src="../assets/defaultProfile.png" alt="" class="rounded-circle me-2" style="width: 45px; height: 45px;">
     </AppLink>
     <div>
       <AppLink
         name="profile"
         class="text-body"
-        :params="{ userId: board.author.userId.toString() }">
+        :params="{ slug: board.author.userId.toString() }">
         <h5 class="mb-1">
           {{ board.author.name }}
         </h5>
@@ -31,9 +31,5 @@ interface Props {
 
 const props = defineProps<Props>()
 const formattedDate = formatDateTime(props.board.regDate);
-
-onMounted(() => {
-  console.log(props.board)
-})
 
 </script>

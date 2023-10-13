@@ -13,7 +13,7 @@
                 active-class="active"
                 :name="link.name"
                 :params="link.params"
-                style="font-weight: 300;"> 
+                style="font-weight: 300;">
                 <i v-if="link.icon" :class="link.icon" /> {{ link.title }}
               </AppLink>
             </li>
@@ -87,6 +87,12 @@ const navLinks = computed<NavLink[]>(() => [
     display: 'authorized',
     icon: '',
   },
+  {
+    name: 'Lunch',
+    title: '투표',
+    display: 'all',
+    icon: '',
+  }
 ])
 
 const loginLink: NavLink = {
@@ -105,7 +111,7 @@ const profileLink = computed<NavLink>(() => {
   return {
     name: 'profile',
     display: 'authorized',
-    params: { userId: userId.value?.toString() || 'as' },
+    params: { slug: userId.value?.toString() || 'as' },
   }
 })
 

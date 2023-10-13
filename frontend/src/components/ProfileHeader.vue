@@ -16,17 +16,19 @@
 import AppLink from '../components/AppLink.vue'
 import { computed } from 'vue'
 import { useUserStore } from '../store/user'
-import { useRoute } from 'vue-router'
 
-const route = useRoute()
+interface Props {
+  user?: User
+}
+
+const props = defineProps<Props>()
 
 const userStore = useUserStore()
-
-const userId = userStore.currentUser?.userId || ''
-
-const showEdit = computed(() => userStore.currentUser?.userId === userId)
-
-const userName = computed(() => userStore.currentUser?.name)
-
+const userId = computed(() => props.user?.userId)
+const showEdit = computed(() => userStore.currentUser?.userId === userId.value)
+const userName = computed(() => {
+  console.log(props.user)
+  return props.user?.name
+})
 
 </script>

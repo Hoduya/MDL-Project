@@ -22,11 +22,11 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-
+	
 	private final UserMapper userMapper;
 	private final JwtTokenProvider jwtTokenProvider;
 	private final PasswordEncoder passwordEncoder;
-
+	
 	@Transactional
 	public UserDto join(UserDto userDto) {
 		if (userMapper.findByUserEmail(userDto.getEmail()).isPresent()) {
@@ -44,7 +44,7 @@ public class UserService {
 			
 		return userMapper.findByUserEmail(userDto.getEmail()).get();
 	}
-
+	
 	public String login(LoginDto loginDto) {
 		UserDto userDto = userMapper.findByUserEmail(loginDto.getEmail())
 				.orElseThrow(() -> new LoginFailedException("올바르지 않은 계정정보입니다."));
@@ -59,7 +59,7 @@ public class UserService {
 	public UserDto findByUserId(Long userId) {
 		return userMapper.findByUserId(userId).orElseThrow(() -> new UserNotFoundException("존재하지 않는 계정입니다."));
 	}
-
+	
 	public UserDto findByUserEmail(String email) {
 		return userMapper.findByUserEmail(email).orElseThrow(() -> new UserNotFoundException("존재하지 않는 계정입니다."));
 	}

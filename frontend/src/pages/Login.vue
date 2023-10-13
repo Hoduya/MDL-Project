@@ -64,7 +64,6 @@ const onLogin = async () => {
   await userStore.login(form)
   .catch((error) => {
     errors.value = error
-    console.log(error)
   })
   .finally(()=> {
     loadding.value = false

@@ -7,7 +7,7 @@
       <a
         :aria-label="`Go to page ${pageNumber}`"
         class="page-link"
-        href="javascript:"
+        href="#"
         @click="onPageChange(pageNumber)">
         {{ pageNumber }}
       </a>
@@ -16,14 +16,15 @@
 </template>
 <script lang="ts" setup>
 import api from '@/api';
-import { computed, defineProps, defineEmits } from 'vue'
+import { computed, defineProps, defineEmits, ref } from 'vue'
 
 interface Props {
-  page: number
   count: number
 }
 
 const props = defineProps<Props>()
+
+const currentPage = ref(1)
 
 const emit = defineEmits<{
   (e: 'page-change', index: number): void
@@ -31,7 +32,10 @@ const emit = defineEmits<{
 
 const pagesCount = computed(() => Math.ceil(props.count / api.fetchBoardsLimit))
 
-const isActive = (index: number) => props.page === index
+const isActive = (index: number) => currentPage.value === index
 
-const onPageChange = (index: number) => emit('page-change', index)
+const onPageChange = (index: number) => { 
+  currentPage.value = index
+  emit('page-change', index)
+}
 </script>

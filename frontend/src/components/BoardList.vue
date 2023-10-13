@@ -1,14 +1,17 @@
 <template>
+  <div class="d-flex justify-content-center">
+    <BoardSearchBar @text-search="searchEvent" />
+  </div>
+  <div class="mt-4">
   <BoardPreview
-    class="mt-5"
     :board="board"
     v-for="(board, index) in boards"
     :key="index" />
+  </div>
   <div v-if="boards.length === 0">
     게시글이 없습니다.
   </div>
   <BoardPagination
-    :page="page"
     :count="boardsCount"
     @page-change="changePage" />
 </template>
@@ -21,45 +24,54 @@ export default {
 <script lang="ts" setup>
 import BoardPreview from './BoardPreview.vue'
 import BoardPagination from './BoardPagination.vue'
-import { ref } from 'vue'
+import BoardSearchBar from './BoardSearchBar.vue'
+import { ref, computed, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import api from '@/api'
 
 const boards = ref<Board[]>([])
 const boardsCount = ref(0)
-const page = ref(1)
+const route = useRoute()
 
-interface Props{ 
-  searchOption: SearchOption | null
-}
+let searchOption: SearchOption | undefined
 
-const props = defineProps<Props>()
+const userId = computed(() => {
+  console.log(route.params.slug)
+  return typeof route.params.slug === 'string' ? route.params.slug : ''
+})
 
 const baseOption: BoardsOption = {
   limit: 10,
-  offset: (page.value - 1) * 10
+  offset: 0,
 }
 
 const fetchBoards = async () => {
   const params: BoardsOption = {
     ...baseOption,
+    ...searchOption
   }
 
-  const response = await api.fetchBoards(params)
+  if (userId.value) {
+    params.authorId = userId.value
+  }
+
+  const response = await api.fetchBoards(params, searchOption)
   boards.value = response.boards
   boardsCount.value = response.boardsCount
 }
 
-const changePage = (index: number) => { page.value = index }
-
 await fetchBoards()
 
-// const {
-//   page,
-//   boardsCount,
-//   changePage,
-//   fetchBoards,
-//   boards,
-// } = useBoards()
+const changePage = async (index: number) => { 
+  baseOption.offset = (index - 1) * 10
+  await fetchBoards()
+}
 
+const searchEvent = async (option?: SearchOption) => {
+  searchOption = option
+  await fetchBoards()
+}
+
+watch(userId, fetchBoards)
 
 </script>
