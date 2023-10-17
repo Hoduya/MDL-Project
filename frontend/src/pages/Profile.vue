@@ -37,7 +37,7 @@ const loadingUser = ref(true)
 
 onMounted(async () => {
   try {
-    const userData = await api.fetchUserInfo(userId)
+    const userData = await api.fetchUser(userId)
     user.value = userData;
   } catch (error) {
     console.error('유저 정보를 불러오는 중에 오류가 발생했습니다:', error)
