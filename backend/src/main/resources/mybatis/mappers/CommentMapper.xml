@@ -24,7 +24,8 @@
 		u.USER_ID, u.NAME, u.EMAIL, u.REG_DATE AS USER_REG_DATE
 		FROM TB_COMMENT c
 		JOIN TB_USER u ON c.USER_ID = u.USER_ID
-		WHERE BOARD_ID = #{boardId}
+		WHERE c.BOARD_ID = #{boardId} and c.DEL_YN = "N" and u.DEL_YN = "N" 
+		ORDER BY COMMENT_ID DESC
 	</select>
 	
 	<select id="selectCommentByCommentId" resultMap="CommentResultMap">
@@ -41,8 +42,11 @@
 		values(#{boardId}, #{userId}, #{content}, NOW())
 	</insert>
 
-	<delete id="deleteComment">
-		delete from TB_COMMENT where COMMNET_ID=#{commentId}
-	</delete>
-
+	<update id="deleteComment">
+		UPDATE TB_COMMENT
+		SET
+		DEL_YN = "Y"
+		WHERE
+		COMMENT_ID=#{commentId}
+	</update>
 </mapper>

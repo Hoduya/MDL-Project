@@ -7,7 +7,7 @@
           <span class="fs-5 fw-bolder">
             <AppLink
               name="profile"
-              :params="{ userId: comment.author.userId.toString() }"
+              :params="{ slug: comment.author.userId.toString() }"
               class="me-2 text-body">
               {{ comment.author.name }}
             </AppLink>

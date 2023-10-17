@@ -22,20 +22,54 @@ async function register(params: PostRegisterForm): Promise<void> {
   })
 }
 
-async function fetchUserInfo(slug: string): Promise<User> {
-  request({ 
-    url: `/api/users/${slug}`,
-    method: 'GET',
-  }).then((res)=>{
-    console.log(res)
-  })
-  
+async function fetchUser(slug: string): Promise<User> {
   return request({ 
     url: `/api/users/${slug}`,
     method: 'GET',
-  }).then((res)=>{
+  }).then((res) => {
     return res.data
   })
+}
+
+async function fetchProfilesFromDept(deptId: number): Promise<Profile[]> {
+  return request({
+    url: `/api/profiles/${deptId}`,
+    method: 'GET',
+  }).then((res) => {
+    return res.data
+  })
+}
+
+async function updateUser(user: User): Promise<User> {
+  return request({
+    url: `/api/users`,
+    method: 'PUT',
+    data: user
+  }).then((res) => {
+    return res.data
+  })
+}
+
+async function deleteUser(user: User): Promise<void> {
+  return request({
+    url: `/api/users`,
+    method: 'DELETE',
+    data: user
+  })
+}
+
+async function fetchDepartments(): Promise<Department[]> {
+  return request({
+    url: '/api/departments',
+    method: 'GET',
+  })
+}
+
+async function fetchDepartmentName(deptId: number): Promise<string> {
+  return request({
+    url: 'api/deaprtments/{deptId}',
+    method:'GET'
+  }).then(res => res.data)
 }
 
 async function fetchBoards(params: BoardsOption, data?: SearchOption): Promise<{ boards: Board[], boardsCount: number }> {
@@ -105,18 +139,16 @@ async function deleteComment(slug: string, id: number): Promise<void> {
   })
 }
 
-async function getALlDepartments(): Promise<Department> {
-  return request({
-    url: '/api/departments',
-    method: 'GET'
-  })
-}
-
 export default {
   fetchBoardsLimit,
   login,
   register,
-  fetchUserInfo,
+  fetchUser,
+  fetchProfilesFromDept,
+  updateUser,
+  deleteUser,
+  fetchDepartments,
+  fetchDepartmentName,
   fetchBoards,
   fetchBoard,
   createBoard,

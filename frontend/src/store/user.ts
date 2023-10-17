@@ -5,14 +5,19 @@ import api from '@/api'
 export const useUserStore = defineStore('user', () => {
   const currentUser = ref<User | null>(null)
   const isLoggedIn = computed(() => currentUser.value !== null)
+
   const updateUserInfo = (user: User) => {
+    currentUser.value = user
+  }
+
+  const updateUserAuth = (user: User) => {
     currentUser.value = user
     localStorage.setItem('jwt-token', user.token!)
   }
 
   const login = async (postLoginForm: PostLoginForm) => {
     const user = await api.login(postLoginForm)
-    updateUserInfo(user)
+    updateUserAuth(user)
   }
 
   const register = async (postRegisterForm: PostRegisterForm) => {
@@ -24,5 +29,5 @@ export const useUserStore = defineStore('user', () => {
     localStorage.removeItem('jwt-token')
   }
 
-  return { currentUser, isLoggedIn, login, register, logout }
+  return { currentUser, isLoggedIn, updateUserInfo, login, register, logout }
 })

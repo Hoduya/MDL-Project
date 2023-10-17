@@ -1,13 +1,11 @@
 <template>
   <div class="auth-page">
-    <div class="container page">
-      <div class="row">
-        <div class="col-md-6 offset-md-3 col-xs-12">
-          <h1 class="text-xs-center">로그인</h1>
-          <p class="text-xs-center">
-            <app-link name="register">Need an account?</app-link>
+    <div class="container page d-flex justify-content-center align-items-center">
+      <div class="col-md-4 col-xs-12 text-center mx-auto">
+        <h1 class="text-center mb-3 mt-5">로그인</h1>
+          <p class="text-center mb-4">
+            <app-link name="register">계정이 없으신가요?</app-link>
           </p>
-
           <ul class="error-messages">
             <li v-for="(error, field) in errors" :key="field">
               {{ field }} {{ error ? error[0] : '' }}
@@ -41,7 +39,6 @@
         </div>
       </div>
     </div>
-  </div>
 </template>
 <script lang="ts" setup>
 import { ref, reactive } from 'vue'
@@ -62,14 +59,21 @@ const userStore = useUserStore()
 const onLogin = async () => {
   loadding.value = true
   await userStore.login(form)
+  .then(() => {
+    routerPush("global-feed")
+  })
   .catch((error) => {
     errors.value = error
   })
   .finally(()=> {
     loadding.value = false
   })
-  routerPush("global-feed")
 }
 
 </script>
 
+<style scoped>
+.form-group {
+  margin: 10px;
+}
+</style>

@@ -10,7 +10,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProfileDto {
-	private String id;
+	private Long userId;
 	private String name;
-	private String imgurl;
 }

@@ -54,6 +54,11 @@ export const router = createRouter({
       name: 'Lunch',
       path: '/Lunch',
       component: () => import('./pages/Lunch.vue')
+    },
+    {
+      name: 'VoteSettings',
+      path: '/VoteSettings',
+      component: () => import('./pages/VoteSettings.vue')
     }
   ],
 })
@@ -69,6 +74,7 @@ export type AppRouteNames =
   | 'board'
   | 'settings'
   | 'Lunch'
+  | 'VoteSettings'
 
 export async function routerPush(
   name: AppRouteNames,

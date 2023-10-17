@@ -39,6 +39,8 @@
 		FROM TB_BOARD b
 		JOIN TB_USER u ON b.USER_ID = u.USER_ID
 		<include refid="condition"></include>
+		AND u.DEL_YN = 'N'
+		AND b.DEL_YN = 'N'
 		ORDER BY BOARD_ID DESC
 		LIMIT #{offset}, #{limit}
 	</select>
@@ -48,6 +50,8 @@
 		FROM TB_BOARD b
 		JOIN TB_USER u ON b.USER_ID = u.USER_ID
 		<include refid="condition"></include>
+		AND u.DEL_YN = "N"
+		AND b.DEL_YN = "N"
 	</select>
 
 	<select resultMap="BoardResultMap" id="selectByUserId">
@@ -56,6 +60,8 @@
 		FROM TB_BOARD b
 		JOIN TB_USER u ON b.USER_ID = u.USER_ID
 		WHERE u.USER_ID=#{userId}
+		AND u.DEL_YN = 'N'
+		AND b.DEL_YN = 'N' 
 		ORDER BY BOARD_ID DESC
 		LIMIT #{offset}, #{limit}
 	</select>
@@ -63,6 +69,7 @@
 	<select resultType="Integer" id="selectCountByUserId">
 		select count(*) from TB_BOARD
 		where USER_ID=#{userId}
+		AND DEL_YN = 'N'
 	</select>
 
 	<select resultMap="BoardResultMap" id="selectByBoardId">
@@ -89,8 +96,11 @@
 		BOARD_ID = #{boardId}
 	</update>
 
-	<delete id="deleteBoard">
-		delete from TB_BOARD where BOARD_ID=#{boardId}
-	</delete>
-
+	<update id="deleteBoard">
+		UPDATE TB_BOARD
+		SET
+		DEL_YN = 'Y'
+		WHERE
+		BOARD_ID = #{boardId}	
+	</update>
 </mapper>

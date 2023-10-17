@@ -36,7 +36,6 @@ const route = useRoute()
 let searchOption: SearchOption | undefined
 
 const userId = computed(() => {
-  console.log(route.params.slug)
   return typeof route.params.slug === 'string' ? route.params.slug : ''
 })
 

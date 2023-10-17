@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -41,8 +42,11 @@ public class UserDto implements UserDetails {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     private String name;
+    private Integer deptId;
+    private String deptName;
     private Integer role;
     private Date regDate;
+	@JsonInclude(JsonInclude.Include.NON_NULL)
     private String token;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

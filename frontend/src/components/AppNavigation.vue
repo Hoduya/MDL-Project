@@ -43,11 +43,13 @@
                 <li>
                   <AppLink :name="profileLink.name" :params="profileLink.params" class="dropdown-item">프로필</AppLink>
                 </li>
-                <li><a class="dropdown-item" href="#">설정</a></li>
                 <li>
-                  <hr class="dropdown-divider">
+                  <AppLink :name="settingsLink.name" class="dropdown-item">설정</AppLink>
                 </li>
-                <li><button class="dropdown-item text-danger fw-bold" @click="onLogout">로그아웃</button></li>
+                <hr class="dropdown-divider">
+                <li>
+                  <button class="dropdown-item text-danger fw-bold" @click="onLogout">로그아웃</button>
+                </li>
               </ul>
             </div>
           </template>
@@ -92,6 +94,12 @@ const navLinks = computed<NavLink[]>(() => [
     title: '투표',
     display: 'all',
     icon: '',
+  },
+  {
+    name: 'VoteSettings',
+    title: '투표관리',
+    display: 'all',
+    icon: '',
   }
 ])
 
@@ -112,6 +120,13 @@ const profileLink = computed<NavLink>(() => {
     name: 'profile',
     display: 'authorized',
     params: { slug: userId.value?.toString() || 'as' },
+  }
+})
+
+const settingsLink = computed<NavLink>(() => {
+  return {
+    name: 'settings',
+    display: 'authorized'
   }
 })
 

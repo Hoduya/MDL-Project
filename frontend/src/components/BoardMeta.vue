@@ -22,8 +22,8 @@
 
 <script lang="ts" setup>
 import AppLink from './AppLink.vue';
-import formatDateTime from '@/utils/formatDateTime';
-import { defineProps, ref, onMounted } from 'vue';
+import { formatDateTime } from '@/utils/formatDateTime';
+import { defineProps } from 'vue';
 
 interface Props {
   board: Board,

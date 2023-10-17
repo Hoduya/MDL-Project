@@ -9,16 +9,15 @@
 
 
   <div>
-    <ParentComponent>
-
-    </ParentComponent>
+    <VoteCanvas>
+    </VoteCanvas>
   </div>
 </template>
 
 <script setup lang="ts">
 import { onUnmounted, onMounted, computed, ref } from 'vue';
 import { createWorker } from 'tesseract.js';
-import ParentComponent from '../components/Lunch/ParentComponent.vue'
+import VoteCanvas from '../components/Lunch/VoteCanvas.vue'
 
 const imagePath = ref('/assets/image.png');
 

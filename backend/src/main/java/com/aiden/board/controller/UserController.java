@@ -1,6 +1,7 @@
 package com.aiden.board.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import com.aiden.board.dto.LoginDto;
+import com.aiden.board.dto.ProfileDto;
 import com.aiden.board.dto.UserDto;
 import com.aiden.board.dto.response.BaseResponse;
 import com.aiden.board.dto.response.SingleDataResponse;
@@ -96,7 +98,7 @@ public class UserController {
     }
     
     @GetMapping("/users/{userId}")
-    public ResponseEntity<BaseResponse> getUser(@PathVariable(value="userId") Long userId, final Authentication authentication) {
+    public ResponseEntity<BaseResponse> getUser(@PathVariable(value="userId") Long userId) {
         ResponseEntity<BaseResponse> responseEntity = null;
         try {
         	UserDto findUser = userService.findByUserId(userId);
@@ -110,5 +112,56 @@ public class UserController {
         }
 
         return responseEntity;
+    }
+    
+    @PutMapping("/users")
+    public ResponseEntity<BaseResponse> updateUser(@RequestBody UserDto user) {
+        ResponseEntity<BaseResponse> responseEntity = null;
+        try {
+        	UserDto updateUser = userService.updateUser(user);
+            SingleDataResponse<UserDto> response = responseService.getSingleDataResponse(true, "업데이트 성공", updateUser);
+  
+            responseEntity = ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (UserNotFoundException exception) {
+            BaseResponse response = responseService.getBaseResponse(false, exception.getMessage());
+
+            responseEntity = ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+        }
+        
+        return responseEntity;
     } 
+    
+    @DeleteMapping("/users")
+    public ResponseEntity<BaseResponse> deleteUser(@RequestBody UserDto user) {
+        ResponseEntity<BaseResponse> responseEntity = null;
+        try {
+        	userService.deleteUser(user.getUserId());
+            BaseResponse response = responseService.getBaseResponse(true, "삭제 완료");
+            
+            responseEntity = ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (Exception exception) {
+        	 BaseResponse response = responseService.getBaseResponse(false, exception.getMessage());
+        	 
+             responseEntity = ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+        }
+        
+        return responseEntity;
+    }
+    
+    @GetMapping("/profiles/{deptId}")
+    public ResponseEntity<BaseResponse> getProfilesFromDepartment(@PathVariable(value="deptId") Long deptId) {
+        ResponseEntity<BaseResponse> responseEntity = null;
+        try {
+        	List<ProfileDto> profiles = userService.selectProfilesFromDepartment(deptId);
+        	SingleDataResponse<List<ProfileDto>> response = responseService.getSingleDataResponse(true, "조회 성공", profiles);
+            
+            responseEntity = ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (UserNotFoundException exception) {
+            BaseResponse response = responseService.getBaseResponse(false, exception.getMessage());
+
+            responseEntity = ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+        }
+
+        return responseEntity;
+    }
 }

@@ -2,6 +2,7 @@
   <div
     @mousedown="startDragging"
     :style="{ position: 'absolute', width: '50px', height: '50px', backgroundColor: 'red', left: `${position.x}px`, top: `${position.y}px` }">
+    {{ piece.userName }}
   </div>
 </template>
 
@@ -11,16 +12,18 @@ import { ref, onMounted, onUnmounted } from 'vue';
 interface Position {
   x: number;
   y: number;
+  userName: string;
+  userId: number;
 }
 
 const props = defineProps<{
-  initialPosition: Position;
+  piece: Position
 }>();
 
-const position = ref(props.initialPosition);
-const isDragging = ref(false);
-const offsetX = ref(0);
-const offsetY = ref(0);
+const position = ref(props.piece)
+const isDragging = ref(false)
+const offsetX = ref(0)
+const offsetY = ref(0)
 
 const startDragging = (event: MouseEvent) => {
   isDragging.value = true;

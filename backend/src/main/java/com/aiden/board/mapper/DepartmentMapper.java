@@ -9,4 +9,5 @@ import com.aiden.board.dto.DepartmentDto;
 @Mapper
 public interface DepartmentMapper {
 	public List<DepartmentDto> selectDepartments();
+	public String selectDepartmentName(Integer deptId);
 }

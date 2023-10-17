@@ -1,9 +1,9 @@
 <template>
   <div class="auth-page">
     <div class="container page d-flex justify-content-center align-items-center">
-      <div class="col-md-6 col-xs-12 text-center mx-auto">
-        <h1 class="text-center mb-4 mt-5">회원가입</h1>
-        <p class="text-center">
+      <div class="col-md-4 col-xs-12 text-center mx-auto">
+        <h1 class="text-center mb-3 mt-5">회원가입</h1>
+        <p class="text-center mb-4">
           <app-link name="login">계정이 있으신가요?</app-link>
         </p>
 
@@ -39,11 +39,11 @@
               placeholder="비밀번호" />
           </fieldset>
           <fieldset class="form-group">
-            <select required class="custom-select form-select shadow-none bg-light border-0">
-              <option value="">소속 부서</option>
-              <option value=1>제목</option>
-              <option value=2>내용</option>
-              <option value=3>작성자</option>
+            <select v-model="form.deptId" required class="form-select shadow-none bg-light border-0">
+              <option value="" disabled selected>소속 부서</option>
+              <option v-for="department in departments" :key="department.deptId" :value="department.deptId">
+                {{ department.name }}
+              </option>
             </select>
           </fieldset>
           <button
@@ -60,33 +60,42 @@
 
 
 <script lang="ts" setup>
-import { reactive, ref } from 'vue'
+import { reactive, ref, onMounted } from 'vue'
 import AppLink from '../components/AppLink.vue'
 import { useUserStore } from '../store/user'
 import { routerPush } from '../router'
+import api from '@/api';
 
 const errors = ref('')
 const loadding = ref(false)
+const departments = ref<Department[]>()
 
 const form = reactive<PostRegisterForm>({
   'email': '',
   'password': '',
   'name': '',
+  'deptId': ''
 })
 
 const userStore = useUserStore()
 
 const onRegister = async () => {
+  loadding.value = true
   await userStore.register(form)
-  await userStore.login(form)
+    .then(() => {
+      routerPush("login")
+    })
     .catch((error) => {
       errors.value = error
     })
     .finally(() => {
       loadding.value = false
     })
-  routerPush("login")
 }
+
+onMounted(async () => {
+  departments.value = await api.fetchDepartments()
+})
 
 </script>
 

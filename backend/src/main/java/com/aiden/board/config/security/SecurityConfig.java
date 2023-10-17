@@ -38,7 +38,8 @@ public class SecurityConfig {
 	
 	private static final String[] PERMIT_GET_URLS = {  
 			"/api/boards/**",
-			"/api/users/**"
+			"/api/users/**",
+			"/api/departments/**"
 	};
 	@Bean
 	protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {

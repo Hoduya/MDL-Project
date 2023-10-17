@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aiden.board.dto.CommentDto;
+import com.aiden.board.dto.DepartmentDto;
 import com.aiden.board.dto.UserDto;
 import com.aiden.board.dto.response.BaseResponse;
 import com.aiden.board.service.CommentService;
+import com.aiden.board.service.DepartmentService;
 import com.aiden.board.service.ResponseService;
 
 import lombok.RequiredArgsConstructor;
@@ -30,12 +32,12 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api")
 public class DepartmentController {
 
-	private final CommentService commentService;
+	private final DepartmentService departmentService;
     private final ResponseService responseService;
 
-	@GetMapping("/boards/{boardId}/comments")
-	public List<CommentDto> getCommentsByBno(@PathVariable("boardId") Long boardId) {
-		List<CommentDto> comments = commentService.selectCommentsByBoardId(boardId);
-		return comments;
+	@GetMapping("/departments")
+	public List<DepartmentDto> getDepartments() {
+		List<DepartmentDto> departments = departmentService.selectDepartments();
+		return departments;
 	}
 }

@@ -6,9 +6,16 @@ declare interface User {
   userId: number
   email: string
   name: string
+  deptId: number
+  deptName: string
   regDate: string
   token?: string
   password?: string
+}
+
+declare interface Profile {
+  userId: number
+  name: string
 }
 
 declare interface Board {
@@ -48,7 +55,7 @@ declare interface BoardComment {
 }
 
 declare interface Department {
-  departmentId: number
+  deptId: number
   name: string
 }
 
@@ -65,6 +72,7 @@ declare interface PostRegisterForm {
   email: string
   password: string
   name: string
+  deptId: string
 }
 
 declare interface BoardForm {

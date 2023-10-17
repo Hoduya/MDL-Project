@@ -8,4 +8,10 @@
         SELECT DEPT_ID, NAME
         FROM TB_DEPT
     </select>
+    
+    <select id="selectDepartmentName" resultType="String">
+    	SELECT NAME
+    	FROM TB_DEPT
+    	WHERE DEPT_ID=#{deptId}
+    </select>
 </mapper>
