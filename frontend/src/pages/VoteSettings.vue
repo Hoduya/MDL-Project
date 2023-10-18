@@ -112,8 +112,6 @@ watch(dayBoxes, () => {
     const top = e.bbox.y0 * (1000 / 1504) -3
     const left = e.bbox.x0 * (1000 / 1504) -3
 
-    console.log(top)
-
     marks.value.push({ style: { width: `${width}px`, height: `${height}px`, top: `${top}px`, left: `${left}px` } })
   })
 })

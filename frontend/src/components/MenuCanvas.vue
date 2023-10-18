@@ -59,11 +59,6 @@ onMounted(() => {
   ctx = canvas.value!.getContext('2d')!;
 
   drawImageOnCanvas();
-
-  setTimeout(()=> {
-    drawRectangle({x0:0, y0:0, x1:100, y1:100});
-
-  }, 3000)
 })
 
 </script>

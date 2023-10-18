@@ -7,7 +7,6 @@
     <img class="imageContainer" :src="imagePath" draggable='false'/>
   </div>
 
-
   <div>
     <VoteCanvas>
     </VoteCanvas>
