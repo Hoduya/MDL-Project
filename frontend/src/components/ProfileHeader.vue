@@ -20,7 +20,7 @@
 import AppLink from '../components/AppLink.vue'
 import { computed } from 'vue'
 import { useUserStore } from '../store/user'
-import { formatDate } from '@/utils/formatDateTime';
+import { formatDate } from '@/utils/DateUtils';
 
 interface Props {
   user?: User
@@ -57,4 +57,4 @@ const regDate = computed(() => {
   flex-direction: column;
   align-items: flex-start;
 }
-</style>
+</style>@/utils/DateUtils

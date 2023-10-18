@@ -84,7 +84,7 @@
 import AppLink from './AppLink.vue';
 import { computed, ref, onMounted } from 'vue';
 import { useUserStore } from '@/store/user';
-import { formatDate } from '@/utils/formatDateTime';
+import { formatDate } from '@/utils/DateUtils';
 import api from '@/api';
 import { router, routerPush } from '@/router';
 
@@ -159,4 +159,4 @@ body {
 input[type="text"]:disabled {
   background: none;
 }
-</style>
+</style>@/utils/DateUtils

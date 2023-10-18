@@ -45,6 +45,7 @@ const detectText = async () => {
   const result = await worker.recognize(imagePath.value)
 
   if (result.data) {
+    console.log(result.data)
     console.log(result.data.text.replace(/ +/g, " ").split(" "))
   }
 }

@@ -22,7 +22,7 @@
 
 <script lang="ts" setup>
 import AppLink from './AppLink.vue';
-import { formatDateTime } from '@/utils/formatDateTime';
+import { formatDateTime } from '@/utils/DateUtils';
 import { defineProps } from 'vue';
 
 interface Props {
@@ -33,3 +33,4 @@ const props = defineProps<Props>()
 const formattedDate = formatDateTime(props.board.regDate);
 
 </script>
+@/utils/DateUtils
