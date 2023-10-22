@@ -4,6 +4,8 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -17,7 +19,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-import com.aiden.board.utils.JwtTokenProvider;
+import com.aiden.board.utils.JwtProvider;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,41 +29,42 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Configuration
 public class SecurityConfig {
-	
-    private final JwtTokenProvider jwtTokenProvider;
-	
-	private static final String[] PERMIT_ALL_URLS = { 
-			"/api/join",
-			"/api/login",
-			"/swagger-ui/**",
-			"/v3/api-docs/**"
-	};
-	
-	private static final String[] PERMIT_GET_URLS = {  
-			"/api/boards/**",
-			"/api/users/**",
-			"/api/departments/**"
-	};
+
+	private final JwtProvider jwtProvider;
+	private final ObjectMapper objectMapper;
+
+	private static final String[] PERMIT_ALL_URLS = { "/api/join", "/api/login", "/swagger-ui/**", "/v3/api-docs/**" };
+
+	private static final String[] PERMIT_GET_URLS = { "/api/boards/**", "/api/users/**", "/api/departments/**" };
+
 	@Bean
 	protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http.csrf(AbstractHttpConfigurer::disable);
-		http.authorizeHttpRequests(authorize -> 
-			authorize
-			.requestMatchers(HttpMethod.GET, PERMIT_GET_URLS).permitAll()
-			.requestMatchers(PERMIT_ALL_URLS).permitAll()
-			.anyRequest().authenticated())
-			// 세션을 사용하지 않으므로 STATELESS 설정
-        	.sessionManagement(sessionManagement ->
-        		sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+		http.csrf(AbstractHttpConfigurer::disable)
+			.sessionManagement( // 세션을 사용하지 않으므로 STATELESS 설정
+				sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+			.authorizeHttpRequests(authorize -> 
+				authorize
+					.requestMatchers(HttpMethod.GET, PERMIT_GET_URLS).permitAll()
+					.requestMatchers(PERMIT_ALL_URLS).permitAll().anyRequest().authenticated())
+			// 토큰 검증 완료 시 ID/PW 인증 단계 필터를 건너뜀.
+			.addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
+		 	.exceptionHandling(authenticationManager ->
+		 		authenticationManager
+                 	.authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+                 	.accessDeniedHandler(new CustomAccessDeniedHandler()));
 		
-        http
-        	.addFilterBefore(new JwtFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class); 
-
+		
 		return http.build();
 	}
-	
+
+	@Bean	
+	AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+			throws Exception {
+		return authenticationConfiguration.getAuthenticationManager();
+	}
 
 	// passwordEncoder
+	// Bcypt 암호화 단방향 해시 알고리즘
 	@Bean
 	protected BCryptPasswordEncoder encodePassword() {
 		return new BCryptPasswordEncoder();

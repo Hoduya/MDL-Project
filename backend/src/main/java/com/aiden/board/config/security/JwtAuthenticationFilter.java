@@ -1,14 +1,25 @@
 package com.aiden.board.config.security;
 
-import com.aiden.board.utils.JwtTokenProvider;
+import com.aiden.board.exception.ExpiredJwtException;
+import com.aiden.board.exception.TokenNotFoundException;
+import com.aiden.board.utils.JwtProvider;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -19,41 +30,32 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-/**
- * JWT(Json Web Token) 인증을 처리
- */
+@Slf4j
+public class JwtAuthenticationFilter extends GenericFilterBean {
 
-// final 필드에 대한 생성자를 자동으로 생성
-@RequiredArgsConstructor
-public class JwtFilter extends GenericFilterBean {
+    private final JwtProvider jwtProvider;
 
-	private static final Logger logger = LoggerFactory.getLogger(JwtFilter.class);
+    public JwtAuthenticationFilter(JwtProvider jwtProvider) {
+        this.jwtProvider = jwtProvider;
+    }
 
-	private final JwtTokenProvider jwtTokenProvider;
+    // request 로 들어오는 Jwt 의 유효성을 검증 - JwtProvider.validationToken() 을 필터로서 FilterChain 에 추가
+    @Override
+    public void doFilter(ServletRequest request,
+                         ServletResponse response,
+                         FilterChain filterChain) throws IOException, ServletException {
 
-	// Filter
-	// - client의 요청을 가로채어 작업을 수행
-	// - response 되기 전에 가로채어 작업을 수행
-	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-			throws IOException, ServletException {
-				
-		String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
+        // request 헤더에서 토큰 가져옴
+        String token = jwtProvider.resolveToken((HttpServletRequest) request);
 
-		String requestURI = ((HttpServletRequest) request).getRequestURI();
+        // 토큰 검증
+        log.info("[Verifying token]");
+        log.info(((HttpServletRequest) request).getRequestURL().toString());
 
-		// 만약 JWT 토큰이 존재하고 유효하다면, 해당 토큰을 사용하여 사용자 인증 정보를 가져와
-		// Spring Security의 SecurityContextHolder에 저장
-		if (StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)) {
-			Authentication authentication = jwtTokenProvider.getAuthentication(token);
-			SecurityContextHolder.getContext().setAuthentication(authentication);
-
-			logger.info("Security context에 인증 정보를 저장했습니다, uri: {}", requestURI);
-		} else {
-			logger.info("유효한 Jwt 토큰이 없습니다, uri: {}", requestURI);
-		}
-
-		// 다음 필터로 요청을 전달합니다.
-		chain.doFilter(request, response);
-	}
+        if (token != null && jwtProvider.validateToken(token)) {
+            Authentication authentication = jwtProvider.getAuthentication(token);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
+        filterChain.doFilter(request, response);
+    }
 }

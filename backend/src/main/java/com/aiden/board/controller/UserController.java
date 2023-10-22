@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,141 +29,101 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@CrossOrigin(origins="http://localhost:8080")
+@CrossOrigin(origins = "http://localhost:8080")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class UserController {
 
-    private final UserService userService;
-    private final ResponseService responseService;
+	private final UserService userService;
+	private final ResponseService responseService;
+	private final AuthenticationManager authenticationManager;
 
-    @PostMapping("/join")
-    public ResponseEntity<BaseResponse> join(@RequestBody UserDto userDto) {
-    	ResponseEntity<BaseResponse> responseEntity = null;
-        try {
-            UserDto savedUser = userService.join(userDto);
-            SingleDataResponse<UserDto> response = responseService.getSingleDataResponse(true, "회원가입 성공", savedUser);
-            responseEntity = ResponseEntity.status(HttpStatus.CREATED).body(response);
-            
-            
-        } catch (DuplicatedUsernameException exception) {
-            log.debug(exception.getMessage());
-            BaseResponse response = responseService.getBaseResponse(false, exception.getMessage());
+	@GetMapping("/users")
+	public ResponseEntity<BaseResponse> getCurrentUser(final Authentication authentication) {
+		ResponseEntity<BaseResponse> responseEntity = null;
+		try {
+			Long userId = ((UserDto) authentication.getPrincipal()).getUserId();
+			UserDto findUser = userService.findByUserId(userId);
 
-            responseEntity = ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
-        }
-        return responseEntity;
-    }
+			SingleDataResponse<UserDto> response = responseService.getSingleDataResponse(true, "조회 성공", findUser);
 
-    @PostMapping("/login")
-    public ResponseEntity<BaseResponse> login(@RequestBody LoginDto loginDto) {
-    	ResponseEntity<BaseResponse> responseEntity = null;
-        try {
-            String token = userService.login(loginDto);
-            UserDto userDto = userService.findByUserEmail(loginDto.getEmail());
-            
-            HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.add("Authorization", "Bearer " + token);
-            
-            Map<String, Object> result = new HashMap();
-            result.put("token", token);
-            result.put("user", userDto);
-            
-            SingleDataResponse<Map<String, Object>> response = responseService.getSingleDataResponse(true, "로그인 성공", result);
-            responseEntity = ResponseEntity.status(HttpStatus.OK).headers(httpHeaders).body(response);
-        } catch (LoginFailedException exception) {
-            BaseResponse response = responseService.getBaseResponse(false, exception.getMessage());
-            responseEntity = ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
-        }
+			responseEntity = ResponseEntity.status(HttpStatus.CREATED).body(response);
+		} catch (UserNotFoundException exception) {
+			BaseResponse response = responseService.getBaseResponse(false, exception.getMessage());
 
-        return responseEntity;
-    }
+			responseEntity = ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+		}
 
-    @GetMapping("/users")
-    public ResponseEntity<BaseResponse> getCurrentUser(final Authentication authentication) {
-        ResponseEntity<BaseResponse> responseEntity = null;
-        try {
-            Long userId = ((UserDto) authentication.getPrincipal()).getUserId();
-            UserDto findUser = userService.findByUserId(userId);
+		return responseEntity;
+	}
 
-            SingleDataResponse<UserDto> response = responseService.getSingleDataResponse(true, "조회 성공", findUser);
-            
-            responseEntity = ResponseEntity.status(HttpStatus.CREATED).body(response);
-        } catch (UserNotFoundException exception) {
-            BaseResponse response = responseService.getBaseResponse(false, exception.getMessage());
+	@GetMapping("/users/{userId}")
+	public ResponseEntity<BaseResponse> getUser(@PathVariable(value = "userId") Long userId) {
+		ResponseEntity<BaseResponse> responseEntity = null;
+		try {
+			UserDto findUser = userService.findByUserId(userId);
+			SingleDataResponse<UserDto> response = responseService.getSingleDataResponse(true, "조회 성공", findUser);
 
-            responseEntity = ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
-        }
+			responseEntity = ResponseEntity.status(HttpStatus.OK).body(response);
+		} catch (UserNotFoundException exception) {
+			BaseResponse response = responseService.getBaseResponse(false, exception.getMessage());
 
-        return responseEntity;
-    }
-    
-    @GetMapping("/users/{userId}")
-    public ResponseEntity<BaseResponse> getUser(@PathVariable(value="userId") Long userId) {
-        ResponseEntity<BaseResponse> responseEntity = null;
-        try {
-        	UserDto findUser = userService.findByUserId(userId);
-            SingleDataResponse<UserDto> response = responseService.getSingleDataResponse(true, "조회 성공", findUser);
-            
-            responseEntity = ResponseEntity.status(HttpStatus.OK).body(response);
-        } catch (UserNotFoundException exception) {
-            BaseResponse response = responseService.getBaseResponse(false, exception.getMessage());
+			responseEntity = ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+		}
 
-            responseEntity = ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
-        }
+		return responseEntity;
+	}
 
-        return responseEntity;
-    }
-    
-    @PutMapping("/users")
-    public ResponseEntity<BaseResponse> updateUser(@RequestBody UserDto user) {
-        ResponseEntity<BaseResponse> responseEntity = null;
-        try {
-        	UserDto updateUser = userService.updateUser(user);
-            SingleDataResponse<UserDto> response = responseService.getSingleDataResponse(true, "업데이트 성공", updateUser);
-  
-            responseEntity = ResponseEntity.status(HttpStatus.OK).body(response);
-        } catch (UserNotFoundException exception) {
-            BaseResponse response = responseService.getBaseResponse(false, exception.getMessage());
+	@PutMapping("/users")
+	public ResponseEntity<BaseResponse> updateUser(@RequestBody UserDto user) {
+		ResponseEntity<BaseResponse> responseEntity = null;
+		try {
+			UserDto updateUser = userService.updateUser(user);
+			SingleDataResponse<UserDto> response = responseService.getSingleDataResponse(true, "업데이트 성공", updateUser);
 
-            responseEntity = ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
-        }
-        
-        return responseEntity;
-    } 
-    
-    @DeleteMapping("/users")
-    public ResponseEntity<BaseResponse> deleteUser(@RequestBody UserDto user) {
-        ResponseEntity<BaseResponse> responseEntity = null;
-        try {
-        	userService.deleteUser(user.getUserId());
-            BaseResponse response = responseService.getBaseResponse(true, "삭제 완료");
-            
-            responseEntity = ResponseEntity.status(HttpStatus.OK).body(response);
-        } catch (Exception exception) {
-        	 BaseResponse response = responseService.getBaseResponse(false, exception.getMessage());
-        	 
-             responseEntity = ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
-        }
-        
-        return responseEntity;
-    }
-    
-    @GetMapping("/profiles/{deptId}")
-    public ResponseEntity<BaseResponse> getProfilesFromDepartment(@PathVariable(value="deptId") Long deptId) {
-        ResponseEntity<BaseResponse> responseEntity = null;
-        try {
-        	List<ProfileDto> profiles = userService.selectProfilesFromDepartment(deptId);
-        	SingleDataResponse<List<ProfileDto>> response = responseService.getSingleDataResponse(true, "조회 성공", profiles);
-            
-            responseEntity = ResponseEntity.status(HttpStatus.OK).body(response);
-        } catch (UserNotFoundException exception) {
-            BaseResponse response = responseService.getBaseResponse(false, exception.getMessage());
+			responseEntity = ResponseEntity.status(HttpStatus.OK).body(response);
+		} catch (UserNotFoundException exception) {
+			BaseResponse response = responseService.getBaseResponse(false, exception.getMessage());
 
-            responseEntity = ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
-        }
+			responseEntity = ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+		}
 
-        return responseEntity;
-    }
+		return responseEntity;
+	}
+
+	@DeleteMapping("/users")
+	public ResponseEntity<BaseResponse> deleteUser(@RequestBody UserDto user) {
+		ResponseEntity<BaseResponse> responseEntity = null;
+		try {
+			userService.deleteUser(user.getUserId());
+			BaseResponse response = responseService.getBaseResponse(true, "삭제 완료");
+
+			responseEntity = ResponseEntity.status(HttpStatus.OK).body(response);
+		} catch (Exception exception) {
+			BaseResponse response = responseService.getBaseResponse(false, exception.getMessage());
+
+			responseEntity = ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+		}
+
+		return responseEntity;
+	}
+
+	@GetMapping("/profiles/{deptId}")
+	public ResponseEntity<BaseResponse> getProfilesFromDepartment(@PathVariable(value = "deptId") Long deptId) {
+		ResponseEntity<BaseResponse> responseEntity = null;
+		try {
+			List<ProfileDto> profiles = userService.selectProfilesFromDepartment(deptId);
+			SingleDataResponse<List<ProfileDto>> response = responseService.getSingleDataResponse(true, "조회 성공",
+					profiles);
+
+			responseEntity = ResponseEntity.status(HttpStatus.OK).body(response);
+		} catch (UserNotFoundException exception) {
+			BaseResponse response = responseService.getBaseResponse(false, exception.getMessage());
+
+			responseEntity = ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+		}
+
+		return responseEntity;
+	}
 }

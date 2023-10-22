@@ -8,8 +8,9 @@ import com.aiden.board.dto.CommentDto;
 
 @Mapper
 public interface CommentMapper {
-	public List<CommentDto> selectCommentsByBoardId(Long boardId);
-	public CommentDto selectCommentByCommentId(Long commentId);
-	public Integer insertComment(CommentDto comment);
-	public Integer deleteComment(Long BoardId, Long commentId);
+	
+	List<CommentDto> selectCommentsByBoardId(Long boardId);
+	CommentDto selectCommentByCommentId(Long commentId);
+	Integer insertComment(CommentDto comment);
+	Integer deleteComment(Long BoardId, Long commentId);
 }

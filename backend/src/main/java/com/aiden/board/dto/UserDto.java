@@ -1,12 +1,15 @@
 package com.aiden.board.dto;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.aiden.board.utils.Role;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -44,19 +47,19 @@ public class UserDto implements UserDetails {
     private String name;
     private Integer deptId;
     private String deptName;
-    private Integer role;
+    private String role;
     private Date regDate;
-	@JsonInclude(JsonInclude.Include.NON_NULL)
-    private String token;
-
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private Collection<? extends GrantedAuthority> authorities;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.authorities;
-    }
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
 
+        for(String role : role.split(",")){
+            authorities.add(new SimpleGrantedAuthority(role));
+        }
+        return authorities;
+    }
+    
     @Override
     public String getPassword() {
         return this.password;

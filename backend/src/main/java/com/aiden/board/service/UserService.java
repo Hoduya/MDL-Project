@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +18,7 @@ import com.aiden.board.exception.LoginFailedException;
 import com.aiden.board.exception.UserNotFoundException;
 import com.aiden.board.mapper.DepartmentMapper;
 import com.aiden.board.mapper.UserMapper;
-import com.aiden.board.utils.JwtTokenProvider;
+import com.aiden.board.utils.JwtProvider;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,38 +30,8 @@ public class UserService {
 	
 	private final UserMapper userMapper;
 	private final DepartmentMapper departmentMapper;
-	private final JwtTokenProvider jwtTokenProvider;
+	private final JwtProvider jwtProvider;
 	private final PasswordEncoder passwordEncoder;
-	
-	@Transactional
-	public UserDto join(UserDto userDto) {
-		if (userMapper.findByUserEmail(userDto.getEmail()).isPresent()) {
-			throw new DuplicatedUsernameException("이미 가입된 이메일입니다");
-		}
-		
-		if (userMapper.findByUserName(userDto.getName()).isPresent()) {
-			throw new DuplicatedUsernameException("이미 존재하는 이름입니다.");
-		}
-		
-		userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
-		
-		if (userDto.getRole() == null) userDto.setRole(0);
-		
-		userMapper.save(userDto);
-		
-		return userMapper.findByUserEmail(userDto.getEmail()).get();
-	}
-	
-	public String login(LoginDto loginDto) {
-		UserDto userDto = userMapper.findByUserEmail(loginDto.getEmail())
-				.orElseThrow(() -> new LoginFailedException("올바르지 않은 계정정보입니다."));
-
-		if (!passwordEncoder.matches(loginDto.getPassword(), userDto.getPassword())) {
-			throw new LoginFailedException("올바르지 않은 계정정보입니다.");
-		}
-				
-		return jwtTokenProvider.createToken(userDto.getUserId(), Collections.singletonList(userDto.getRole()));
-	}
 	
 	public UserDto findByUserId(Long userId) {
 		return userMapper.findByUserId(userId).orElseThrow(() -> new UserNotFoundException("존재하지 않는 계정입니다."));
