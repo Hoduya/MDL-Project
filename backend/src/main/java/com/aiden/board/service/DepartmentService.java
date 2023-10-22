@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.aiden.board.dto.DepartmentDto;
+import com.aiden.board.dto.User.DepartmentDto;
 import com.aiden.board.mapper.DepartmentMapper;
 import com.aiden.board.mapper.UserMapper;
 

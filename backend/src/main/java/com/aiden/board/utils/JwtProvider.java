@@ -2,6 +2,8 @@ package com.aiden.board.utils;
 
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,40 +14,65 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import com.aiden.board.dto.Token.TokenDto;
+
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
-public class JwtTokenProvider {
+public class JwtProvider {
 
 	@Value("${jwt.secret}")
 	private String secretKey;
 
-	@Value("${jwt.token-validity-in-seconds}")
-	private long tokenValidMillisecond;
+	@Value("${jwt.accessToken-validity-in-seconds}")
+	private long accessTokenValidSeconds;
 
+	@Value("${jwt.refreshToken-validity-in-seconds}")
+	private long refreshTokenValidSeconds;
+	
 	private final UserDetailsService userDetailsService;
-	private final Logger logger = LoggerFactory.getLogger(JwtTokenProvider.class);
 
 	@PostConstruct
 	protected void init() {
 		secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes()); // SecretKey Base64로 인코딩
 	}
 
-	// JWT 토큰 생성
-	public String createToken(Long userId, List<Integer> roles) {
+	// JWT 생성
+	public TokenDto createToken(Long userId, String roles) {
+		
+		// Claims 에 user 구분을 위한 userPK 및 권한 저장 
 		Claims claims = Jwts.claims().setSubject(userId.toString());
 		claims.put("roles", roles);
+		
+		// 생성날짜, 만료날짜 
 		Date now = new Date();
+		
+       String accessToken = Jwts.builder()
+                .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + accessTokenValidSeconds))
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .compact();
 
-		return Jwts.builder().setClaims(claims).setIssuedAt(now)
-				.setExpiration(new Date(now.getTime() + tokenValidMillisecond)) // 토큰 만료일 설정
-				.signWith(SignatureAlgorithm.HS256, secretKey) // 암호화
-				.compact();
+        String refreshToken = Jwts.builder()
+                .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
+                .setExpiration(new Date(now.getTime() + refreshTokenValidSeconds))
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .compact();
+
+        return TokenDto.builder()
+                .grantType("Bearer")
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .accessTokenExprieDate(new Date(now.getTime() + accessTokenValidSeconds))
+                .build();
 	}
 
 	// JWT 토큰에서 인증 정보 조회
@@ -56,7 +83,7 @@ public class JwtTokenProvider {
 	}
 
 	// 유저 ID 추출
-	public String getUserId(String token) {
+	private String getUserId(String token) {
 		return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
 	}
 
@@ -75,16 +102,17 @@ public class JwtTokenProvider {
 	// JWT 토큰 유효성 체크
 	public boolean validateToken(String token) {
 		try {
-			Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
-
-			return !claims.getBody().getExpiration().before(new Date());
-		} catch (SecurityException | MalformedJwtException | IllegalArgumentException exception) {
-			logger.info("잘못된 Jwt 토큰입니다");
+			Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
+			return true;
+		} catch (SecurityException | MalformedJwtException exception) {
+			log.info("잘못된 Jwt 서입니다");
 		} catch (ExpiredJwtException exception) {
-			logger.info("만료된 Jwt 토큰입니다");
+			log.info("만료된 Jwt 토큰입니다");
 		} catch (UnsupportedJwtException exception) {
-			logger.info("지원하지 않는 Jwt 토큰입니다");
-		}
+			log.info("지원하지 않는 Jwt 토큰입니다");
+		} catch (IllegalArgumentException e) {
+			log.error("잘못된 토큰입니다.");
+        }
 
 		return false;
 	}

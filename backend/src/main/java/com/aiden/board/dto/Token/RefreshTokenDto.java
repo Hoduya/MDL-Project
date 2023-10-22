@@ -1,6 +1,7 @@
-package com.aiden.board.dto;
+package com.aiden.board.dto.Token;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,7 +10,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class DepartmentDto {
-    private Integer deptId;
-    private String name;
+@Builder
+public class RefreshTokenDto {
+	
+	private Long key; // USER_ID
+	private String token;
 }

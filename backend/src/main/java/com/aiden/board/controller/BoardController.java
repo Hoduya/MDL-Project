@@ -22,8 +22,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.aiden.board.dto.BoardDto;
-import com.aiden.board.dto.UserDto;
+import com.aiden.board.dto.User.UserDto;
+import com.aiden.board.dto.board.BoardDto;
 import com.aiden.board.service.BoardService;
 
 import lombok.RequiredArgsConstructor;

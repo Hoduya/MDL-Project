@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.aiden.board.dto.BoardDto;
+import com.aiden.board.dto.board.BoardDto;
 
 @Mapper
 public interface BoardMapper {

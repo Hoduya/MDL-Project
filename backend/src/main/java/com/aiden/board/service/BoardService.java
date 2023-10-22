@@ -10,8 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.aiden.board.dto.BoardDto;
-import com.aiden.board.dto.UserDto;
+import com.aiden.board.dto.User.UserDto;
+import com.aiden.board.dto.board.BoardDto;
 import com.aiden.board.mapper.BoardMapper;
 import com.aiden.board.mapper.UserMapper;
 

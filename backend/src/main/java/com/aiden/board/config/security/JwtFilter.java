@@ -1,6 +1,6 @@
 package com.aiden.board.config.security;
 
-import com.aiden.board.utils.JwtTokenProvider;
+import com.aiden.board.utils.JwtProvider;
 import lombok.RequiredArgsConstructor;
 
 import org.slf4j.Logger;
@@ -29,7 +29,7 @@ public class JwtFilter extends GenericFilterBean {
 
 	private static final Logger logger = LoggerFactory.getLogger(JwtFilter.class);
 
-	private final JwtTokenProvider jwtTokenProvider;
+	private final JwtProvider jwtTokenProvider;
 
 	// Filter
 	// - client의 요청을 가로채어 작업을 수행

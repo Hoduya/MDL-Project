@@ -1,4 +1,4 @@
-package com.aiden.board.dto;
+package com.aiden.board.dto.User;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProfileDto {
-	private Long userId;
-	private String name;
+public class DepartmentDto {
+    private Integer deptId;
+    private String name;
 }
