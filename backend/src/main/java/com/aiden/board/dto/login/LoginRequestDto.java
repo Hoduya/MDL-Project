@@ -1,4 +1,4 @@
-package com.aiden.board.dto;
+package com.aiden.board.dto.login;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginDto {
+public class LoginRequestDto {
     private String email;
     private String password;
 }

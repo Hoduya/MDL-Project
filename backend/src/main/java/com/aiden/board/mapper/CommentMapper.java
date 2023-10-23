@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.aiden.board.dto.CommentDto;
+import com.aiden.board.dto.board.CommentDto;
 
 @Mapper
 public interface CommentMapper {

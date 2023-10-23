@@ -3,6 +3,8 @@ package com.aiden.board.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,59 +12,51 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.aiden.board.dto.LoginDto;
-import com.aiden.board.dto.UserDto;
-import com.aiden.board.dto.response.BaseResponse;
-import com.aiden.board.dto.response.SingleDataResponse;
+import com.aiden.board.dto.User.UserDto;
 import com.aiden.board.exception.DuplicatedUsernameException;
 import com.aiden.board.service.CommentService;
-import com.aiden.board.service.ResponseService;
+import com.aiden.board.dto.ApiResponse.SingleResult;
+import com.aiden.board.dto.Token.TokenDto;
+import com.aiden.board.dto.Token.TokenRequestDto;
+import com.aiden.board.dto.login.LoginRequestDto;
+import com.aiden.board.dto.login.LoginResponseDto;
+import com.aiden.board.exception.DuplicatedUsernameException;
+import com.aiden.board.exception.LoginFailedException;
+import com.aiden.board.service.AuthService;
+import com.aiden.board.service.BoardService;
+import com.aiden.board.service.response.ResponseService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
-@RestController
+
 @RequiredArgsConstructor
+@RestController
 @RequestMapping("/api")
 public class AuthController {
-	
-	// 회원가입
-	// 성공 여부만 리턴. 로그인 해야 토큰 생성
-	@PostMapping("/join")
-	public ResponseEntity<BaseResponse> join(@RequestBody UserDto userDto) {
-		ResponseEntity<BaseResponse> responseEntity = null;
-		try {
-			UserDto savedUser = userService.join(userDto);
-			SingleDataResponse<UserDto> response = responseService.getSingleDataResponse(true, "회원가입 성공", savedUser);
-			responseEntity = ResponseEntity.status(HttpStatus.CREATED).body(response);
 
-		} catch (DuplicatedUsernameException exception) {
-			log.debug(exception.getMessage());
-			BaseResponse response = responseService.getBaseResponse(false, exception.getMessage());
+	private final AuthService authService;
+	private final ResponseService responseService;
 
-			responseEntity = ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
-		}
-		return responseEntity;
+	@PostMapping("/login")
+	public SingleResult<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
+
+		LoginResponseDto loginResponseDto = authService.login(loginRequestDto);
+		return responseService.getSingleResult(loginResponseDto);
 	}
 	
-	// 로그인
-	// Email, PW 검증 후 Access / Refresh 토큰 발급.
-	// Refresh 토큰은 Refresh 토큰 테이블에 별도로 저장.
-	@PostMapping("/login")
-	public ResponseEntity<BaseResponse> login(@RequestBody LoginDto loginDto) {
+	@PostMapping("/join")
+	public SingleResult<UserDto> join(@RequestBody UserDto userDto) {
 		
-		// 유저 계정 존재 &  패스워드 확인 후 토큰 생성.
-		String token = userService.login(loginDto);
+		UserDto signupUser = authService.signUp(userDto);
+		return responseService.getSingleResult(signupUser);
+	}
+	
+	
+	@PostMapping("/reissue")
+	public SingleResult<TokenDto> reissue(@RequestBody TokenRequestDto tokenRequestDto) {
 		
-		Map<String, Object> result = new HashMap();
-		result.put("token", token);
-		result.put("user", userDto);
-
-		SingleDataResponse<Map<String, Object>> response = responseService.getSingleDataResponse(true, "로그인 성공",
-				result);
-
-		ResponseEntity<BaseResponse> responseEntity = ResponseEntity.status(HttpStatus.OK).body(response);
-		return responseEntity;
+		TokenDto responseTokenDto = authService.reissue(tokenRequestDto);
+		return responseService.getSingleResult(responseTokenDto);
 	}
 }

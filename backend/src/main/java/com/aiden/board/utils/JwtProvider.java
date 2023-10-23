@@ -2,6 +2,8 @@ package com.aiden.board.utils;
 
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,8 +14,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import com.aiden.board.dto.jwt.TokenDto;
-
+import com.aiden.board.dto.Token.TokenDto;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Base64;
@@ -21,6 +22,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtProvider {
@@ -28,14 +30,13 @@ public class JwtProvider {
 	@Value("${jwt.secret}")
 	private String secretKey;
 
-	@Value("${jwt.aceessToken-validity-in-seconds}")
+	@Value("${jwt.accessToken-validity-in-seconds}")
 	private long accessTokenValidSeconds;
-	
+
 	@Value("${jwt.refreshToken-validity-in-seconds}")
 	private long refreshTokenValidSeconds;
-
+	
 	private final UserDetailsService userDetailsService;
-	private final Logger logger = LoggerFactory.getLogger(JwtProvider.class);
 
 	@PostConstruct
 	protected void init() {
@@ -44,35 +45,36 @@ public class JwtProvider {
 		secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes()); // SecretKey Base64로 인코딩
 	}
 
-	// JWT 토큰 생성
-	public TokenDto generateToken(Long userPk, String role) {
+	// JWT 생성
+	public TokenDto createToken(Long userId, String roles) {
 		
-		// 토큰 식별을 위해 claim 에 유저 id, 권한 삽입
-		Claims claims = Jwts.claims().setSubject(String.valueOf(userPk));
-		claims.put("roles", role);
+		// Claims 에 user 구분을 위한 userPK 및 권한 저장 
+		Claims claims = Jwts.claims().setSubject(userId.toString());
+		claims.put("roles", roles);
 		
+		// 생성날짜, 만료날짜 
 		Date now = new Date();
 		
-		String accessToken = Jwts.builder()
-				.setHeaderParam(Header.TYPE, Header.JWT_TYPE)
-				.setClaims(claims)
-				.setIssuedAt(now)
-				.setExpiration(new Date(now.getTime() + accessTokenValidSeconds * 1000))
-				.signWith(SignatureAlgorithm.HS256, secretKey)
-				.compact();
-		
-		String refreshToken = Jwts.builder()
-				.setHeaderParam(Header.TYPE, Header.JWT_TYPE)
-                .setExpiration(new Date(now.getTime() + refreshTokenValidSeconds * 1000))
+       String accessToken = Jwts.builder()
+                .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + accessTokenValidSeconds))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
-		
-		return TokenDto.builder()
-				.grantType("Bearer")
-				.accessToken(accessToken)
-				.accessToken(refreshToken)
-				.accessTokenExpireDate(new Date(now.getTime() + accessTokenValidSeconds * 1000))
-				.build();
+
+        String refreshToken = Jwts.builder()
+                .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
+                .setExpiration(new Date(now.getTime() + refreshTokenValidSeconds))
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .compact();
+
+        return TokenDto.builder()
+                .grantType("Bearer")
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .accessTokenExprieDate(new Date(now.getTime() + accessTokenValidSeconds))
+                .build();
 	}
 
 	// JWT 토큰에서 인증 정보 조회
@@ -82,8 +84,9 @@ public class JwtProvider {
 		return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
 	}
 
-	// 토큰에서 유저 ID 추출
-	public String getUserId(String token) {
+
+	// 유저 ID 추출
+	private String getUserId(String token) {
 		return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
 	}
 
@@ -102,16 +105,17 @@ public class JwtProvider {
 	// JWT 토큰 유효성 체크
 	public boolean validateToken(String token) {
 		try {
-			Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
-
-			return !claims.getBody().getExpiration().before(new Date());
-		} catch (SecurityException | MalformedJwtException | IllegalArgumentException exception) {
-			logger.info("잘못된 Jwt 토큰입니다");
+			Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
+			return true;
+		} catch (SecurityException | MalformedJwtException exception) {
+			log.info("잘못된 Jwt 서입니다");
 		} catch (ExpiredJwtException exception) {
-			logger.info("만료된 Jwt 토큰입니다");
+			log.info("만료된 Jwt 토큰입니다");
 		} catch (UnsupportedJwtException exception) {
-			logger.info("지원하지 않는 Jwt 토큰입니다");
-		}
+			log.info("지원하지 않는 Jwt 토큰입니다");
+		} catch (IllegalArgumentException e) {
+			log.error("잘못된 토큰입니다.");
+        }
 
 		return false;
 	}

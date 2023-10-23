@@ -1,11 +1,12 @@
 package com.aiden.board.service;
 
+import java.io.Console;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
 import com.aiden.board.controller.CommentController;
-import com.aiden.board.dto.CommentDto;
+import com.aiden.board.dto.board.CommentDto;
 import com.aiden.board.mapper.BoardMapper;
 import com.aiden.board.mapper.CommentMapper;
 
@@ -30,10 +31,10 @@ public class CommentService {
 		return result;
 	}
 	
-	public void deleteComment(Long boardId, Long commentId) throws Exception {
+	public void deleteComment(Long boardId, Long commentId) {
 		Integer result = commentMapper.deleteComment(boardId, commentId);
 		if (result == 0) {
-			throw new Exception("댓글 삭제 오류");
+			log.info("댓글 삭제 실패 ");
 		}
 	}
 }

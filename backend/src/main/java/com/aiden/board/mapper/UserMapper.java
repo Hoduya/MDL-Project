@@ -5,8 +5,8 @@ import java.util.Optional;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.aiden.board.dto.ProfileDto;
-import com.aiden.board.dto.UserDto;
+import com.aiden.board.dto.User.ProfileDto;
+import com.aiden.board.dto.User.UserDto;
 
 @Mapper
 public interface UserMapper {

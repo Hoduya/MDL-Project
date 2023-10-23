@@ -20,8 +20,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 import com.aiden.board.utils.JwtProvider;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,13 +27,21 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Configuration
 public class SecurityConfig {
-
-	private final JwtProvider jwtProvider;
-	private final ObjectMapper objectMapper;
-
-	private static final String[] PERMIT_ALL_URLS = { "/api/join", "/api/login", "/swagger-ui/**", "/v3/api-docs/**" };
-
-	private static final String[] PERMIT_GET_URLS = { "/api/boards/**", "/api/users/**", "/api/departments/**" };
+	
+    private final JwtProvider jwtProvider;
+	
+	private static final String[] PERMIT_ALL_URLS = { 
+			"/api/join",
+			"/api/login",
+			"/swagger-ui/**",
+			"/v3/api-docs/**"
+	};
+	
+	private static final String[] PERMIT_GET_URLS = {  
+			"/api/boards/**",
+			"/api/users/**",
+			"/api/departments/**"
+	};
 
 	@Bean
 	protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {

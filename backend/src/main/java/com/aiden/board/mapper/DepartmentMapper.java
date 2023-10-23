@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.aiden.board.dto.DepartmentDto;
+import com.aiden.board.dto.User.DepartmentDto;
 
 @Mapper
 public interface DepartmentMapper {

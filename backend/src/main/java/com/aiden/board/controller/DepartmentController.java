@@ -14,13 +14,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.aiden.board.dto.CommentDto;
-import com.aiden.board.dto.DepartmentDto;
-import com.aiden.board.dto.UserDto;
-import com.aiden.board.dto.response.BaseResponse;
+import com.aiden.board.dto.User.DepartmentDto;
+import com.aiden.board.dto.User.UserDto;
+import com.aiden.board.dto.board.CommentDto;
 import com.aiden.board.service.CommentService;
 import com.aiden.board.service.DepartmentService;
-import com.aiden.board.service.ResponseService;
+import com.aiden.board.service.response.ResponseService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
