@@ -7,6 +7,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ListResult<T> extends CommonResult {
-    private List<T> list;
+public class ListDataResponse<T> extends CommonResponse {
+    private List<T> data;
 }

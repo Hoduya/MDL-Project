@@ -1,4 +1,4 @@
-package com.aiden.board.dto.jwt;
+package com.aiden.board.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RefreshTokenDto {
-	private Long key;
-	private String token;
+public class ProfileDto {
+	private Long userId;
+	private String name;
 }

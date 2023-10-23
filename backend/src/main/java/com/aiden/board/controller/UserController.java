@@ -6,11 +6,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
-import com.aiden.board.dto.ApiResponse.CommonResult;
-import com.aiden.board.dto.ApiResponse.ListResult;
-import com.aiden.board.dto.ApiResponse.SingleResult;
-import com.aiden.board.dto.User.ProfileDto;
-import com.aiden.board.dto.User.UserDto;
+import com.aiden.board.dto.ApiResponse.CommonResponse;
+import com.aiden.board.dto.ApiResponse.ListDataResponse;
+import com.aiden.board.dto.ApiResponse.SingleDataResponse;
+import com.aiden.board.dto.user.ProfileDto;
+import com.aiden.board.dto.user.UserDto;
 import com.aiden.board.service.UserService;
 import com.aiden.board.service.response.ResponseService;
 
@@ -28,30 +28,30 @@ public class UserController {
     private final ResponseService responseService;
     
     @GetMapping("/users/{userId}")
-    public SingleResult<UserDto> findUserById(@PathVariable(value="userId") Long userId) {
+    public SingleDataResponse<UserDto> findUserById(@PathVariable(value="userId") Long userId) {
     	
     	UserDto findUser = userService.findByUserId(userId);
-        return responseService.getSingleResult(findUser);
+        return responseService.getSingleDataResponse(findUser);
     }
     
     @PutMapping("/users")
-    public SingleResult<UserDto> update(@RequestBody UserDto user) {
+    public SingleDataResponse<UserDto> update(@RequestBody UserDto user) {
     	
     	UserDto updateUser = userService.updateUser(user);
-    	return responseService.getSingleResult(updateUser);
+    	return responseService.getSingleDataResponse(updateUser);
     } 
     
     @DeleteMapping("/users")
-    public CommonResult delete(@RequestBody Long userId) {
+    public CommonResponse delete(@RequestBody Long userId) {
     	
     	userService.deleteUser(userId);
-    	return responseService.getSuccessResult();
+    	return responseService.getSuccessResponse();
     }
     
     @GetMapping("/profiles/{deptId}")
-    public ListResult<ProfileDto> getProfilesByDepartmentId(@PathVariable(value="deptId") Long deptId) {
+    public ListDataResponse<ProfileDto> getProfilesByDepartmentId(@PathVariable(value="deptId") Long deptId) {
     	
     	List<ProfileDto> profiles = userService.selectProfilesFromDepartment(deptId);
-    	return responseService.getListResult(profiles);
+    	return responseService.getListDataResponse(profiles);
     }
 }

@@ -9,8 +9,12 @@ declare interface User {
   deptId: number
   deptName: string
   regDate: string
-  token?: string
   password?: string
+}
+
+declare interface Token {
+  accessToken: string
+  refreshToken: string
 }
 
 declare interface Profile {

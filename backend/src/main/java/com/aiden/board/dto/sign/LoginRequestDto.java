@@ -1,7 +1,6 @@
-package com.aiden.board.dto.Token;
+package com.aiden.board.dto.sign;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,9 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class RefreshTokenDto {
-	
-	private Long key; // USER_ID
-	private String token;
+public class LoginRequestDto {
+    private String email;
+    private String password;
 }

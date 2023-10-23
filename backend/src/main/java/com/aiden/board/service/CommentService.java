@@ -33,8 +33,8 @@ public class CommentService {
 	
 	public void deleteComment(Long boardId, Long commentId) {
 		Integer result = commentMapper.deleteComment(boardId, commentId);
-		if (result == 0) {
-			log.info("댓글 삭제 실패 ");
+		if (result <= 0) {
+			throw new RuntimeException();
 		}
 	}
 }

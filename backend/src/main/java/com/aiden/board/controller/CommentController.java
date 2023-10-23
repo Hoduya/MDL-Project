@@ -17,9 +17,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.aiden.board.dto.User.UserDto;
+import com.aiden.board.dto.ApiResponse.CommonResponse;
+import com.aiden.board.dto.ApiResponse.ListDataResponse;
+import com.aiden.board.dto.ApiResponse.SingleDataResponse;
 import com.aiden.board.dto.board.BoardDto;
 import com.aiden.board.dto.board.CommentDto;
+import com.aiden.board.dto.user.UserDto;
 import com.aiden.board.service.CommentService;
 import com.aiden.board.service.response.ResponseService;
 
@@ -36,14 +39,16 @@ public class CommentController {
 	private final ResponseService responseService;
 
 	@GetMapping("/boards/{boardId}/comments")
-	public List<CommentDto> getCommentsByBno(@PathVariable("boardId") Long boardId) {
+	public ListDataResponse<CommentDto> getCommentsByBno(@PathVariable("boardId") Long boardId) {
+		
 		List<CommentDto> comments = commentService.selectCommentsByBoardId(boardId);
-		return comments;
+		return responseService.getListDataResponse(comments);
 	}
 
 	@PostMapping("/boards/{boardId}/comments")
-	public CommentDto addComment(@PathVariable("boardId") Long boardId, @RequestBody Map<String, String> body,
+	public SingleDataResponse<CommentDto> addComment(@PathVariable("boardId") Long boardId, @RequestBody Map<String, String> body,
 			final Authentication authentication) {
+		
 		String content = body.get("content");
 		CommentDto comment = new CommentDto();
 		Long currentUserId = ((UserDto) authentication.getPrincipal()).getUserId();
@@ -51,14 +56,14 @@ public class CommentController {
 		comment.setContent(content);
 		comment.setUserId(currentUserId);
 
-		CommentDto result = commentService.insertComment(comment);
-		log.info(result.getAuthor().getEmail());
-		return result;
+		CommentDto newComment = commentService.insertComment(comment);
+		return responseService.getSingleDataResponse(newComment);
 	}
 
 	@DeleteMapping("/boards/{boardId}/comments/{commentId}")
-	public void deleteComment(@PathVariable("boardId") Long boardId, @PathVariable("commentId") Long commentId) {
+	public CommonResponse deleteComment(@PathVariable("boardId") Long boardId, @PathVariable("commentId") Long commentId) {
 
 		commentService.deleteComment(boardId, commentId);
+		return responseService.getSuccessResponse();
 	}
 }

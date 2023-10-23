@@ -29,6 +29,13 @@ import lombok.extern.slf4j.Slf4j;
 public class SecurityConfig {
 	
     private final JwtProvider jwtProvider;
+		
+	private static final String[] PERMIT_GET_URLS = {  
+			"/api/boards",
+			"/api/boards/**",
+			"/api/users/**",
+			"/api/departments/**"
+	};
 	
 	private static final String[] PERMIT_ALL_URLS = { 
 			"/api/join",
@@ -36,37 +43,28 @@ public class SecurityConfig {
 			"/swagger-ui/**",
 			"/v3/api-docs/**"
 	};
-	
-	private static final String[] PERMIT_GET_URLS = {  
-			"/api/boards/**",
-			"/api/users/**",
-			"/api/departments/**"
-	};
 
 	@Bean
 	protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.csrf(AbstractHttpConfigurer::disable)
 			.sessionManagement( // 세션을 사용하지 않으므로 STATELESS 설정
 				sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+		
 			.authorizeHttpRequests(authorize -> 
 				authorize
 					.requestMatchers(HttpMethod.GET, PERMIT_GET_URLS).permitAll()
-					.requestMatchers(PERMIT_ALL_URLS).permitAll().anyRequest().authenticated())
-			// 토큰 검증 완료 시 ID/PW 인증 단계 필터를 건너뜀.
-			.addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
+					.requestMatchers(PERMIT_ALL_URLS).permitAll()
+					.anyRequest().authenticated())		
+
 		 	.exceptionHandling(authenticationManager ->
 		 		authenticationManager
                  	.authenticationEntryPoint(new CustomAuthenticationEntryPoint())
-                 	.accessDeniedHandler(new CustomAccessDeniedHandler()));
+                 	.accessDeniedHandler(new CustomAccessDeniedHandler()))
 		
+		 	// 토큰 검증 완료 시 ID/PW 인증 단계 필터를 건너뜀.
+		 	.addFilterBefore(new JwtFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
 		
 		return http.build();
-	}
-
-	@Bean	
-	AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
-			throws Exception {
-		return authenticationConfiguration.getAuthenticationManager();
 	}
 
 	// passwordEncoder

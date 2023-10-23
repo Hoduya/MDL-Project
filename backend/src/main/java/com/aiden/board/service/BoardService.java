@@ -10,8 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.aiden.board.dto.User.UserDto;
 import com.aiden.board.dto.board.BoardDto;
+import com.aiden.board.dto.user.UserDto;
 import com.aiden.board.mapper.BoardMapper;
 import com.aiden.board.mapper.UserMapper;
 
@@ -61,7 +61,10 @@ public class BoardService {
 		return boardMapper.updateBoard(boardId, board);
 	}
 
-	public Integer deleteBoard(Long boardId) {
-		return boardMapper.deleteBoard(boardId);
+	public void deleteBoard(Long boardId) {
+		int result = boardMapper.deleteBoard(boardId);
+		if (result <= 0) {
+			throw new RuntimeException();
+		}
 	}
 }

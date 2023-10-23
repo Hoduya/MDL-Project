@@ -14,9 +14,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.aiden.board.dto.User.DepartmentDto;
-import com.aiden.board.dto.User.UserDto;
+import com.aiden.board.dto.ApiResponse.ListDataResponse;
 import com.aiden.board.dto.board.CommentDto;
+import com.aiden.board.dto.user.DepartmentDto;
+import com.aiden.board.dto.user.UserDto;
 import com.aiden.board.service.CommentService;
 import com.aiden.board.service.DepartmentService;
 import com.aiden.board.service.response.ResponseService;
@@ -35,8 +36,9 @@ public class DepartmentController {
     private final ResponseService responseService;
 
 	@GetMapping("/departments")
-	public List<DepartmentDto> getDepartments() {
+	public ListDataResponse<DepartmentDto> getDepartments() {
+		
 		List<DepartmentDto> departments = departmentService.selectDepartments();
-		return departments;
+		return responseService.getListDataResponse(departments);
 	}
 }

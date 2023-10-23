@@ -1,4 +1,4 @@
-package com.aiden.board.dto.Token;
+package com.aiden.board.dto.token;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

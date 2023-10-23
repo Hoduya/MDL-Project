@@ -41,7 +41,7 @@ public class JwtFilter extends GenericFilterBean {
 		String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
 
 		String requestURI = ((HttpServletRequest) request).getRequestURI();
-
+		
 		// 만약 JWT 토큰이 존재하고 유효하다면, 해당 토큰을 사용하여 사용자 인증 정보를 가져와
 		// Spring Security의 SecurityContextHolder에 저장
 		if (StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)) {
@@ -49,9 +49,7 @@ public class JwtFilter extends GenericFilterBean {
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 
 			logger.info("Security context에 인증 정보를 저장했습니다, uri: {}", requestURI);
-		} else {
-			logger.info("유효한 Jwt 토큰이 없습니다, uri: {}", requestURI);
-		}
+		} 
 
 		// 다음 필터로 요청을 전달합니다.
 		chain.doFilter(request, response);

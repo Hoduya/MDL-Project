@@ -12,16 +12,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.aiden.board.dto.User.UserDto;
-import com.aiden.board.exception.DuplicatedUsernameException;
 import com.aiden.board.service.CommentService;
-import com.aiden.board.dto.ApiResponse.SingleResult;
-import com.aiden.board.dto.Token.TokenDto;
-import com.aiden.board.dto.Token.TokenRequestDto;
-import com.aiden.board.dto.login.LoginRequestDto;
-import com.aiden.board.dto.login.LoginResponseDto;
-import com.aiden.board.exception.DuplicatedUsernameException;
-import com.aiden.board.exception.LoginFailedException;
+import com.aiden.board.advice.exception.DuplicatedUsernameException;
+import com.aiden.board.advice.exception.LoginFailedException;
+import com.aiden.board.dto.ApiResponse.SingleDataResponse;
+import com.aiden.board.dto.sign.LoginRequestDto;
+import com.aiden.board.dto.sign.LoginResponseDto;
+import com.aiden.board.dto.sign.SignUpRequestDto;
+import com.aiden.board.dto.token.TokenDto;
+import com.aiden.board.dto.token.TokenRequestDto;
+import com.aiden.board.dto.user.UserDto;
 import com.aiden.board.service.AuthService;
 import com.aiden.board.service.BoardService;
 import com.aiden.board.service.response.ResponseService;
@@ -39,24 +39,24 @@ public class AuthController {
 	private final ResponseService responseService;
 
 	@PostMapping("/login")
-	public SingleResult<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
+	public SingleDataResponse<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
 
 		LoginResponseDto loginResponseDto = authService.login(loginRequestDto);
-		return responseService.getSingleResult(loginResponseDto);
+		return responseService.getSingleDataResponse(loginResponseDto);
 	}
 	
 	@PostMapping("/join")
-	public SingleResult<UserDto> join(@RequestBody UserDto userDto) {
+	public SingleDataResponse<UserDto> join(@RequestBody SignUpRequestDto signUpRequestDto) {
 		
-		UserDto signupUser = authService.signUp(userDto);
-		return responseService.getSingleResult(signupUser);
+		UserDto signupUser = authService.signUp(signUpRequestDto);
+		return responseService.getSingleDataResponse(signupUser);
 	}
 	
 	
 	@PostMapping("/reissue")
-	public SingleResult<TokenDto> reissue(@RequestBody TokenRequestDto tokenRequestDto) {
+	public SingleDataResponse<TokenDto> reissue(@RequestBody TokenRequestDto tokenRequestDto) {
 		
 		TokenDto responseTokenDto = authService.reissue(tokenRequestDto);
-		return responseService.getSingleResult(responseTokenDto);
+		return responseService.getSingleDataResponse(responseTokenDto);
 	}
 }

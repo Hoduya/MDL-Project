@@ -7,8 +7,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.aiden.board.dto.User.UserDto;
-import com.aiden.board.exception.UserNotFoundException;
+import com.aiden.board.advice.exception.UserNotFoundException;
+import com.aiden.board.dto.user.UserDto;
 import com.aiden.board.mapper.UserMapper;
 
 import java.util.Arrays;

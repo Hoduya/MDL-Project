@@ -1,7 +1,7 @@
-package com.aiden.board.dto.login;
+package com.aiden.board.dto.sign;
 
-import com.aiden.board.dto.Token.TokenDto;
-import com.aiden.board.dto.User.UserDto;
+import com.aiden.board.dto.token.TokenDto;
+import com.aiden.board.dto.user.UserDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

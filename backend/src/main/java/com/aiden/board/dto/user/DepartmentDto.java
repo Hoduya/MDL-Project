@@ -1,4 +1,4 @@
-package com.aiden.board.dto.User;
+package com.aiden.board.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

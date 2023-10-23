@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.aiden.board.dto.User.ProfileDto;
-import com.aiden.board.dto.User.UserDto;
-import com.aiden.board.exception.UserNotFoundException;
+import com.aiden.board.advice.exception.UserNotFoundException;
+import com.aiden.board.dto.user.ProfileDto;
+import com.aiden.board.dto.user.UserDto;
 import com.aiden.board.mapper.DepartmentMapper;
 import com.aiden.board.mapper.UserMapper;
 

@@ -1,59 +1,82 @@
 package com.aiden.board.service.response;
 
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import com.aiden.board.dto.ApiResponse.CommonResult;
-import com.aiden.board.dto.ApiResponse.ListResult;
-import com.aiden.board.dto.ApiResponse.SingleResult;
+import com.aiden.board.dto.ApiResponse.CommonResponse;
+import com.aiden.board.dto.ApiResponse.ListDataResponse;
+import com.aiden.board.dto.ApiResponse.SingleDataResponse;
+
+import lombok.AllArgsConstructor;
 
 import java.util.List;
 
 @Service
 public class ResponseService {
+	
+	@AllArgsConstructor
+	private enum Status {
+		SUCCESS("success", "성공"),
+	    FAIL("fail", "실패"),
+	    ERROR("error", "에러");
+		
+		private String type;
+		private String message;
+	}
 
-    // 단일건 결과 처리 메소드
-    public <T> SingleResult<T> getSingleResult(T data) {
-        SingleResult<T> result = new SingleResult<>();
+    // 단일 데이터 결과 처리 메소드
+    public <T> SingleDataResponse<T> getSingleDataResponse(T data) {
+        SingleDataResponse<T> result = new SingleDataResponse<>();
         result.setData(data);
-        setSuccessResult(result);
+        setSuccessResponse(result);
         return result;
     }
 
-    // 복수건 결과 처리 메서드
-    public <T> ListResult<T> getListResult(List<T> list) {
-        ListResult<T> result = new ListResult<>();
-        result.setList(list);
-        setSuccessResult(result);
+    // 리스트 데이터 결과 처리 메서드
+    public <T> ListDataResponse<T> getListDataResponse(List<T> list) {
+        ListDataResponse<T> result = new ListDataResponse<>();
+        result.setData(list);
+        setSuccessResponse(result);
         return result;
     }
 
     // 성공 결과만 처리
-    public CommonResult getSuccessResult() {
-        CommonResult result = new CommonResult();
-        setSuccessResult(result);
-        return result;
+    public CommonResponse getSuccessResponse() {
+        CommonResponse response = new CommonResponse();
+        setSuccessResponse(response);
+        return response;
     }
 
     // 실패 결과만 처리
-    public CommonResult getFailResult(int code, String msg) {
-        CommonResult result = new CommonResult();
-        result.setSuccess(false);
-        setFailResult(result, code, msg);
-        return result;
+    public CommonResponse getFailResponse(String msg) {
+        CommonResponse response = new CommonResponse();
+        setFailResponse(response, msg);
+        return response;
+    }
+    
+    // 에러 결과만 처리
+    public CommonResponse getErrorResponse(String msg) {
+        CommonResponse response = new CommonResponse();
+        setErrorResponse(response, msg);
+        return response;
     }
 
-    // API 요청 성공 시 응답 모델을 성공 데이터로 세팅
-    private void setSuccessResult(CommonResult result) {
-        result.setSuccess(true);
-        result.setCode(CommonResponse.SUCCESS.getCode());
-        result.setMsg(CommonResponse.SUCCESS.getMsg());
+    // API 요청 성공 응답 모델 세팅
+    private void setSuccessResponse(CommonResponse response) {
+    	response.setStatus(Status.SUCCESS.type);
+    	response.setMessage(Status.SUCCESS.message);
     }
 
-    // API 요청 실패 시 응답 모델을 실패 데이터로 세팅
-    private void setFailResult(CommonResult result, int code, String msg) {
-        result.setSuccess(false);
-        result.setCode(code);
-        result.setMsg(msg);
+    // API 요청 실패 응답 모델 세팅
+    private void setFailResponse(CommonResponse response, String msg) {
+    	response.setStatus(Status.FAIL.type);
+    	response.setMessage(msg);
+    }
+    
+    // API 요청 에러 응답 모델 세팅
+    private void setErrorResponse(CommonResponse response, String msg) {
+    	response.setStatus(Status.ERROR.type);
+    	response.setMessage(msg);
     }
 }

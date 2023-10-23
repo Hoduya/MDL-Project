@@ -5,6 +5,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SingleResult<T> extends CommonResult {
+public class SingleDataResponse<T> extends CommonResponse {
     private T data;
 }

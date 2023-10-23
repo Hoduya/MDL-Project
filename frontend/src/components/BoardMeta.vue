@@ -33,4 +33,3 @@ const props = defineProps<Props>()
 const formattedDate = formatDateTime(props.board.regDate);
 
 </script>
-@/utils/DateUtils

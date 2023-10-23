@@ -4,20 +4,18 @@
 
 <mapper namespace="com.aiden.board.mapper.BoardMapper">
 	
-	<resultMap type="com.aiden.board.dto.UserDto" id="UserDto">
+	<resultMap type="ProfileDto" id="ProfileDto">
 		<id property="userId" column="USER_ID" />
 		<result property="name" column="NAME" />
-		<result property="email" column="EMAIL" />
-		<result property="regDate" column="USER_REG_DATE" />
 	</resultMap>
 	
-	<resultMap type="com.aiden.board.dto.BoardDto" id="BoardResultMap">
+	<resultMap type="BoardDto" id="BoardResultMap">
 		<id property="boardId" column="BOARD_ID"/>
  		<result property="title" column="TITLE"/>
         <result property="content" column="CONTENT"/>
         <result property="regDate" column="REG_DATE"/>
         <result property="updateDate" column="UPDATE_DATE"/>
-        <collection property="author" resultMap="UserDto" />
+        <collection property="author" resultMap="ProfileDto" />
 	</resultMap>
 	
 	<sql id="condition">
@@ -74,7 +72,7 @@
 
 	<select resultMap="BoardResultMap" id="selectByBoardId">
 		SELECT b.BOARD_ID, b.TITLE, b.CONTENT, b.REG_DATE, b.UPDATE_DATE,
-		u.USER_ID, u.NAME, u.EMAIL, u.REG_DATE AS USER_REG_DATE
+		u.USER_ID, u.NAME
 		FROM tb_board b
 		JOIN TB_USER u ON b.USER_ID = u.USER_ID
 		WHERE b.BOARD_ID = #{boardId}

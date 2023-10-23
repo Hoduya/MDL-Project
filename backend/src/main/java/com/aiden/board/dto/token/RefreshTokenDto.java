@@ -1,6 +1,7 @@
-package com.aiden.board.dto.User;
+package com.aiden.board.dto.token;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,7 +10,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProfileDto {
-	private Long userId;
-	private String name;
+@Builder
+public class RefreshTokenDto {
+	
+	private Long userId; // 발급 유저 ID
+	private String token;
 }

@@ -86,7 +86,7 @@ import { computed, ref, onMounted } from 'vue';
 import { useUserStore } from '@/store/user';
 import { formatDate } from '@/utils/DateUtils';
 import api from '@/api';
-import { router, routerPush } from '@/router';
+import { routerPush } from '@/router';
 
 interface Props {
   user: User
@@ -126,6 +126,7 @@ onMounted(async () => {
   console.log(userForm.value)
   if (props.isEditPage) {
     departments.value = await api.fetchDepartments()
+    console.log(departments.value)
   }
 })
 
@@ -159,4 +160,4 @@ body {
 input[type="text"]:disabled {
   background: none;
 }
-</style>@/utils/DateUtils
+</style>

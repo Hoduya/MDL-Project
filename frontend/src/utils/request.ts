@@ -1,17 +1,23 @@
 import axios from 'axios'
 import { CONFIG } from '@/config'
+import { useUserStore } from '@/store/user'
 
 const instance = axios.create({
   timeout: 10000,
   baseURL: CONFIG.API_HOST
 })
 
+const userStore = useUserStore()
+
 instance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('jwt-token')
+    
+    if(userStore.isLoggedIn) {
+      const token = localStorage.getItem('access-token')
 
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`
+      }
     }
 
     return config
@@ -25,8 +31,3 @@ instance.interceptors.response.use(
 ) 
 
 export default instance
-
-/**
- * 200외 에러 message 모두 묶어서. return
- * api 사용부분에서 catch 되면 alert 표시.
- */

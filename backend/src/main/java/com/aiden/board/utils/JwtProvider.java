@@ -14,7 +14,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import com.aiden.board.dto.Token.TokenDto;
+import com.aiden.board.dto.token.TokenDto;
+
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Base64;
@@ -59,21 +60,23 @@ public class JwtProvider {
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setClaims(claims)
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + accessTokenValidSeconds))
+                .setExpiration(new Date(now.getTime() + accessTokenValidSeconds * 1000))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
 
         String refreshToken = Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
-                .setExpiration(new Date(now.getTime() + refreshTokenValidSeconds))
+                .setExpiration(new Date(now.getTime() + refreshTokenValidSeconds * 1000))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
-
+        
+        Date n = new Date(now.getTime() + accessTokenValidSeconds * 1000);
+        
         return TokenDto.builder()
                 .grantType("Bearer")
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
-                .accessTokenExprieDate(new Date(now.getTime() + accessTokenValidSeconds))
+                .accessTokenExprieDate(new Date(now.getTime() + accessTokenValidSeconds * 1000))
                 .build();
 	}
 
@@ -108,7 +111,7 @@ public class JwtProvider {
 			Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
 			return true;
 		} catch (SecurityException | MalformedJwtException exception) {
-			log.info("잘못된 Jwt 서입니다");
+			log.info("잘못된 Jwt 서명입니다");
 		} catch (ExpiredJwtException exception) {
 			log.info("만료된 Jwt 토큰입니다");
 		} catch (UnsupportedJwtException exception) {

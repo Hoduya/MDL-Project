@@ -2,7 +2,8 @@ package com.aiden.board.dto.board;
 
 import java.util.Date;
 
-import com.aiden.board.dto.User.UserDto;
+import com.aiden.board.dto.user.ProfileDto;
+import com.aiden.board.dto.user.UserDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.AllArgsConstructor;
@@ -23,6 +24,6 @@ public class BoardDto {
     Date regDate;
     Date updateDate;
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	private UserDto author;
+	private ProfileDto author;
 }
 

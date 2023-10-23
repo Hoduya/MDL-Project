@@ -5,24 +5,28 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.aiden.board.dto.Token.RefreshTokenDto;
-import com.aiden.board.dto.Token.TokenDto;
-import com.aiden.board.dto.Token.TokenRequestDto;
-import com.aiden.board.dto.User.UserDto;
-import com.aiden.board.dto.login.LoginRequestDto;
-import com.aiden.board.dto.login.LoginResponseDto;
-import com.aiden.board.exception.DuplicatedUserEmailExceptoin;
-import com.aiden.board.exception.DuplicatedUsernameException;
-import com.aiden.board.exception.LoginFailedException;
-import com.aiden.board.exception.RefreshTokenException;
-import com.aiden.board.exception.UserNotFoundException;
+import com.aiden.board.advice.exception.DuplicatedUserEmailExceptoin;
+import com.aiden.board.advice.exception.DuplicatedUsernameException;
+import com.aiden.board.advice.exception.LoginFailedException;
+import com.aiden.board.advice.exception.RefreshTokenException;
+import com.aiden.board.advice.exception.SignUpErrorException;
+import com.aiden.board.advice.exception.UserNotFoundException;
+import com.aiden.board.dto.sign.LoginRequestDto;
+import com.aiden.board.dto.sign.LoginResponseDto;
+import com.aiden.board.dto.sign.SignUpRequestDto;
+import com.aiden.board.dto.token.RefreshTokenDto;
+import com.aiden.board.dto.token.TokenDto;
+import com.aiden.board.dto.token.TokenRequestDto;
+import com.aiden.board.dto.user.UserDto;
 import com.aiden.board.mapper.RefreshTokenMapper;
 import com.aiden.board.mapper.UserMapper;
 import com.aiden.board.utils.JwtProvider;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class AuthService {
 
@@ -30,7 +34,6 @@ public class AuthService {
 	private final RefreshTokenMapper refreshTokenMapper;
 	private final PasswordEncoder passwordEncoder;
 	private final JwtProvider jwtProvider;
-
 
 	@Transactional
 	public LoginResponseDto login(LoginRequestDto loginDto) {
@@ -48,7 +51,7 @@ public class AuthService {
 		TokenDto tokenDto = jwtProvider.createToken(userDto.getUserId(), userDto.getRole());
 		
 		RefreshTokenDto refreshTokenDto = RefreshTokenDto.builder()
-				.key(userDto.getUserId())
+				.userId(userDto.getUserId())
 				.token(tokenDto.getRefreshToken())
 				.build();
 		refreshTokenMapper.save(refreshTokenDto);
@@ -59,24 +62,25 @@ public class AuthService {
 				.build();
 	}
 	
-	@Transactional
-	public UserDto signUp(UserDto userDto) {
+	public UserDto signUp(SignUpRequestDto signUpRequestDto) {
 		
 		// 이메일 중복 확인 
-		if (userMapper.findByUserEmail(userDto.getEmail()).isPresent()) {
+		if (userMapper.findByUserEmail(signUpRequestDto.getEmail()).isPresent()) {
 			throw new DuplicatedUserEmailExceptoin();
 		}
-
+		
 		// 유저 이름 중복 확인  
-		if (userMapper.findByUserName(userDto.getName()).isPresent()) {
+		if (userMapper.findByUserName(signUpRequestDto.getName()).isPresent()) {
 			throw new DuplicatedUsernameException();
 		}
 		
 		// 패스워드 암호화 저장 
-		userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
-		userMapper.save(userDto);
-
-		return userMapper.findByUserId(userDto.getUserId()).get();
+		signUpRequestDto.setPassword(passwordEncoder.encode(signUpRequestDto.getPassword()));
+		userMapper.save(signUpRequestDto);
+		UserDto savedUser = userMapper.findByUserEmail(signUpRequestDto.getEmail())
+				.orElseThrow(SignUpErrorException::new);
+		
+		return savedUser; 
 	}
 	
 	@Transactional
@@ -96,7 +100,7 @@ public class AuthService {
         		.orElseThrow(UserNotFoundException::new);
         
         // 유저한테 발급된 Refresh Token 이 없음 (재로그인)
-        RefreshTokenDto refreshTokenDto = refreshTokenMapper.findByKey(userDto.getUserId())
+        RefreshTokenDto refreshTokenDto = refreshTokenMapper.findByUserId(userDto.getUserId())
                 .orElseThrow(RefreshTokenException::new);
 
         // 리프레시 토큰 불일치 에러

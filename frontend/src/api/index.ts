@@ -2,15 +2,14 @@ import request from "@/utils/request"
 
 const fetchBoardsLimit = 10;
 
-async function login(params: PostLoginForm): Promise<User> {
+async function login(params: PostLoginForm): Promise<{user: User, token: Token}> {
   return request({
     url: '/api/login',
     method: 'POST',
     data: params,
   }).then(({ data }) => {
     const { user, token } = data;
-    user.token = token;
-    return user;
+    return {user, token};
   })
 }
 
@@ -35,9 +34,7 @@ async function fetchProfilesFromDept(deptId: number): Promise<Profile[]> {
   return request({
     url: `/api/profiles/${deptId}`,
     method: 'GET',
-  }).then((res) => {
-    return res.data
-  })
+  }).then(res => res.data)
 }
 
 async function updateUser(user: User): Promise<User> {
@@ -45,9 +42,7 @@ async function updateUser(user: User): Promise<User> {
     url: `/api/users`,
     method: 'PUT',
     data: user
-  }).then((res) => {
-    return res.data
-  })
+  }).then(res => res.data)
 }
 
 async function deleteUser(user: User): Promise<void> {
@@ -55,19 +50,19 @@ async function deleteUser(user: User): Promise<void> {
     url: `/api/users`,
     method: 'DELETE',
     data: user
-  })
+  }).then(res => res.data)
 }
 
 async function fetchDepartments(): Promise<Department[]> {
   return request({
     url: '/api/departments',
     method: 'GET',
-  })
+  }).then(res => res.data)
 }
 
 async function fetchDepartmentName(deptId: number): Promise<string> {
   return request({
-    url: 'api/deaprtments/{deptId}',
+    url: `api/deaprtments/${deptId}`,
     method:'GET'
   }).then(res => res.data)
 }
@@ -78,14 +73,14 @@ async function fetchBoards(params: BoardsOption, data?: SearchOption): Promise<{
     method:'GET',
     params: params,
     data: data
-  })
+  }).then(res => res.data)
 }
 
 async function fetchBoard(slug: string): Promise<Board> {
   return request({
     url: `/api/boards/${slug}`,
     method: 'GET',
-  })
+  }).then(res => res.data)
 }
 
 async function createBoard(params: BoardForm): Promise<Board> {
@@ -93,7 +88,7 @@ async function createBoard(params: BoardForm): Promise<Board> {
     url: '/api/boards',
     method: 'POST',
     data: params
-  })
+  }).then(res => res.data)
 }
 
 async function updateBoard(params: {
@@ -104,21 +99,21 @@ async function updateBoard(params: {
     url: `api/boards/${params.slug}`,
     method: 'PUT',
     data: params.board
-  })
+  }).then(res => res.data)
 }
 
 async function deleteBoard(slug: string): Promise<void> {
   return request ({ 
     url: `api/boards/${slug}`,
     method: 'DELETE',
-  })
+  }).then(res => res.data)
 }
 
 async function fetchComments(slug: string): Promise<BoardComment[]> {
   return request ({
     url: `api/boards/${slug}/comments`,
     method: 'GET'
-  })
+  }).then(res => res.data)
 }
 
 async function createComment(params: {
@@ -129,14 +124,14 @@ async function createComment(params: {
     url: `/api/boards/${params.slug}/comments`,
     method: 'post',
     data: params
-  })
+  }).then(res => res.data)
 }
 
 async function deleteComment(slug: string, id: number): Promise<void> {
   return request({ 
     url: `/api/boards/${slug}/comments/${id}`,
     method: 'DELETE'
-  })
+  }).then(res => res.data)
 }
 
 export default {

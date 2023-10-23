@@ -1,4 +1,4 @@
-package com.aiden.board.dto.User;
+package com.aiden.board.dto.user;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,7 +10,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.aiden.board.dto.sign.SignUpRequestDto;
 import com.aiden.board.utils.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -38,6 +40,7 @@ public class UserDto implements UserDetails {
 	private Integer deptId;
 	private Date regDate;
 
+	@JsonIgnore
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		Collection<GrantedAuthority> authorities = new ArrayList<>();
@@ -48,11 +51,13 @@ public class UserDto implements UserDetails {
 		return authorities;
 	}
 
+	@JsonIgnore
 	@Override
 	public String getPassword() {
 		return this.password;
 	}
-
+	
+	@JsonIgnore
 	@Override
 	public String getUsername() {
 		return this.userId.toString();

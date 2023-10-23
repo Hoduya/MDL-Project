@@ -22,9 +22,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.aiden.board.dto.User.UserDto;
+import com.aiden.board.dto.ApiResponse.CommonResponse;
+import com.aiden.board.dto.ApiResponse.SingleDataResponse;
 import com.aiden.board.dto.board.BoardDto;
+import com.aiden.board.dto.user.UserDto;
 import com.aiden.board.service.BoardService;
+import com.aiden.board.service.response.ResponseService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,9 +40,10 @@ import lombok.extern.slf4j.Slf4j;
 public class BoardController {
 
 	private final BoardService boardService;
+	private final ResponseService responseService;
 
 	@GetMapping("/boards")
-	public Map<String, Object> getBoardList(@RequestParam int offset, 
+	public SingleDataResponse<Map<String, Object>> getBoardList(@RequestParam int offset, 
 											@RequestParam(defaultValue = "10") int limit,
 											@RequestParam(value="authorId", required=false) Long userId,
 											@RequestParam(value="searchFilter", defaultValue = "0") int searchFilter,
@@ -55,42 +59,47 @@ public class BoardController {
 			count = boardService.selectCountByUserId(userId);
 		}
 
-		Map<String, Object> response = new HashMap<>();
-		response.put("boards", boards);
-		response.put("boardsCount", count);
+		Map<String, Object> responseData = new HashMap<>();
+		responseData.put("boards", boards);
+		responseData.put("boardsCount", count);
 
-		return response;
+		return responseService.getSingleDataResponse(responseData);
 	}
 
 	@GetMapping("/boards/{boardId}")
-	public BoardDto getBoardByboardId(@PathVariable("boardId") Long boardId) {
+	public SingleDataResponse<BoardDto> getBoardByboardId(@PathVariable("boardId") Long boardId) {
+		
 		BoardDto board = boardService.selectByBoardId(boardId);
-		return board;
+		log.info("asdfasfsadfsadf");
+		return responseService.getSingleDataResponse(board);
 	}
 
 	@PostMapping("/boards")
-	public BoardDto createBoard(@RequestBody BoardDto board, final Authentication authentication) {
+	public SingleDataResponse<BoardDto> createBoard(@RequestBody BoardDto board, final Authentication authentication) {
+		
 		Long currentUserId = ((UserDto) authentication.getPrincipal()).getUserId();
-		board.setRegDate(new Date());
 		board.setUserId(currentUserId);
 		Long boardId = boardService.insertBoard(board);
-		BoardDto result = boardService.selectByBoardId(boardId);
-		return result;
+		BoardDto createdBoard = boardService.selectByBoardId(boardId);
+		
+		return responseService.getSingleDataResponse(createdBoard);
 	}
 
 	@PutMapping("/boards/{boardId}")
-	public BoardDto updateBoard(@PathVariable("boardId") Long boardId, @RequestBody BoardDto board,
+	public SingleDataResponse<BoardDto> updateBoard(@PathVariable("boardId") Long boardId, @RequestBody BoardDto board,
 			final Authentication authentication) {
+		
 		Long currentUserId = ((UserDto) authentication.getPrincipal()).getUserId();
 		board.setUserId(currentUserId);
 		boardService.updateByBoardId(boardId, board);
-		BoardDto result = boardService.selectByBoardId(boardId);
-		return result;
+		BoardDto updatedBoard = boardService.selectByBoardId(boardId);
+		
+		return responseService.getSingleDataResponse(updatedBoard);
 	}
 
 	@DeleteMapping("/boards/{boardId}")
-	public void deleteBoard(@PathVariable("boardId") Long boardId) {
-		log.info("Delte: Delete a Board {boardId}", boardId);
-		int result = boardService.deleteBoard(boardId);
+	public CommonResponse deleteBoard(@PathVariable("boardId") Long boardId) {
+		boardService.deleteBoard(boardId);
+		return responseService.getSuccessResponse();
 	}
 }

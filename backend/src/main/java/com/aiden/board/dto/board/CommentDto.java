@@ -2,7 +2,7 @@ package com.aiden.board.dto.board;
 
 import java.util.Date;
 
-import com.aiden.board.dto.User.UserDto;
+import com.aiden.board.dto.user.UserDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.AllArgsConstructor;

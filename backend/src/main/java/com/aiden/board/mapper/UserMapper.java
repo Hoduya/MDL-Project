@@ -5,8 +5,9 @@ import java.util.Optional;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.aiden.board.dto.User.ProfileDto;
-import com.aiden.board.dto.User.UserDto;
+import com.aiden.board.dto.sign.SignUpRequestDto;
+import com.aiden.board.dto.user.ProfileDto;
+import com.aiden.board.dto.user.UserDto;
 
 @Mapper
 public interface UserMapper {
@@ -15,6 +16,6 @@ public interface UserMapper {
     Optional<UserDto> findByUserId(Long userId);
 	List<ProfileDto> selectProfilesFromDepartment(Long deptId);
     Integer updateUser(UserDto user);
-    void save(UserDto userDto);
+    void save(SignUpRequestDto userDto);
 	Integer deleteUser(Long userId);
 }
