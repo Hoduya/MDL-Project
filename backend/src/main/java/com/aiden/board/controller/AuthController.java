@@ -7,7 +7,9 @@ import java.util.Map;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,6 +42,12 @@ public class AuthController {
 		return ResponseEntity.ok(loginResponseDto);
 	}
 	
+	@PutMapping("/logout")
+	public ResponseEntity<Void> logout(Authentication authentication) {
+		authService.logout(Long.parseLong(authentication.getName()));
+		return ResponseEntity.ok().build();
+	}
+	
 	@PostMapping("/join")
 	public ResponseEntity<UserDto> join(@RequestBody SignUpRequestDto signUpRequestDto) {
 		
@@ -50,7 +58,6 @@ public class AuthController {
 	
 	@PostMapping("/reissue")
 	public ResponseEntity<TokenDto> reissue(@RequestBody TokenRequestDto tokenRequestDto) {
-		log.info("재생성");
 		TokenDto responseTokenDto = authService.reissue(tokenRequestDto);
 		return ResponseEntity.ok(responseTokenDto);
 	}

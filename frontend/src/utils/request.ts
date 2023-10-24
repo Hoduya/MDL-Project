@@ -15,7 +15,7 @@ const doLogout = async () => {
 instance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('access-token')
-
+    console.log("request intercept!")
     if(token) {
       config.headers.Authorization = `Bearer ${token}`
     } else {
@@ -64,21 +64,21 @@ instance.interceptors.response.use(
           token,
           {}
         ) 
+
+        // 재발급 성공
         const newToken = response.data
-      
-        console.log(newToken)
-      
-        await localStorage.multiSet([
-          ["access-token", newToken.accessToken],
-          ["refresh-token", newToken.refreshToken]
-        ])
-      
+        localStorage.setItem("access-token", newToken.accessToken)
+        localStorage.setItem("refresh-token", newToken.refreshToken)
+        
+        // 동일한 요청 전송 (새로운 Access 토큰으로)
+        originRequest.headers.authorization = `Bearer ${newToken.accessToken}`
         return axios(originRequest)
       } catch (error) {
         return Promise.reject(error)
       }
     }
     // ({ message, response }) => Promise.reject(response ? response.data : message)
+    Promise.reject(error)
   }
 ) 
 

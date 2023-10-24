@@ -39,7 +39,6 @@ public class UserService {
 	}
 	
 	public UserDto updateUser(UserDto userDto) {
-		
 		String deptName = departmentMapper.selectDepartmentName(userDto.getDeptId());
 		userDto.setDeptName(deptName);
 		userMapper.updateUser(userDto);

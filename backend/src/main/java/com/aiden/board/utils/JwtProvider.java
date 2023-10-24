@@ -68,7 +68,10 @@ public class JwtProvider {
 
 		Date n = new Date(now.getTime() + accessTokenValidSeconds * 1000);
 
-		return TokenDto.builder().grantType("Bearer").accessToken(accessToken).refreshToken(refreshToken)
+		return TokenDto.builder()
+				.grantType("Bearer")
+				.accessToken(accessToken)
+				.refreshToken(refreshToken)
 				.accessTokenExprieDate(new Date(now.getTime() + accessTokenValidSeconds * 1000)).build();
 	}
 
@@ -76,7 +79,8 @@ public class JwtProvider {
 	public Authentication getAuthentication(String token) {
 		Claims claims = getClaims(token);
 		UserDetails userDetails = userDetailsService.loadUserByUsername(claims.getSubject());
-
+		
+		log.info(userDetails.toString());
 		return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
 	}
 

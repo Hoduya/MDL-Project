@@ -5,15 +5,22 @@
 
 <mapper namespace="com.aiden.board.mapper.RefreshTokenMapper">
 	
-	<select id="findByUserId">
-        SELECT TOKEN 
-        FROM TB_REFRESH_TOKEN
-        WHERE USER_ID = {userId}
-	</select>
-	
-	<insert id="save">
-		INSERT INTO TB_REFRESH_TOKEN (USER_ID, TOKEN)
-		VALUES ( #{userId}, #{token} )
+	<insert id="createTuple">
+		INSERT INTO TB_REFRESH_TOKEN(USER_ID)
+		VALUES(#{userId})
 	</insert>
 	
+	<select id="findByUserId">
+        SELECT USER_ID, TOKEN
+        FROM TB_REFRESH_TOKEN
+        WHERE USER_ID = #{userId}
+	</select>
+	
+	<update id="write">
+		UPDATE TB_REFRESH_TOKEN
+		SET
+		TOKEN = #{token, jdbcType=VARCHAR}
+		WHERE
+		USER_ID = #{userId}
+	</update>
 </mapper>

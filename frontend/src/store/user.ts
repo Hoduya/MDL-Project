@@ -16,6 +16,7 @@ export const useUserStore = defineStore('user', () => {
   }
 
   const logout = async () => {
+    await api.logout()
     currentUser.value = null
     localStorage.removeItem('access-token')
     localStorage.removeItem('refresh-token')

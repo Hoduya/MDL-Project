@@ -38,8 +38,8 @@
 	
 	<insert id="insertComment" parameterType="CommentDto"
 		useGeneratedKeys="true" keyProperty="commentId">
-		insert into TB_COMMENT(BOARD_ID, USER_ID, CONTENT, REG_DATE)
-		values(#{boardId}, #{userId}, #{content}, NOW())
+		INSERT INTO TB_COMMENT(BOARD_ID, USER_ID, CONTENT, REG_DATE)
+		VALUES(#{boardId}, #{userId}, #{content}, NOW())
 	</insert>
 
 	<update id="deleteComment">

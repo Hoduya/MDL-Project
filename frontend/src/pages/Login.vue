@@ -66,6 +66,8 @@ const onLogin = async () => {
     routerPush("global-feed")
   } catch(error) {
     console.log(error)
+  } finally {
+    loadding.value = false
   }
 }
 

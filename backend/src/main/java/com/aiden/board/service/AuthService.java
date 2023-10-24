@@ -50,12 +50,22 @@ public class AuthService {
 				.userId(userDto.getUserId())
 				.token(tokenDto.getRefreshToken())
 				.build();
-		refreshTokenMapper.save(refreshTokenDto);
+		refreshTokenMapper.write(refreshTokenDto);
 		
 		return LoginResponseDto.builder()
 				.user(userDto)
 				.token(tokenDto)
 				.build();
+	}
+	
+	@Transactional
+	public void logout(Long userId) {
+		refreshTokenMapper.write(
+				RefreshTokenDto
+				.builder()
+				.userId(userId)
+				.token(null)
+				.build());
 	}
 	
 	public UserDto signUp(SignUpRequestDto signUpRequestDto) {
@@ -75,6 +85,9 @@ public class AuthService {
 		userMapper.save(signUpRequestDto);
 		UserDto savedUser = userMapper.findByUserEmail(signUpRequestDto.getEmail())
 				.orElseThrow(() -> new CustomException(ErrorCode.UNKNOWN_ERROR));
+		
+		// 해당 유저 리프레시 토큰 튜플 생성
+		refreshTokenMapper.createTuple(savedUser.getUserId());
 		
 		return savedUser; 
 	}
@@ -113,7 +126,7 @@ public class AuthService {
         // AccessToken, RefreshToken 토큰 재발급, 리프레쉬 토큰 저장
         TokenDto newToken = jwtProvider.createToken(userDto.getUserId(), userDto.getRole());
         refreshTokenDto.setToken(newToken.getRefreshToken());
-        refreshTokenMapper.save(refreshTokenDto);
+        refreshTokenMapper.write(refreshTokenDto);
 
         return newToken;
 	}

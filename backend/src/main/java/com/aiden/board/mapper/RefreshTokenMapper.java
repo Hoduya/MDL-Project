@@ -8,6 +8,7 @@ import com.aiden.board.dto.token.RefreshTokenDto;
 
 @Mapper
 public interface RefreshTokenMapper {
+	void createTuple(Long userId);
 	Optional<RefreshTokenDto> findByUserId(Long userId);
-	void save(RefreshTokenDto refreshToken);
+	void write(RefreshTokenDto refreshToken);
 }

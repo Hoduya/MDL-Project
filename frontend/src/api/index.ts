@@ -13,6 +13,13 @@ async function login(params: PostLoginForm): Promise<{user: User, token: Token}>
   })
 }
 
+async function logout(): Promise<void> {
+  return request({
+    url: '/api/logout',
+    method: 'PUT'
+  })
+}
+
 async function register(params: PostRegisterForm): Promise<void> {
   return request({
     url: '/api/join',
@@ -140,6 +147,7 @@ async function deleteComment(slug: string, id: number): Promise<void> {
 export default {
   fetchBoardsLimit,
   login,
+  logout,
   register,
   fetchUser,
   fetchProfilesFromDept,
