@@ -20,6 +20,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 import com.aiden.board.utils.JwtProvider;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,6 +42,7 @@ public class SecurityConfig {
 	private static final String[] PERMIT_ALL_URLS = { 
 			"/api/join",
 			"/api/login",
+			"/api/reissue",
 			"/swagger-ui/**",
 			"/v3/api-docs/**"
 	};
@@ -55,15 +58,11 @@ public class SecurityConfig {
 					.requestMatchers(HttpMethod.GET, PERMIT_GET_URLS).permitAll()
 					.requestMatchers(PERMIT_ALL_URLS).permitAll()
 					.anyRequest().authenticated())		
-
-		 	.exceptionHandling(authenticationManager ->
-		 		authenticationManager
-                 	.authenticationEntryPoint(new CustomAuthenticationEntryPoint())
-                 	.accessDeniedHandler(new CustomAccessDeniedHandler()))
 		
 		 	// 토큰 검증 완료 시 ID/PW 인증 단계 필터를 건너뜀.
-		 	.addFilterBefore(new JwtFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
-		
+		 	.addFilterBefore(new JwtFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
+			.addFilterBefore(new JwtExceptionFilter(new ObjectMapper()), JwtFilter.class);
+
 		return http.build();
 	}
 

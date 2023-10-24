@@ -4,15 +4,12 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.aiden.board.dto.ApiResponse.CommonResponse;
-import com.aiden.board.dto.ApiResponse.ListDataResponse;
-import com.aiden.board.dto.ApiResponse.SingleDataResponse;
 import com.aiden.board.dto.user.ProfileDto;
 import com.aiden.board.dto.user.UserDto;
 import com.aiden.board.service.UserService;
-import com.aiden.board.service.response.ResponseService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,33 +22,32 @@ import lombok.extern.slf4j.Slf4j;
 public class UserController {
 
     private final UserService userService;
-    private final ResponseService responseService;
     
     @GetMapping("/users/{userId}")
-    public SingleDataResponse<UserDto> findUserById(@PathVariable(value="userId") Long userId) {
+    public ResponseEntity<UserDto> findUserById(@PathVariable(value="userId") Long userId) {
     	
     	UserDto findUser = userService.findByUserId(userId);
-        return responseService.getSingleDataResponse(findUser);
+        return ResponseEntity.ok(findUser);
     }
     
     @PutMapping("/users")
-    public SingleDataResponse<UserDto> update(@RequestBody UserDto user) {
+    public ResponseEntity<UserDto> update(@RequestBody UserDto user) {
     	
     	UserDto updateUser = userService.updateUser(user);
-    	return responseService.getSingleDataResponse(updateUser);
+    	return ResponseEntity.ok(updateUser);
     } 
     
     @DeleteMapping("/users")
-    public CommonResponse delete(@RequestBody Long userId) {
+    public ResponseEntity<Void> delete(@RequestBody Long userId) {
     	
     	userService.deleteUser(userId);
-    	return responseService.getSuccessResponse();
+    	return ResponseEntity.ok().build();
     }
     
     @GetMapping("/profiles/{deptId}")
-    public ListDataResponse<ProfileDto> getProfilesByDepartmentId(@PathVariable(value="deptId") Long deptId) {
+    public ResponseEntity<List<ProfileDto>> getProfilesByDepartmentId(@PathVariable(value="deptId") Long deptId) {
     	
     	List<ProfileDto> profiles = userService.selectProfilesFromDepartment(deptId);
-    	return responseService.getListDataResponse(profiles);
+    	return ResponseEntity.ok(profiles);
     }
 }

@@ -45,6 +45,7 @@ import { ref, reactive } from 'vue'
 import { routerPush } from '@/router'
 import AppLink from '../components/AppLink.vue'
 import { useUserStore } from '../store/user'
+import api from '@/api';
 
 const errors = ref('')
 const loadding = ref(false)
@@ -58,16 +59,14 @@ const userStore = useUserStore()
 
 const onLogin = async () => {
   loadding.value = true
-  await userStore.login(form)
-  .then(() => {
+  try {
+    const { user, token } = await api.login(form)
+    userStore.updateToken(token)
+    userStore.updateUser(user)
     routerPush("global-feed")
-  })
-  .catch((error) => {
-    errors.value = error
-  })
-  .finally(()=> {
-    loadding.value = false
-  })
+  } catch(error) {
+    console.log(error)
+  }
 }
 
 </script>

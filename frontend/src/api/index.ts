@@ -80,7 +80,10 @@ async function fetchBoard(slug: string): Promise<Board> {
   return request({
     url: `/api/boards/${slug}`,
     method: 'GET',
-  }).then(res => res.data)
+  }).then(res => { 
+    console.log(res)
+    return res.data 
+  })
 }
 
 async function createBoard(params: BoardForm): Promise<Board> {

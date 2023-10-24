@@ -62,8 +62,7 @@
 <script lang="ts" setup>
 import { reactive, ref, onMounted } from 'vue'
 import AppLink from '../components/AppLink.vue'
-import { useUserStore } from '../store/user'
-import { routerPush } from '../router'
+import { router, routerPush } from '../router'
 import api from '@/api';
 
 const errors = ref('')
@@ -77,20 +76,16 @@ const form = reactive<PostRegisterForm>({
   'deptId': ''
 })
 
-const userStore = useUserStore()
-
 const onRegister = async () => {
   loadding.value = true
-  await userStore.register(form)
-    .then(() => {
-      routerPush("login")
-    })
-    .catch((error) => {
-      errors.value = error
-    })
-    .finally(() => {
-      loadding.value = false
-    })
+  try {
+    await api.register(form)
+    routerPush("login")
+  } catch (error) {
+    console.log(error)
+  } finally {
+    loadding.value = false
+  }
 }
 
 onMounted(async () => {

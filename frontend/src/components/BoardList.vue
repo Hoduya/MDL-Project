@@ -55,7 +55,6 @@ const fetchBoards = async () => {
   }
 
   const response = await api.fetchBoards(params, searchOption)
-  console.log(response);
   
   boards.value = response.boards
   boardsCount.value = response.boardsCount

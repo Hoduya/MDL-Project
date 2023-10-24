@@ -14,13 +14,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.aiden.board.dto.ApiResponse.ListDataResponse;
 import com.aiden.board.dto.board.CommentDto;
 import com.aiden.board.dto.user.DepartmentDto;
 import com.aiden.board.dto.user.UserDto;
 import com.aiden.board.service.CommentService;
 import com.aiden.board.service.DepartmentService;
-import com.aiden.board.service.response.ResponseService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,12 +31,11 @@ import lombok.extern.slf4j.Slf4j;
 public class DepartmentController {
 
 	private final DepartmentService departmentService;
-    private final ResponseService responseService;
 
 	@GetMapping("/departments")
-	public ListDataResponse<DepartmentDto> getDepartments() {
+	public ResponseEntity<List<DepartmentDto>> getDepartments() {
 		
 		List<DepartmentDto> departments = departmentService.selectDepartments();
-		return responseService.getListDataResponse(departments);
+		return ResponseEntity.ok(departments);
 	}
 }
