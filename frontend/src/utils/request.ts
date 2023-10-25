@@ -1,23 +1,28 @@
 import axios from 'axios'
 import { CONFIG } from '@/config'
 import { useUserStore } from '@/store/user'
+import { useToast } from 'vue-toastification'
+import { routerPush } from '@/router'
 
 const instance = axios.create({
   timeout: 10000,
   baseURL: CONFIG.API_HOST
 })
 
-const doLogout = async () => {
+const handleInvalidTokenState = async () => {
   const userStore = useUserStore()
-  userStore.logout()
+  const toast = useToast()
+  userStore.forceLogout()
+  toast.info("로그인 시간 만료\n다시 로그인해주세요", { timeout: 3000 })
+  routerPush('login')
 }
+
 
 instance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('access-token')
-    console.log("request intercept!")
-    if(token) {
-      config.headers.Authorization = `Bearer ${token}`
+    const accessToken = localStorage.getItem('access-token')
+    if(accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`
     } else {
       config.headers.Authorization = null
     }
@@ -29,33 +34,27 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
   ( response ) => {
-    console.log(response)
-    return response
+    return response.data
   },
   async (error) => {
-    const {
-      config,
-      response: { 
-        status, 
-        data: {
-          code: errorCode
-        }
-      }
-    } = error
+    const { config: originRequest } = error
+    const apiError: ApiErrorResponse = error.response.data
     
     // TODO - 상태 코드로 만료 시 재발급, 토큰 서명 오류 & 불일치 시 로그아웃
-    if (errorCode === 105) {
+    if (apiError.code === 105) {
       
-      const originRequest = config;
       const accessToken = localStorage.getItem("access-token")
       const refreshToken = localStorage.getItem("refresh-token")
-
-      if (!accessToken || !refreshToken) {
-        await doLogout()
+      
+      if(!accessToken || !refreshToken) {
+        handleInvalidTokenState()
         return
       }
       
-      const token: Token = { 'accessToken': accessToken, 'refreshToken': refreshToken }
+      const token: Token = {
+        accessToken,
+        refreshToken
+      }
 
       // 토큰 재발급 요청
       try {
@@ -65,20 +64,20 @@ instance.interceptors.response.use(
           {}
         ) 
 
-        // 재발급 성공
-        const newToken = response.data
-        localStorage.setItem("access-token", newToken.accessToken)
-        localStorage.setItem("refresh-token", newToken.refreshToken)
+        // 재발급 성공 -> localStorage 저장
+        const newToken = response.data 
+        localStorage.setItem('access-token', newToken.accessToken)
+        localStorage.setItem('refresh-token', newToken.refreshToken)
         
         // 동일한 요청 전송 (새로운 Access 토큰으로)
         originRequest.headers.authorization = `Bearer ${newToken.accessToken}`
-        return axios(originRequest)
-      } catch (error) {
-        return Promise.reject(error)
+        return axios(originRequest).then(response => response.data)
+      } catch (e) {
+        handleInvalidTokenState()
+        return Promise.reject(apiError)
       }
     }
-    // ({ message, response }) => Promise.reject(response ? response.data : message)
-    Promise.reject(error)
+    return Promise.reject(apiError)
   }
 ) 
 

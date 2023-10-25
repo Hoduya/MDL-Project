@@ -36,7 +36,7 @@ public class AuthService {
 		
 		// 회원 정보 이메일 존재 확인 
 		UserDto userDto = userMapper.findByUserEmail(loginDto.getEmail())
-				.orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+				.orElseThrow(() -> new CustomException(ErrorCode.LOGIN_FAILED));
 
 		// 패스워드 일치 여부 확인 
 		if (!passwordEncoder.matches(loginDto.getPassword(), userDto.getPassword())) {
@@ -103,25 +103,30 @@ public class AuthService {
         
 		// refresh token 검증 (만료 / 유효)
         if (!jwtProvider.validateToken(tokenRequestDto.getRefreshToken(), false)) {
+        	log.info("refresh token 검증");
             throw new CustomException(ErrorCode.INVALID_TOKEN);
         }
 
         // AccessToken 에서 Username (pk) 가져오기
         String accessToken = tokenRequestDto.getAccessToken();
         Authentication authentication = jwtProvider.getAuthentication(accessToken);
+        log.info("기존 리프레시토큰 조회 유저 검색 완료");
         
         // user pk로 유저 검색
         UserDto userDto = userMapper.findByUserId(Long.parseLong(authentication.getName()))
         		.orElseThrow(() -> new CustomException(ErrorCode.INVALID_TOKEN));
+    	log.info("pk 유저 검색 완료");
         
         // 해당 유저에게 발급했던 Refresh Token 조회
         RefreshTokenDto refreshTokenDto = refreshTokenMapper.findByUserId(userDto.getUserId())
                 .orElseThrow(() -> new CustomException(ErrorCode.INVALID_TOKEN));
+        log.info("기존 리프레시토큰 조회 유저 검색 완료");
 
         // 리프레시 토큰 불일치 에러
         if (!refreshTokenDto.getToken().equals(tokenRequestDto.getRefreshToken())) {
         	throw new CustomException(ErrorCode.INVALID_TOKEN);
         }
+        log.info("기존 리프레시토큰 조회 유저 검색 완료");
         
         // AccessToken, RefreshToken 토큰 재발급, 리프레쉬 토큰 저장
         TokenDto newToken = jwtProvider.createToken(userDto.getUserId(), userDto.getRole());

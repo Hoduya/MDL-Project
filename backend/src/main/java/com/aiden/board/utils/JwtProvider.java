@@ -80,7 +80,6 @@ public class JwtProvider {
 		Claims claims = getClaims(token);
 		UserDetails userDetails = userDetailsService.loadUserByUsername(claims.getSubject());
 		
-		log.info(userDetails.toString());
 		return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
 	}
 
@@ -129,6 +128,7 @@ public class JwtProvider {
 		try {
 			return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
 		} catch (ExpiredJwtException e) { // Access Token
+			log.info("만료된 access토큰 클레임 : ", e.getClaims());
 			return e.getClaims();
 		}
 	}

@@ -1,7 +1,10 @@
-// declare interface Comment {
-//   commentId: string
-//   boardId: string
-//   userId: string
-//   regDate: string
-//   content: string
-// }
+/**
+ * 댓글
+ */
+declare interface BoardComment {
+  commentId: number
+  boardId: number
+  regDate: string
+  content: string
+  author: User
+}

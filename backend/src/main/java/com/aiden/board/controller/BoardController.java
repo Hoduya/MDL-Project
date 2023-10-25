@@ -67,7 +67,7 @@ public class BoardController {
 
 	@PostMapping("/boards")
 	public ResponseEntity<BoardDto> createBoard(@RequestBody BoardDto board, final Authentication authentication) {
-		
+				
 		Long currentUserId = ((UserDto) authentication.getPrincipal()).getUserId();
 		board.setUserId(currentUserId);
 		Long boardId = boardService.insertBoard(board);

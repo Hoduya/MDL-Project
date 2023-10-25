@@ -6,12 +6,9 @@
           <p class="text-center mb-4">
             <app-link name="register">계정이 없으신가요?</app-link>
           </p>
-          <ul class="error-messages">
-            <li v-for="(error, field) in errors" :key="field">
-              {{ field }} {{ error ? error[0] : '' }}
-            </li>
-          </ul>
-
+          <p style="color:red">
+            {{ loginErrorText }}
+          </p>
           <form @submit.prevent="onLogin">
             <fieldset class="form-group">
               <input
@@ -41,13 +38,15 @@
     </div>
 </template>
 <script lang="ts" setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, toDisplayString } from 'vue'
 import { routerPush } from '@/router'
+import { useToast } from 'vue-toastification'
 import AppLink from '../components/AppLink.vue'
 import { useUserStore } from '../store/user'
 import api from '@/api';
 
-const errors = ref('')
+const toast = useToast();
+const loginErrorText = ref('')
 const loadding = ref(false)
 
 const form = reactive<PostLoginForm>({
@@ -59,13 +58,16 @@ const userStore = useUserStore()
 
 const onLogin = async () => {
   loadding.value = true
+
   try {
     const { user, token } = await api.login(form)
-    userStore.updateToken(token)
-    userStore.updateUser(user)
+    userStore.updateUser(user, token)
+    toast.success("로그인되었습니다.", {
+      timeout: 2000
+    })
     routerPush("global-feed")
-  } catch(error) {
-    console.log(error)
+  } catch(error: any) {
+    loginErrorText.value = error.message
   } finally {
     loadding.value = false
   }

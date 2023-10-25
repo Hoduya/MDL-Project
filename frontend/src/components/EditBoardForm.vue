@@ -63,28 +63,18 @@ onMounted(async () => {
   formData.content = board.content  
 })
 
-// const newTag = ref('')
-
-// const addTag = () => {
-//   const val = newTag.value.trim()
-//   if (!formData.tagList.find((t) => t === val)) {
-//     formData.tagList.push(newTag.value.trim())
-//     newTag.value = ''
-//   }
-// }
-
-// const removeTag = (tag: string) => {
-//   formData.tagList = formData.tagList.filter((t) => t !== tag)
-// }
-
 const onSubmit = async () => {
-  let board = null
-  if (slug.value) {
-    board = await api.updateBoard({ board: formData, slug: slug.value })
-  } else {
-    board = await api.createBoard(formData)
+  try {
+    let board = null
+    if (slug.value) {
+      board = await api.updateBoard({ board: formData, slug: slug.value })
+    } else {
+      board = await api.createBoard(formData)
+    }
+    if (board) await routerPush('board', { slug: board.boardId.toString() })
+  } catch (error) {
+    console.log(error)
   }
-  if (board) await routerPush('board', { slug: board.boardId.toString() })
 }
 
 const onCancel = async () => {

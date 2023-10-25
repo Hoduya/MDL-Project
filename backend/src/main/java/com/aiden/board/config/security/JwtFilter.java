@@ -35,8 +35,6 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
 
-	private static final Logger logger = LoggerFactory.getLogger(JwtFilter.class);
-
 	private final JwtProvider jwtTokenProvider;
 
 	// Filter
@@ -49,15 +47,14 @@ public class JwtFilter extends OncePerRequestFilter {
 		
 		String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
 		
-		String requestURI = ((HttpServletRequest) request).getRequestURI();
-		
 		// 만약 JWT 토큰이 존재하고 유효하다면, 해당 토큰을 사용하여 사용자 인증 정보를 가져와
 		// Spring Security의 SecurityContextHolder에 저장
 		if (token != null && jwtTokenProvider.validateToken(token, true)) {
 			Authentication authentication = jwtTokenProvider.getAuthentication(token);
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 			
-			logger.info("Security context에 인증 정보를 저장했습니다, uri: {}", requestURI);
+			String requestURI = ((HttpServletRequest) request).getRequestURI();
+			log.info("Security context에 인증 정보를 저장했습니다, uri: {}", requestURI);
 		} 
 
 		// 다음 필터로 요청을 전달합니다.

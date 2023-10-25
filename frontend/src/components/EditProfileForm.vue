@@ -110,7 +110,7 @@ const formatRegDate = computed(() => {
 
 const onSave = async () => {
   await api.updateUser(userForm.value).then((updateUser) => {
-    userStore.updateUserInfo(updateUser)
+    userStore.currentUser = updateUser
     routerPush("profile", { slug: props.user.userId.toString() })
   })
 }

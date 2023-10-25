@@ -6,13 +6,9 @@
         <p class="text-center mb-4">
           <app-link name="login">계정이 있으신가요?</app-link>
         </p>
-
-        <ul class="error-messages">
-          <li v-for="(error, field) in errors" :key="field">
-            {{ field }} {{ error ? error[0] : '' }}
-          </li>
-        </ul>
-
+        <p style="color:red">
+            {{ signupErrorText }}
+        </p>
         <form @submit.prevent="onRegister">
           <fieldset class="form-group">
             <input
@@ -62,10 +58,12 @@
 <script lang="ts" setup>
 import { reactive, ref, onMounted } from 'vue'
 import AppLink from '../components/AppLink.vue'
-import { router, routerPush } from '../router'
+import { routerPush } from '../router'
+import { useToast } from 'vue-toastification'
 import api from '@/api';
 
-const errors = ref('')
+const toast = useToast()
+const signupErrorText = ref('')
 const loadding = ref(false)
 const departments = ref<Department[]>()
 
@@ -80,9 +78,12 @@ const onRegister = async () => {
   loadding.value = true
   try {
     await api.register(form)
+    toast.success("회원가입 완료. 로그인 후 이용바랍니다.", {
+      timeout: 2000
+    })
     routerPush("login")
-  } catch (error) {
-    console.log(error)
+  } catch (error: any) {
+    signupErrorText.value = error.message
   } finally {
     loadding.value = false
   }

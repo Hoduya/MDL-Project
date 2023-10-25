@@ -37,20 +37,21 @@ public class AuthController {
 
 	@PostMapping("/login")
 	public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
-
+		
 		LoginResponseDto loginResponseDto = authService.login(loginRequestDto);
 		return ResponseEntity.ok(loginResponseDto);
 	}
 	
 	@PutMapping("/logout")
 	public ResponseEntity<Void> logout(Authentication authentication) {
+		
 		authService.logout(Long.parseLong(authentication.getName()));
 		return ResponseEntity.ok().build();
 	}
 	
 	@PostMapping("/join")
 	public ResponseEntity<UserDto> join(@RequestBody SignUpRequestDto signUpRequestDto) {
-		
+	
 		UserDto signupUser = authService.signUp(signUpRequestDto);
 		return ResponseEntity.ok(signupUser);
 	}
