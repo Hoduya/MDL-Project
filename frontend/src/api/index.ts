@@ -2,6 +2,8 @@ import request from "@/utils/request"
 
 const fetchBoardsLimit = 10;
 
+// 로그인
+
 async function login(params: PostLoginForm): Promise<{user: User, token: Token}> {
   return request({
     url: '/api/login',
@@ -25,6 +27,8 @@ async function register(params: PostRegisterForm): Promise<void> {
   })
 }
 
+// 유저
+
 async function fetchUser(slug: string): Promise<User> {
   return request({ 
     url: `/api/users/${slug}`,
@@ -47,13 +51,14 @@ async function updateUser(user: User): Promise<User> {
   })
 }
 
-async function deleteUser(user: User): Promise<void> {
+async function deleteCurrentUser(): Promise<void> {
   return request({
     url: `/api/users`,
     method: 'DELETE',
-    data: user
   })
 }
+
+// 부서
 
 async function fetchDepartments(): Promise<Department[]> {
   return request({
@@ -68,6 +73,8 @@ async function fetchDepartmentName(deptId: number): Promise<string> {
     method:'GET'
   })
 }
+
+// 게시글
 
 async function fetchBoards(params: BoardsOption, data?: SearchOption): Promise<{ boards: Board[], boardsCount: number }> {
   return request({
@@ -111,6 +118,8 @@ async function deleteBoard(slug: string): Promise<void> {
   })
 }
 
+// 댓글
+
 async function fetchComments(slug: string): Promise<BoardComment[]> {
   return request ({
     url: `api/boards/${slug}/comments`,
@@ -133,6 +142,23 @@ async function deleteComment(slug: string, id: number): Promise<void> {
   })
 }
 
+// 투표
+
+async function fetchComponents(slug: number): Promise<Component[]>{
+  return request({
+    url: `/api/components/${slug}`,
+    method: 'GET'
+  })
+}
+
+async function updateComponent(component: UpdateComponent): Promise<void> {
+  return request({
+    url: '/api/components',
+    method: 'PUT',
+    data: component
+  })
+}
+
 export default {
   fetchBoardsLimit,
   login,
@@ -141,7 +167,7 @@ export default {
   fetchUser,
   fetchProfilesFromDept,
   updateUser,
-  deleteUser,
+  deleteCurrentUser,
   fetchDepartments,
   fetchDepartmentName,
   fetchBoards,
@@ -152,4 +178,6 @@ export default {
   fetchComments,
   createComment,
   deleteComment,
+  fetchComponents,
+  updateComponent
 }

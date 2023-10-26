@@ -43,7 +43,7 @@ public class AuthController {
 	}
 	
 	@PutMapping("/logout")
-	public ResponseEntity<Void> logout(Authentication authentication) {
+	public ResponseEntity<Void> logout(final Authentication authentication) {
 		
 		authService.logout(Long.parseLong(authentication.getName()));
 		return ResponseEntity.ok().build();
@@ -55,7 +55,6 @@ public class AuthController {
 		UserDto signupUser = authService.signUp(signUpRequestDto);
 		return ResponseEntity.ok(signupUser);
 	}
-	
 	
 	@PostMapping("/reissue")
 	public ResponseEntity<TokenDto> reissue(@RequestBody TokenRequestDto tokenRequestDto) {

@@ -51,9 +51,9 @@ export const router = createRouter({
       component: () => import('./pages/Settings.vue')
     },
     {
-      name: 'Lunch',
-      path: '/Lunch',
-      component: () => import('./pages/Lunch.vue')
+      name: 'Vote',
+      path: '/Vote',
+      component: () => import('./pages/Vote.vue')
     },
     {
       name: 'VoteSettings',
@@ -73,7 +73,7 @@ export type AppRouteNames =
   | 'profile'
   | 'board'
   | 'settings'
-  | 'Lunch'
+  | 'Vote'
   | 'VoteSettings'
 
 export async function routerPush(

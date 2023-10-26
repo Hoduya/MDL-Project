@@ -90,7 +90,7 @@ const navLinks = computed<NavLink[]>(() => [
     icon: '',
   },
   {
-    name: 'Lunch',
+    name: 'Vote',
     title: '투표',
     display: 'all',
     icon: '',

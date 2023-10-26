@@ -116,8 +116,8 @@ const onSave = async () => {
 }
 
 const onWithdrawl = async () => {
-  await api.deleteUser(props.user).then(() => {
-    userStore.logout()
+  await api.deleteCurrentUser().then(() => {
+    userStore.forceLogout()
     routerPush("global-feed")
   })
 }

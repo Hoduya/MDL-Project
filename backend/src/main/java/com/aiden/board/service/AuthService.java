@@ -14,6 +14,7 @@ import com.aiden.board.dto.token.TokenRequestDto;
 import com.aiden.board.dto.user.UserDto;
 import com.aiden.board.exception.CustomException;
 import com.aiden.board.exception.ErrorCode;
+import com.aiden.board.mapper.ComponentMapper;
 import com.aiden.board.mapper.RefreshTokenMapper;
 import com.aiden.board.mapper.UserMapper;
 import com.aiden.board.utils.JwtProvider;
@@ -28,6 +29,7 @@ public class AuthService {
 
 	private final UserMapper userMapper;
 	private final RefreshTokenMapper refreshTokenMapper;
+	private final ComponentMapper componentMapper;
 	private final PasswordEncoder passwordEncoder;
 	private final JwtProvider jwtProvider;
 
@@ -88,6 +90,9 @@ public class AuthService {
 		
 		// 해당 유저 리프레시 토큰 튜플 생성
 		refreshTokenMapper.createTuple(savedUser.getUserId());
+		
+		// 해당 유저 컴포넌트 튜플 생성
+		componentMapper.createTuple(savedUser.getUserId(), savedUser.getDeptId());
 		
 		return savedUser; 
 	}

@@ -25,7 +25,6 @@ import com.aiden.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@CrossOrigin(origins = "http://localhost:8080")
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -67,8 +66,8 @@ public class BoardController {
 
 	@PostMapping("/boards")
 	public ResponseEntity<BoardDto> createBoard(@RequestBody BoardDto board, final Authentication authentication) {
-				
-		Long currentUserId = ((UserDto) authentication.getPrincipal()).getUserId();
+		
+		Long currentUserId = Long.parseLong(authentication.getName());
 		board.setUserId(currentUserId);
 		Long boardId = boardService.insertBoard(board);
 		BoardDto createdBoard = boardService.selectByBoardId(boardId);

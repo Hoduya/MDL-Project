@@ -40,7 +40,7 @@ instance.interceptors.response.use(
     const { config: originRequest } = error
     const apiError: ApiErrorResponse = error.response.data
     
-    // TODO - 상태 코드로 만료 시 재발급, 토큰 서명 오류 & 불일치 시 로그아웃
+    // 105 : 엑세스 토큰 만료 -> 재발급
     if (apiError.code === 105) {
       
       const accessToken = localStorage.getItem("access-token")
@@ -73,6 +73,7 @@ instance.interceptors.response.use(
         originRequest.headers.authorization = `Bearer ${newToken.accessToken}`
         return axios(originRequest).then(response => response.data)
       } catch (e) {
+        // 재발급 불가능한 경우 로그아웃 처리
         handleInvalidTokenState()
         return Promise.reject(apiError)
       }

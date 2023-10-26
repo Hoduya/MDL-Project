@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aiden.board.mapper.ComponentMapper">
+	
+	<insert id="createTuple">
+		INSERT INTO TB_COMPONENT(USER_ID, DEPT_ID)
+		VALUES(#{userId}, #{deptId})
+	</insert>
+	
+	<select id="selectByDeptId" resultType="ComponentDto">
+        SELECT c.COMPONENT_ID, c.DEPT_ID, c.USER_ID, c.COORD_X, c.COORD_Y, u.NAME as USER_NAME
+        FROM TB_COMPONENT c
+        JOIN TB_USER u ON c.USER_ID = u.USER_ID 
+        WHERE c.DEPT_ID = #{deptId}
+	</select>
+	
+	<update id="updatePosition">
+		UPDATE TB_COMPONENT
+		SET
+		COORD_X = #{coordX},
+		COORD_Y = #{coordY}
+		WHERE
+		COMPONENT_ID = #{componentId}
+	</update>
+</mapper>
+
+

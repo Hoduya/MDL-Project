@@ -4,15 +4,18 @@
   </div>
 
   <div>
-    <VoteCanvas>
-    </VoteCanvas>
+    
+  </div>
+
+  <div>
+    <VoteBoard/>
   </div>
 </template>
 
 <script setup lang="ts">
 import { onUnmounted, onMounted, computed, ref } from 'vue';
 import { createWorker } from 'tesseract.js';
-import VoteCanvas from '../components/Lunch/VoteCanvas.vue'
+import VoteBoard from '../components/Vote/VoteBoard.vue'
 
 const imagePath = ref('/assets/image.png');
 
