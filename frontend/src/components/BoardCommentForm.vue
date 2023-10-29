@@ -3,7 +3,7 @@
     <div class="card-block">
       <textarea
         v-model="comment"
-        class="form-ctrol"
+        class="form-control"
         placeholder="댓글 입력..."
         rows="3" />
     </div>

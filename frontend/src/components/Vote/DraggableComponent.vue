@@ -37,7 +37,6 @@ const handleDragging = (event: MouseEvent) => {
   if (isDragging.value) {
     const newX = event.clientX - offsetX.value;
     const newY = event.clientY - offsetY.value;
-    console.log(newY)
     
     // 바운더리 계산
     const maxX = props.maxX - 60; 

@@ -36,7 +36,8 @@ public class SecurityConfig {
 			"/api/boards",
 			"/api/boards/**",
 			"/api/users/**",
-			"/api/departments/**"
+			"/api/departments/**",
+			"/api/menuImage/**"
 	};
 	
 	private static final String[] PERMIT_ALL_URLS = { 
@@ -44,7 +45,7 @@ public class SecurityConfig {
 			"/api/login",
 			"/api/reissue",
 			"/swagger-ui/**",
-			"/v3/api-docs/**"
+			"/v3/api-docs/**",
 	};
 
 	@Bean

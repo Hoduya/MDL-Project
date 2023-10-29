@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aiden.board.mapper.MenuImageMapper">
+	<insert id="saveMenuImageDto">
+		INSERT INTO TB_MENU_IMAGE(IMAGE_PATH, ORIGIN_NAME, STORED_NAME)
+		VALUES(#{imagePath}, #{originName}, #{storedName})
+	</insert>
+	
+	<select id="selectMenuImageDto" resultType="MenuImageDto">
+		SELECT IMAGE_PATH, ORIGIN_NAME, STORED_NAME
+		FROM TB_MENU_IMAGE
+		WHERE STORED_NAME = #{storedName}
+	</select>
+</mapper>

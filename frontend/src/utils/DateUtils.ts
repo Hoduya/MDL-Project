@@ -22,7 +22,7 @@ export function formatDate(dateString: string) {
   return new Intl.DateTimeFormat('ko-kr', options).format(new Date(dateString))
 }
 
-export function getWeekRange(date: Date): { text: string, param: string, weekdays: string[] } {
+export function getWeekRange(date: Date): { text: string, formalString: string} {
   const dayOfWeek = date.getDay() // 주어진 날짜의 요일 (0: 일요일, 1: 월요일, ..., 6: 토요일)
   const startDate = new Date(date) // 입력된 날짜를 복사하여 시작 날짜로 설정
   const endDate = new Date(date)
@@ -39,15 +39,8 @@ export function getWeekRange(date: Date): { text: string, param: string, weekday
   const endMonth = endDate.getMonth() + 1
   const endDay = endDate.getDate()
 
-  const weekdays = [1, 2, 3, 4, 5].map((day) => {
-    const date = new Date()
-    date.setDate(startDate.getDate() + day)
-    return `${date.getMonth() + 1}/${date.getDate()}`
-  })
-
   return {
     text: `${startYear}년 ${startMonth}월 ${startDay}일 ~ ${endYear}년 ${endMonth}월 ${endDay}일`,
-    param: `${startYear}${startMonth}${startDay}${endYear}${endMonth}${endDay}`,
-    weekdays: weekdays
+    formalString: `${startYear}${startMonth}${startDay}${endYear}${endMonth}${endDay}`,
   }
 }

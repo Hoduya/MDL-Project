@@ -52,14 +52,13 @@ import { useUserStore } from '@/store/user';
 import { routerPush } from '@/router';
 import BoardComments from './BoardComments.vue';
 import api from '@/api';
+import { useToast } from 'vue-toastification';
 
 const userStore = useUserStore()
-
 const route = useRoute()
-
 const slug = route.params.slug as string
-
 const board = ref<Board>(await api.fetchBoard(slug))
+const toast = useToast()
 
 const showEdit = computed(
   () => 
@@ -70,6 +69,9 @@ const showEdit = computed(
 
 const onDelete = async () => {
   await api.deleteBoard(slug)
+  toast.success("게시글 삭제 완료", {
+      timeout: 2000
+  })
   routerPush('global-feed')
 }
 </script>

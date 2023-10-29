@@ -27,8 +27,6 @@ public class ComponentService {
 	
 	public List<ComponentDto> selectByDeptId(Integer deptId) {
 		List<ComponentDto> components = componentMapper.selectByDeptId(deptId);
-		log.info(deptId.toString());
-		log.info(String.valueOf(components.size()));
 		return components;
 	}
 }

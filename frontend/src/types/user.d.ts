@@ -7,6 +7,7 @@ declare interface User {
   name: string
   deptId: number
   deptName: string
+  role: string
   regDate: string
   password?: string
 }

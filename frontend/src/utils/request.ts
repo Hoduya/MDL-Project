@@ -29,7 +29,9 @@ instance.interceptors.request.use(
 
     return config
   },
-  error => Promise.reject(error)
+  error => { 
+    Promise.reject(error)
+  }
 )
 
 instance.interceptors.response.use(
@@ -72,6 +74,7 @@ instance.interceptors.response.use(
         // 동일한 요청 전송 (새로운 Access 토큰으로)
         originRequest.headers.authorization = `Bearer ${newToken.accessToken}`
         return axios(originRequest).then(response => response.data)
+
       } catch (e) {
         // 재발급 불가능한 경우 로그아웃 처리
         handleInvalidTokenState()

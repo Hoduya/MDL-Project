@@ -159,6 +159,26 @@ async function updateComponent(component: UpdateComponent): Promise<void> {
   })
 }
 
+// 투표 관리
+
+async function uploadMenuImage(formData: FormData, slug: string): Promise<void> {
+  return request({
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+    url: `/api/menuImage/${slug}`,
+    method: 'POST',
+    data: formData
+  })
+}
+
+async function fetchMenuImage(slug: string): Promise<string> {
+  return request({
+    url: `/api/menuImage/${slug}`,
+    method: 'GET',
+  })
+}
+
 export default {
   fetchBoardsLimit,
   login,
@@ -179,5 +199,7 @@ export default {
   createComment,
   deleteComment,
   fetchComponents,
-  updateComponent
+  updateComponent,
+  uploadMenuImage,
+  fetchMenuImage,
 }

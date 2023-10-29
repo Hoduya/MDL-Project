@@ -87,6 +87,7 @@ import { useUserStore } from '@/store/user';
 import { formatDate } from '@/utils/DateUtils';
 import api from '@/api';
 import { routerPush } from '@/router';
+import { useToast } from 'vue-toastification';
 
 interface Props {
   user: User
@@ -95,6 +96,7 @@ interface Props {
 
 const userStore = useUserStore()
 const props = defineProps<Props>()
+const toast = useToast()
 
 const userForm = ref<User>({
   ...props.user
@@ -117,6 +119,9 @@ const onSave = async () => {
 
 const onWithdrawl = async () => {
   await api.deleteCurrentUser().then(() => {
+    toast.success("회원 탈퇴가 완료되었습니다.", {
+      timeout: 2000
+    })
     userStore.forceLogout()
     routerPush("global-feed")
   })

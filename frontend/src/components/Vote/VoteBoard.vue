@@ -1,9 +1,7 @@
 <template>
   <div class="container">
-    <h2 class="title"> {{  }} </h2>
-    <div class="unvote-rectangle">
-
-    </div>
+    <h2 class="title"> 현재 투표 결과: <b>{{ voteResultText }}</b></h2>
+    <div class="unvote-rectangle" />
     <div class="vote-rectangle">
       <div class="vertical-line"></div>
       <FixedComponents
@@ -32,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch, computed } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useUserStore } from '@/store/user';
 import { useToast } from 'vue-toastification';
 import DraggableComponent from './DraggableComponent.vue'
@@ -49,8 +47,14 @@ const voteResultText = ref('');
 
 const fetchComponents = async () => {
   const components = await api.fetchComponents(currentDeptId || 0)
+  const currentUserComponent = components.find((componet) => componet.userId === currentUserId)
   fixedComponents.value = components.filter((component) => component.userId !== currentUserId)
-  draggableComponent.value = components.find((componet) => componet.userId === currentUserId)
+  draggableComponent.value = currentUserComponent
+  if(currentUserComponent && !isVote(currentUserComponent.coordY)) {
+    toast.warning("투표를 진행해주세요", { timeout: false })
+  } else {
+    toast.clear()
+  }
   updateVoteResult(components)
 }
 
@@ -60,14 +64,15 @@ const updatePosition = async (component: UpdateComponent) => {
 }
 
 const updateVoteResult = (components: Component[]) => {
-  const voteTotalCount = components.length
-  let cafeteriaCount = 0
-  components.forEach((component) => {
-    if (component.coordX < 375) {
-      cafeteriaCount += 1;
-    }
-  })
-  voteResultText.value = (voteTotalCount / 2 <= cafeteriaCount) ? "구내식당" : "외식"
+  const votedComponents = components.filter((component) => component.coordY >= 0 )
+  const cafeteriaCount = votedComponents.filter(component => component.coordX < 375).length // 구내식당 투표 수
+  const votedCount = votedComponents.length // 전체 투표 수
+
+  voteResultText.value = (votedCount / 2 <= cafeteriaCount) ? "구내식당" : "외식"
+}
+
+const isVote = (coordY: number) => {
+  return coordY >= 0
 }
 
 onMounted(() => {

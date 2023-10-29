@@ -17,16 +17,6 @@
           placeholder="내용을 입력해주세요"
           data-test="content"></textarea>
       </fieldset>
-      <!-- <fieldset class="form-group mb-3">
-        <input
-          v-model="newTag"
-          type="text"
-          class="form-control"
-          placeholder="Enter tags"
-          @keydown.enter.prevent="addTag"
-          data-test="newTag" />
-        <TagList :tags="formData.tagList" editable @click="removeTag" />
-      </fieldset> -->
     </fieldset>
 
     <div class="mb-3 d-flex justify-content-center">
@@ -44,12 +34,13 @@
 import { onMounted, reactive, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { routerPush } from '../router'
-import TagList from './TagList.vue'
 import api from '@/api'
+import { useToast } from 'vue-toastification'
 
 const route = useRoute()
 const router = useRouter()
 const slug = computed(() => route.params.slug as string)
+const toast = useToast()
 
 const formData = reactive<BoardForm>({
   title: '',
@@ -66,11 +57,18 @@ onMounted(async () => {
 const onSubmit = async () => {
   try {
     let board = null
+    let toastMessage = ""
     if (slug.value) {
-      board = await api.updateBoard({ board: formData, slug: slug.value })
-    } else {
+      board = await api.updateBoard({ board: formData, slug: slug.value })  
+      toastMessage = "게시글 수정 완료"
+    } 
+    else {
       board = await api.createBoard(formData)
+      toastMessage = "게시글 등록 완료"
     }
+    toast.success(toastMessage, {
+      timeout: 2000
+    })
     if (board) await routerPush('board', { slug: board.boardId.toString() })
   } catch (error) {
     console.log(error)

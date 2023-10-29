@@ -22,7 +22,7 @@
         <div class="col"></div>
         <div class="col-auto text-end">
 
-          <template v-if="displayStatus === 'guest'">
+          <template v-if="displayStatus === 'GUEST'">
             <AppLink :name="loginLink.name" class="btn btn-outline-light me-2">
               {{ loginLink.title }}
             </AppLink>
@@ -61,9 +61,9 @@
 
 
 <script lang="ts" setup>
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import AppLink from './AppLink.vue'
-import { AppRouteNames, router, routerPush } from '../router'
+import { AppRouteNames, routerPush } from '../router'
 import { RouteParams } from 'vue-router'
 import { useUserStore } from '../store/user'
 
@@ -72,53 +72,51 @@ interface NavLink {
   params?: RouteParams
   title?: string
   icon?: string
-  display: 'all' | 'guest' | 'authorized'
+  display: 'GUEST' | 'USER' | 'ADMIN'
 }
 
 const userStore = useUserStore()
 
+const role = computed(() => userStore.currentUser?.role)
 const username = computed(() => userStore.currentUser?.name)
 const userId = computed(() => userStore.currentUser?.userId)
 const userProfileUrl = computed(() => require("/src/assets/defaultProfile.png"))
-const displayStatus = computed(() => (username.value ? 'authorized' : 'guest'))
+const displayStatus = computed(() => role.value ?  role.value : 'GUEST')
 
 const navLinks = computed<NavLink[]>(() => [
   {
     name: 'create-board',
     title: '글쓰기',
-    display: 'authorized',
-    icon: '',
+    display: 'USER',
   },
   {
     name: 'Vote',
     title: '투표',
-    display: 'all',
-    icon: '',
+    display: 'USER',
   },
   {
     name: 'VoteSettings',
     title: '투표관리',
-    display: 'all',
-    icon: '',
+    display: 'ADMIN',
   }
 ])
 
 const loginLink: NavLink = {
   name: 'login',
   title: '로그인',
-  display: 'guest'
+  display: 'GUEST'
 }
 
 const registerLink: NavLink = {
   name: 'register',
   title: '회원가입',
-  display: 'guest'
+  display: 'GUEST'
 }
 
 const profileLink = computed<NavLink>(() => {
   return {
     name: 'profile',
-    display: 'authorized',
+    display: 'USER',
     params: { slug: userId.value?.toString() || 'as' },
   }
 })
@@ -126,15 +124,20 @@ const profileLink = computed<NavLink>(() => {
 const settingsLink = computed<NavLink>(() => {
   return {
     name: 'settings',
-    display: 'authorized'
+    display: 'USER'
   }
 })
 
 const enabledNavLinks = computed(() =>
   navLinks.value.filter(
-    (l) => l.display === 'all' || l.display === displayStatus.value
+    (link) => link.display === displayStatus.value
   )
 )
+
+onMounted(()=> {
+  console.log(role.value)
+  console.log(displayStatus.value)
+})
 
 const onLogout = async () => {
   await userStore.logout()
