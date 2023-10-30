@@ -54,24 +54,40 @@ const updatePosition = async (component: UpdateComponent) => {
     toast.clear()
   }
 
-  console.log(component.voteState)
-
   await api.updateUserComponent(component) // 현재 유저 컴포넌트 업데이트
   await fetchComponents() // 다른 모든 컴포넌트 정보 로드
 }
 
 const fetchComponents = async () => {
-  const components = await api.fetchComponents(currentDeptId || 0)  
-  fixedComponents.value = components.filter((component) => component.userId !== currentUserId)
-  userComponent.value = components.find((component) => component.userId === currentUserId)
+  const components = await api.fetchComponents(currentDeptId || 0)
   
-  updateVoteResult(components)
-}
+  let newX = 10
+  let cafeteriaCount = 0
+  let eatOutCount = 0
 
-const updateVoteResult = (components: Component[]) => {
-  const cafeteriaCount = components.filter((component) => component.voteState === 1 ).length // 구내식당 투표 수
-  const eatOutCount = components.filter(component => component.voteState === 2).length // 외식 투표 수
+  // 투표 하지 않은 컴포넌트 재배치 (겹치는 것 방지) & 투표 결과 계산
+  const rearangedComponents = components.map((component) => {
+    switch (component.voteState) {
+      case 0:
+        component.coordX = newX
+        component.coordY = -100
+        newX += 100
+        break
+      case 1:
+        cafeteriaCount += 1
+        break
+      case 2:
+        eatOutCount += 1
+        break
+    }
+    return component
+  })
 
+  // 재배치 적용
+  fixedComponents.value = rearangedComponents.filter((component) => component.userId !== currentUserId)
+  userComponent.value = rearangedComponents.find((component) => component.userId === currentUserId)
+  
+  // 투표 결과 출력
   voteResultText.value = (cafeteriaCount >= eatOutCount) ? "구내식당" : "외식"
 }
 

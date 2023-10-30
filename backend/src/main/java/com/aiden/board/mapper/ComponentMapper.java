@@ -11,5 +11,6 @@ import com.aiden.board.dto.component.UpdateComponentDto;
 public interface ComponentMapper {
 	void createTuple(Long userId, Integer deptId);
 	Integer updatePosition(UpdateComponentDto component);
+	void initializeVoteState();
 	List<ComponentDto> selectByDeptId(Integer deptId);
 }
