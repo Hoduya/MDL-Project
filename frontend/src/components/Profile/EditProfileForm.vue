@@ -6,7 +6,7 @@
           <div class="card">
             <div class="card-body">
               <div class="d-flex flex-column align-items-center text-center">
-                <img src="../assets/defaultProfile.png" alt="Admin"
+                <img src="@/assets/images/defaultProfile.png" alt="Admin"
                   class="rounded-circle" width="110">
                 <div class="mt-3">
                   <h4>{{ user.name }}</h4>
@@ -81,13 +81,13 @@
 </template>
 
 <script setup lang="ts">
-import AppLink from './AppLink.vue';
+import AppLink from '@/components/AppLink.vue';
 import { computed, ref, onMounted } from 'vue';
 import { useUserStore } from '@/store/user';
-import { formatDate } from '@/utils/DateUtils';
-import api from '@/api';
+import { formatDate } from '@/utils/dateUtils';
 import { routerPush } from '@/router';
 import { useToast } from 'vue-toastification';
+import api from '@/api';
 
 interface Props {
   user: User
@@ -134,7 +134,6 @@ onMounted(async () => {
     console.log(departments.value)
   }
 })
-
 </script>
 
 <style scoped>

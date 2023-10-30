@@ -1,7 +1,7 @@
 <template>
   <div class="user-profile-container">
     <div class="me-3">
-      <img src="../assets/defaultProfile.png" alt="" class="rounded-circle profile-image">
+      <img src="../assets/images/defaultProfile.png" alt="" class="rounded-circle profile-image">
       <h3 class="name">{{ user?.name }}</h3>
     </div>
     <div class="user-details">
@@ -19,8 +19,8 @@
 <script lang="ts" setup>
 import AppLink from '../components/AppLink.vue'
 import { computed } from 'vue'
-import { useUserStore } from '../store/user'
-import { formatDate } from '@/utils/DateUtils';
+import { useUserStore } from '@/store/user'
+import { formatDate } from '@/utils/dateUtils';
 
 interface Props {
   user?: User
@@ -57,4 +57,4 @@ const regDate = computed(() => {
   flex-direction: column;
   align-items: flex-start;
 }
-</style>@/utils/DateUtils
+</style>

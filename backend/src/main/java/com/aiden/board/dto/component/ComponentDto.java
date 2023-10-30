@@ -16,4 +16,5 @@ public class ComponentDto {
 	private String userName;
 	private Integer coordX;
 	private Integer coordY;
+	private Integer voteState;
 }

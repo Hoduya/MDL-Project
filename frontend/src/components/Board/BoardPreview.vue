@@ -17,9 +17,10 @@
   </div>
   <hr>
 </template>
+
 <script lang="ts" setup>
 import { defineProps } from 'vue'
-import AppLink from './AppLink.vue'
+import AppLink from '@/components/AppLink.vue'
 import BoardMeta from './BoardMeta.vue';
 
 interface Props {

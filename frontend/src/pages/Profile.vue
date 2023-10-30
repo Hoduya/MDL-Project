@@ -23,9 +23,9 @@
 </template>
 
 <script lang="ts" setup>
-import BoardNavigation from '@/components/BoardNavigation.vue';
-import EditProfileForm from '@/components/EditProfileForm.vue';
-import BoardList from '@/components/BoardList.vue';
+import BoardNavigation from '@/components/Board/BoardNavigation.vue';
+import BoardList from '@/components/Board/BoardList.vue';
+import EditProfileForm from '@/components/Profile/EditProfileForm.vue';
 import { useRoute } from 'vue-router';
 import { ref, onMounted } from 'vue';
 import api from '@/api';

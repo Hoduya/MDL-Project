@@ -15,4 +15,5 @@ public class UpdateComponentDto {
 	private Long componentId;
 	private Integer coordX;
 	private Integer coordY;
+	private Integer voteState;
 }

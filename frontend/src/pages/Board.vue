@@ -12,5 +12,5 @@
 </template>
 
 <script lang="ts" setup>
-import BoardDetail from '@/components/BoardDetail.vue';
+import BoardDetail from '@/components/Board/BoardDetail.vue';
 </script>

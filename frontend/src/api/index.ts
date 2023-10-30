@@ -151,7 +151,7 @@ async function fetchComponents(slug: number): Promise<Component[]>{
   })
 }
 
-async function updateComponent(component: UpdateComponent): Promise<void> {
+async function updateUserComponent(component: UpdateComponent): Promise<void> {
   return request({
     url: '/api/components',
     method: 'PUT',
@@ -199,7 +199,7 @@ export default {
   createComment,
   deleteComment,
   fetchComponents,
-  updateComponent,
+  updateUserComponent,
   uploadMenuImage,
   fetchMenuImage,
 }

@@ -43,16 +43,18 @@
     </div>
   </div>
 </template>
+
 <script lang="ts" setup>
 import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
-import AppLink from './AppLink.vue';
-import BoardMeta from './BoardMeta.vue';
 import { useUserStore } from '@/store/user';
 import { routerPush } from '@/router';
-import BoardComments from './BoardComments.vue';
-import api from '@/api';
 import { useToast } from 'vue-toastification';
+import api from '@/api';
+import BoardComments from '@/components/Comment/BoardComments.vue';
+import BoardMeta from './BoardMeta.vue';
+import AppLink from '@/components/AppLink.vue';
+
 
 const userStore = useUserStore()
 const route = useRoute()

@@ -31,9 +31,9 @@
 </template>
   
 <script lang="ts" setup>
-import { onMounted, reactive, computed, watch } from 'vue'
+import { onMounted, reactive, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { routerPush } from '../router'
+import { routerPush } from '@/router'
 import api from '@/api'
 import { useToast } from 'vue-toastification'
 

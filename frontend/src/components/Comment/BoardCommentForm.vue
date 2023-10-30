@@ -19,9 +19,9 @@
   </p>
 </template>
 <script lang="ts" setup>
-import AppLink from './AppLink.vue'
+import AppLink from '@/components/AppLink.vue'
 import { ref, defineProps, defineEmits } from 'vue'
-import { useUserStore } from '../store/user'
+import { useUserStore } from '@/store/user'
 import api from '@/api';
 
 interface Props {

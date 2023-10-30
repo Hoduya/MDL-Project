@@ -1,5 +1,5 @@
 <template>
-  <div class="container mt-5">
+  <div class="container mt-5 mb-5">
     <div class="d-flex justify-content-center mb-4">
       <DatePicker v-model="selectedDate" mode="date" />
     </div>
@@ -24,8 +24,9 @@
 
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue'
-import { getWeekRange } from '@/utils/DateUtils'
+import { getWeekRange } from '@/utils/dateUtils'
 import { DatePicker } from 'v-calendar'
+import { useToast } from 'vue-toastification'
 import 'v-calendar/style.css'
 import api from '@/api'
 
@@ -34,6 +35,7 @@ const weekRangeText = ref("")
 const imagePath = ref<string | null>()
 const imageFile = ref<File | null>()
 const showUploadButton = ref(false)
+const toast = useToast()
 
 const handleFileUpload = (event: Event) => {
   const input = event.target as HTMLInputElement;
@@ -59,7 +61,8 @@ const onUpload = async () => {
   console.log(formalString)
   formData.append('imageFile', imageFile.value);
   
-  api.uploadMenuImage(formData, formalString)
+  await api.uploadMenuImage(formData, formalString)
+  toast.success("식단표 업로드 완료", { timeout: 2000 })
 }
 
 onMounted(() => {
@@ -79,6 +82,3 @@ watch(selectedDate, async () => {
 })
 
 </script>
-
-
-

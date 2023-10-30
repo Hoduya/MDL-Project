@@ -80,7 +80,7 @@ const userStore = useUserStore()
 const role = computed(() => userStore.currentUser?.role)
 const username = computed(() => userStore.currentUser?.name)
 const userId = computed(() => userStore.currentUser?.userId)
-const userProfileUrl = computed(() => require("/src/assets/defaultProfile.png"))
+const userProfileUrl = computed(() => require("/src/assets/images/defaultProfile.png"))
 const displayStatus = computed(() => role.value ?  role.value : 'GUEST')
 
 const navLinks = computed<NavLink[]>(() => [

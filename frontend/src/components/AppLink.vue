@@ -6,7 +6,7 @@
 
 <script lang="ts" setup>
 import { useAttrs, defineProps, withDefaults } from 'vue'
-import type { AppRouteNames } from '../router'
+import type { AppRouteNames } from '@/router'
 import type { RouteParams } from 'vue-router'
 import { RouterLink } from 'vue-router'
 

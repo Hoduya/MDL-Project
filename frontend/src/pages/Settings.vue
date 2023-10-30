@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import EditProfileForm from '@/components/EditProfileForm.vue';
+import EditProfileForm from '@/components/Profile/EditProfileForm.vue';
 import { useUserStore } from '@/store/user';
 import { ref } from 'vue';
 

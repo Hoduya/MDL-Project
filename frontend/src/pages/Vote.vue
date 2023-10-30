@@ -14,7 +14,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import VoteBoard from '../components/Vote/VoteBoard.vue'
-import { getWeekRange } from '@/utils/DateUtils';
+import { getWeekRange } from '@/utils/dateUtils';
 import api from '@/api';
 
 const imagePath = ref();
@@ -27,7 +27,5 @@ onMounted( async () => {
   } catch {
     imagePath.value = null
   }})
-
-
 
 </script>

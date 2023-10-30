@@ -4,7 +4,7 @@
       name="profile"
       class="text-body"
       :params="{ slug: board.author.userId.toString() }">
-      <img src="../assets/defaultProfile.png" alt="" class="rounded-circle me-2" style="width: 45px; height: 45px;">
+      <img src="@/assets/images/defaultProfile.png" alt="" class="rounded-circle me-2" style="width: 45px; height: 45px;">
     </AppLink>
     <div>
       <AppLink
@@ -21,8 +21,8 @@
 </template>
 
 <script lang="ts" setup>
-import AppLink from './AppLink.vue';
-import { formatDateTime } from '@/utils/DateUtils';
+import AppLink from '../AppLink.vue';
+import { formatDateTime } from '@/utils/dateUtils';
 import { defineProps } from 'vue';
 
 interface Props {

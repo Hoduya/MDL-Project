@@ -28,8 +28,8 @@
 </template>
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { useUserStore } from '../store/user'
-import AppLink from './AppLink.vue'
+import { useUserStore } from '@/store/user'
+import AppLink from '@/components/AppLink.vue'
 
 interface Props {
   comment: BoardComment

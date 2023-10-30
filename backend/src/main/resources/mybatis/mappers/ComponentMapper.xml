@@ -11,7 +11,7 @@
 	</insert>
 	
 	<select id="selectByDeptId" resultType="ComponentDto">
-        SELECT c.COMPONENT_ID, c.DEPT_ID, c.USER_ID, c.COORD_X, c.COORD_Y, u.NAME as USER_NAME
+        SELECT c.COMPONENT_ID, c.DEPT_ID, c.USER_ID, c.COORD_X, c.COORD_Y, c.VOTE_STATE, u.NAME as USER_NAME
         FROM TB_COMPONENT c
         JOIN TB_USER u ON c.USER_ID = u.USER_ID 
         WHERE c.DEPT_ID = #{deptId}
@@ -21,7 +21,8 @@
 		UPDATE TB_COMPONENT
 		SET
 		COORD_X = #{coordX},
-		COORD_Y = #{coordY}
+		COORD_Y = #{coordY},
+		VOTE_STATE = #{voteState}
 		WHERE
 		COMPONENT_ID = #{componentId}
 	</update>

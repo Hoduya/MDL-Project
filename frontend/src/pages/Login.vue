@@ -38,7 +38,7 @@
     </div>
 </template>
 <script lang="ts" setup>
-import { ref, reactive, toDisplayString } from 'vue'
+import { ref, reactive } from 'vue'
 import { routerPush } from '@/router'
 import { useToast } from 'vue-toastification'
 import AppLink from '../components/AppLink.vue'

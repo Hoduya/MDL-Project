@@ -17,11 +17,10 @@
 
 <script lang="ts" setup>
 import { computed, withDefaults, defineProps } from 'vue'
-import { AppRouteNames } from '../router'
+import { AppRouteNames } from '@/router'
 import { RouteParams } from 'vue-router'
-import { useUserStore } from '../store/user'
-
-import AppLink from './AppLink.vue'
+import { useUserStore } from '@/store/user'
+import AppLink from '@/components/AppLink.vue'
 
 interface Props {
   useGlobalFeed?: boolean

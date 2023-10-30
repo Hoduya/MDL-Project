@@ -1,10 +1,6 @@
 /**
- * API 응답 모델 (성공 / 에러)
+ * API 응답 모델 (에러)
  */
-
-declare interface ApiResponse<T> {
-  data: T
-}
 
 declare interface ApiErrorResponse {
   status: number

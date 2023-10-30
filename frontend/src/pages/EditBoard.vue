@@ -18,6 +18,6 @@
   </template>
   
   <script lang="ts" setup>
-  import EditBoardForm from '../components/EditBoardForm.vue'
+  import EditBoardForm from '@/components/Board/EditBoardForm.vue'
   </script>
   

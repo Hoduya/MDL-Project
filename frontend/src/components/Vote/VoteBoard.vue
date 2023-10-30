@@ -9,8 +9,8 @@
       :key="index"
       :component="component"
       />
-      <DraggableComponent v-if="draggableComponent"
-        :component="draggableComponent"
+      <DraggableComponent v-if="userComponent"
+        :component="userComponent"
         :max-x="750"
         :max-y="500"
         :min-y="-150"
@@ -42,36 +42,40 @@ const toast = useToast()
 const currentUserId = userStore.currentUser?.userId
 const currentDeptId = userStore.currentUser?.deptId
 const fixedComponents = ref<Component[]>([]);
-const draggableComponent = ref<Component>();
+const userComponent = ref<Component>();
 const voteResultText = ref('');
 
-const fetchComponents = async () => {
-  const components = await api.fetchComponents(currentDeptId || 0)
-  const currentUserComponent = components.find((componet) => componet.userId === currentUserId)
-  fixedComponents.value = components.filter((component) => component.userId !== currentUserId)
-  draggableComponent.value = currentUserComponent
-  if(currentUserComponent && !isVote(currentUserComponent.coordY)) {
+const updatePosition = async (component: UpdateComponent) => {
+  if(!isVotePosition(component.coordY)) {
+    component.voteState = 0;
     toast.warning("투표를 진행해주세요", { timeout: false })
   } else {
+    component.voteState = component.coordX < 375 ? 1 : 2
     toast.clear()
   }
+
+  console.log(component.voteState)
+
+  await api.updateUserComponent(component) // 현재 유저 컴포넌트 업데이트
+  await fetchComponents() // 다른 모든 컴포넌트 정보 로드
+}
+
+const fetchComponents = async () => {
+  const components = await api.fetchComponents(currentDeptId || 0)  
+  fixedComponents.value = components.filter((component) => component.userId !== currentUserId)
+  userComponent.value = components.find((component) => component.userId === currentUserId)
+  
   updateVoteResult(components)
 }
 
-const updatePosition = async (component: UpdateComponent) => {
-  await api.updateComponent(component)
-  await fetchComponents()
-}
-
 const updateVoteResult = (components: Component[]) => {
-  const votedComponents = components.filter((component) => component.coordY >= 0 )
-  const cafeteriaCount = votedComponents.filter(component => component.coordX < 375).length // 구내식당 투표 수
-  const votedCount = votedComponents.length // 전체 투표 수
+  const cafeteriaCount = components.filter((component) => component.voteState === 1 ).length // 구내식당 투표 수
+  const eatOutCount = components.filter(component => component.voteState === 2).length // 외식 투표 수
 
-  voteResultText.value = (votedCount / 2 <= cafeteriaCount) ? "구내식당" : "외식"
+  voteResultText.value = (cafeteriaCount >= eatOutCount) ? "구내식당" : "외식"
 }
 
-const isVote = (coordY: number) => {
+const isVotePosition = (coordY: number) => {
   return coordY >= 0
 }
 

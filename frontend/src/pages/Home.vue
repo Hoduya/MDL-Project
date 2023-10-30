@@ -16,8 +16,8 @@
 </template>
   
 <script lang="ts" setup>
-import BoardNavigation from '../components/BoardNavigation.vue'
-import BoardList from '../components/BoardList.vue'
+import BoardNavigation from '@/components/Board/BoardNavigation.vue'
+import BoardList from '@/components/Board/BoardList.vue'
 </script>
 
 <style scoped>
