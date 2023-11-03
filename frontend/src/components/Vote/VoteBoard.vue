@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useUserStore } from '@/store/user';
 import { useToast } from 'vue-toastification';
 import DraggableComponent from './DraggableComponent.vue'
@@ -48,10 +48,8 @@ const voteResultText = ref('');
 const updatePosition = async (component: UpdateComponent) => {
   if(!isVotePosition(component.coordY)) {
     component.voteState = 0;
-    toast.warning("투표를 진행해주세요", { timeout: false })
   } else {
     component.voteState = component.coordX < 375 ? 1 : 2
-    toast.clear()
   }
 
   await api.updateUserComponent(component) // 현재 유저 컴포넌트 업데이트
@@ -60,7 +58,6 @@ const updatePosition = async (component: UpdateComponent) => {
 
 const fetchComponents = async () => {
   const components = await api.fetchComponents(currentDeptId || 0)
-  
   let newX = 10
   let cafeteriaCount = 0
   let eatOutCount = 0
@@ -79,17 +76,27 @@ const fetchComponents = async () => {
       case 2:
         eatOutCount += 1
         break
+      default: 
+        break
     }
     return component
   })
 
   // 재배치 적용
   fixedComponents.value = rearangedComponents.filter((component) => component.userId !== currentUserId)
-  userComponent.value = rearangedComponents.find((component) => component.userId === currentUserId)
-  
+  userComponent.value = rearangedComponents.find((component) => component.userId === currentUserId)  
+
   // 투표 결과 출력
   voteResultText.value = (cafeteriaCount >= eatOutCount) ? "구내식당" : "외식"
 }
+
+watch((userComponent), () => {
+  if (userComponent.value?.voteState === 0) {
+    toast.warning("투표를 진행해주세요", { timeout: false })
+  } else {
+    toast.clear()
+  }
+})
 
 const isVotePosition = (coordY: number) => {
   return coordY >= 0
